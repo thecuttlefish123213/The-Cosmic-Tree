@@ -25,6 +25,7 @@
 	
 	<script src="js/game.js"></script>
 	<script src="js/utils.js"></script>
+	<script src="js/utils/book.js"></script>
 	<script src="js/utils/easyAccess.js"></script>
 	<script src="js/technical/systemComponents.js"></script>
 	<script src="js/components.js"></script>
@@ -91,6 +92,16 @@
 							v-bind:style="{'font-size': '16px'}">Main Prestige Tree server</a></li>
 				</ul>
 			</div>
+			
+			<img id="guideBook" class="overlayThing" alt="My Icon" width="40" height="40" v-if="player.tab!='book-tab'" src="resources/books.png"
+				onclick="showTab('book-tab')"></img>
+			
+			<img id="chatIcon" class="overlayThing" alt="My Icon" width="40" height="40" v-if="player.tab!='global-tab'" src="resources/chaticon.png"
+				onclick="showTab('global-tab')"></img>
+		
+			<img id="leaderboard" class="overlayThing" alt="My Icon" width="40" height="40" v-if="player.tab!='leaderboard-tab'" src="resources/leaderboard.png"
+				onclick="showTab('leaderboard-tab')"></img>
+
 			<overlay-head v-if="!(tmp.gameEnded && !player.keepGoing)"></overlay-head>
 			<div class="sideLayers">
 				<div v-for="(node, index) in OTHER_LAYERS['side']">
@@ -135,5 +146,29 @@
 		</div>
 		<div class = "bg2" v-bind:style = "tmp.backgroundStyle"></div>
 
+	</div>
+		<div> <img id="mNote" class="overlayThing" alt="My Icon" width="40" height="40" src="resources/mnote.png"
+				onclick="toggleMusic() " ></img>
+			
+			<img id="pButton" class="overlayThing" alt="My Icon" width="40" height="40" src="resources/playbutton.png"
+				onclick="skipTrack()"></img>
+	<audio id="bgm" loop>
+  			<source src="resources/DJVILetGo.mp3" type="audio/mpeg">
+			</audio>
+			<audio id="hammer" loop>
+  			<source src="resources/hammer.mp3" type="audio/mpeg">
+			</audio>
+			<audio id="spear" loop>
+  			<source src="resources/spear.mp3" type="audio/mpeg">
+			</audio>
+			<audio id="mother" loop>
+  			<source src="resources/mother.mp3" type="audio/mpeg">
+			</audio>
+			<audio id="cosmic" loop>
+  			<source src="resources/cosmic.mp3" type="audio/mpeg">
+			</audio>
+			<audio id="ruine" loop>
+  			<source src="resources/ruinedridge.mp3" type="audio/mpeg">
+			</audio>
 	</div>
 </body>

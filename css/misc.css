@@ -8,6 +8,121 @@
 	border-color: rgba(0, 0, 0, 0.125);
 }
 
+#textDisplay1 {
+  font-size: 25px;
+}
+
+@keyframes radioactivePulse {
+  0%, 100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 2px #b6ff00, 0 0 10px #7fff00, 0 0 14px #7fff00;
+  }
+  50% {
+    transform: scale(1.08);
+    box-shadow: 0 0 8px #d6ff5a, 0 0 12px #b6ff00, 0 0 16px #7fff00;
+  }
+}
+
+@keyframes hologram {
+  0%,100% {
+    transform: skewX(0deg);
+    opacity: 1;
+  }
+
+  20% {
+    transform: skewX(2deg);
+  }
+
+  40% {
+    transform: skewX(-2deg);
+    opacity: 0.8;
+  }
+
+  60% {
+    transform: translateX(2px);
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform:
+      translateY(0px)
+      rotateX(0deg);
+  }
+
+  50% {
+    transform:
+      translateY(-12px)
+      rotateX(4deg);
+  }
+}  
+
+.diamond {
+  width: 100px;
+  height: 100px;
+  
+  transform: rotate(45deg);
+}
+
+.dimensions {
+  width: 320px;
+  height: 220px;
+
+  background: rgba(255,255,255,0.08);
+
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+
+  border: 1px solid rgba(255,255,255,0.15);
+
+  border-radius: 20px;
+
+  box-shadow:
+    0 8px 32px rgba(0,0,0,0.35);
+}
+
+.scrollable {
+    height: 100vh;
+    overflow-y: auto;
+}
+
+.scroll-box {
+    height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    padding: 10px;
+}
+
+.hexNode {
+    clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+    border-radius: 0 !important;
+}
+
+.starNode {
+  clip-path: polygon(
+    50% 0%, 
+    61% 35%, 
+    98% 35%, 
+    68% 57%, 
+    79% 91%, 
+    50% 70%, 
+    21% 91%, 
+    32% 57%, 
+    2% 35%, 
+    39% 35%
+  );
+  border-radius: 0 !important;
+}
+
+.box {
+  width: 800px;
+  height: 800px;
+  border: 2px solid;
+  border-color: #ffffff;
+  background-color: transparent;
+}
+
 .tabButton {
 	background-color: transparent;
 	color: var(--color);
@@ -78,6 +193,14 @@
 	top: 0
 }
 
+@keyframes backgroundMove {
+  0% { background-position: 0% 0%; }
+
+  50% { background-position: 100% 100%; }
+
+  100% { background-position: 0% 0%;}
+}
+
 .hl {
 	border-top: 3px solid var(--color);
 }
@@ -142,4 +265,27 @@
     border-bottom: 100px solid white; /* color of the triangle */
 }
 
-
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.star {
+  width: 100px;
+  height: 100px;
+  background: gold;
+  clip-path: polygon(
+    50% 0%, 61% 35%, 98% 35%, 68% 57%, 
+    79% 91%, 50% 70%, 21% 91%, 32% 57%, 
+    2% 35%, 39% 35%
+  );
+  display: inline-block;
+}
+.spin {
+  animation: spin 2s ease-in-out infinite !important;
+  display: inline-block;
+  will-change: transform;
+}

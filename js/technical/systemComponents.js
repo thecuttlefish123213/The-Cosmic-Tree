@@ -4,7 +4,7 @@ var systemComponents = {
 		template: `
 			<div class="upgRow">
 				<div v-for="tab in Object.keys(data)">
-					<button v-if="data[tab].unlocked == undefined || data[tab].unlocked" v-bind:class="{tabButton: true, notify: subtabShouldNotify(layer, name, tab), resetNotify: subtabResetNotify(layer, name, tab)}"
+					<button v-if="data[tab].unlocked == undefined || data[tab].unlocked" v-bind:class="[ {tabButton: true, notify: subtabShouldNotify(layer, name, tab), resetNotify: subtabResetNotify(layer, name, tab)}, tmp[layer].componentStyles['tab-button'] && tmp[layer].componentStyles['tab-button'].classes ? tmp[layer].componentStyles['tab-button'].classes : (tmp[layer].componentStyles['tab-button'] && tmp[layer].componentStyles['tab-button'].class ? tmp[layer].componentStyles['tab-button'].class : [])]"
 					v-bind:style="[{'border-color': tmp[layer].color}, (subtabShouldNotify(layer, name, tab) ? {'box-shadow': 'var(--hqProperty2a), 0 0 20px '  + (data[tab].glowColor || defaultGlow)} : {}), tmp[layer].componentStyles['tab-button'], data[tab].buttonStyle]"
 						v-on:click="function(){player.subtabs[layer][name] = tab; updateTabFormats(); needCanvasUpdate = true;}">{{tab}}</button>
 				</div>
@@ -31,21 +31,24 @@ var systemComponents = {
 			}"
 
 
-			v-bind:class="{
-				treeNode: tmp[layer].isLayer,
-				treeButton: !tmp[layer].isLayer,
-				smallNode: size == 'small',
-				[layer]: true,
-				tooltipBox: true,
-				forceTooltip: player[layer].forceTooltip,
-				ghost: tmp[layer].layerShown == 'ghost',
-				hidden: !tmp[layer].layerShown,
-				locked: tmp[layer].isLayer ? !(player[layer].unlocked || tmp[layer].canReset) : !(tmp[layer].canClick),
-				notify: tmp[layer].notify && player[layer].unlocked,
-				resetNotify: tmp[layer].prestigeNotify,
-				can: ((player[layer].unlocked || tmp[layer].canReset) && tmp[layer].isLayer) || (!tmp[layer].isLayer && tmp[layer].canClick),
-				front: !tmp.scrolled,
-			}"
+			v-bind:class="[
+				{
+					treeNode: tmp[layer].isLayer,
+					treeButton: !tmp[layer].isLayer,
+					smallNode: size == 'small',
+					[layer]: true,
+					tooltipBox: true,
+					forceTooltip: player[layer].forceTooltip,
+					ghost: tmp[layer].layerShown == 'ghost',
+					hidden: !tmp[layer].layerShown,
+					locked: tmp[layer].isLayer ? !(player[layer].unlocked || tmp[layer].canReset) : !(tmp[layer].canClick),
+					notify: tmp[layer].notify && player[layer].unlocked,
+					resetNotify: tmp[layer].prestigeNotify,
+					can: ((player[layer].unlocked || tmp[layer].canReset) && tmp[layer].isLayer) || (!tmp[layer].isLayer && tmp[layer].canClick),
+					front: !tmp.scrolled,
+				},
+				tmp[layer].nodeStyle && tmp[layer].nodeStyle.classes ? tmp[layer].nodeStyle.classes : []
+			]"
 			v-bind:style="constructNodeStyle(layer)">
 			<span class="nodeLabel" v-html="(abb !== '' && tmp[layer].image === undefined) ? abb : '&nbsp;'"></span>
 			<tooltip
@@ -66,7 +69,7 @@ var systemComponents = {
 	
 	'layer-tab': {
 		props: ['layer', 'back', 'spacing', 'embedded'],
-		template: `<div v-bind:style="[tmp[layer].style ? tmp[layer].style : {}, (tmp[layer].tabFormat && !Array.isArray(tmp[layer].tabFormat)) ? tmp[layer].tabFormat[player.subtabs[layer].mainTabs].style : {}]" class="noBackground">
+		template: `<div v-bind:class="[tmp[layer].style && tmp[layer].style.classes ? tmp[layer].style.classes : (tmp[layer].style && tmp[layer].style.class ? tmp[layer].style.class : []), (tmp[layer].tabFormat && !Array.isArray(tmp[layer].tabFormat) && tmp[layer].tabFormat[player.subtabs[layer].mainTabs].style && tmp[layer].tabFormat[player.subtabs[layer].mainTabs].style.classes) ? tmp[layer].tabFormat[player.subtabs[layer].mainTabs].style.classes : (tmp[layer].tabFormat && !Array.isArray(tmp[layer].tabFormat) && tmp[layer].tabFormat[player.subtabs[layer].mainTabs].style && tmp[layer].tabFormat[player.subtabs[layer].mainTabs].style.class ? tmp[layer].tabFormat[player.subtabs[layer].mainTabs].style.class : [])]" v-bind:style="[tmp[layer].style ? tmp[layer].style : {}, (tmp[layer].tabFormat && !Array.isArray(tmp[layer].tabFormat)) ? tmp[layer].tabFormat[player.subtabs[layer].mainTabs].style : {}]" class="noBackground">
 		<div v-if="back"><button v-bind:class="back == 'big' ? 'other-back' : 'back'" v-on:click="goBack(layer)">←</button></div>
 		<div v-if="!tmp[layer].tabFormat">
 			<div v-if="spacing" v-bind:style="{'height': spacing}" :key="this.$vnode.key + '-spacing'"></div>
@@ -176,7 +179,42 @@ var systemComponents = {
             </tr>
         </table>`
     },
+      'book-tab': {
+        template: `
+		<div class="tab-container">
+  <!-- Tab Buttons -->
+  <div class="tab-buttons">
 
+    <button class="tabButton active" onclick="addText('Introduction')" >Introduction</button>
+    <button class="tabButton active" onclick="addText('Music')" >Music</button>
+    <button class="tabButton active" onclick="addText('Guide')" >Guide</button>
+    <button class="tabButton active" onclick="addText('Description & Info')" >Description & Info</button>
+    <button class="tabButton active" onclick="addText('Advanced Guide')" >Advanced Guide</button>
+  </div>
+
+  <!-- Tab Content -->
+  <div class="tab-content" id="Introduction">Click on a tab for info!</div>
+  <div class="tab-content" id="Music" style="display:none;">Text for Tab 2. Edit me!</div>
+  <div class="tab-content" id="Guide" style="display:none;">Text for Tab 3. Replace this text.</div>
+  <div class="tab-content" id="Description & Info" style="display:none;">Text for Tab 4. Change as needed.</div>
+  <div class="tab-content" id="Advanced Guide" style="display:none;">Text for Tab 5. Your content goes here.</div>
+</div>
+		`
+
+		
+        
+    },
+	 'global-tab': {
+        template: `
+		<div class="box" style="">
+		<h3 id="textDisplay1">Click the text box at the bottom in order to chat!</h3>
+		<hr style="color: #ffffff;">
+		</div>
+		`
+
+		
+        
+    },
     'back-button': {
         template: `
         <button v-bind:class="back" onclick="goBack()">←</button>
@@ -217,7 +255,17 @@ var systemComponents = {
 		props: ['layer'],
 		template: `<div class ="bg" v-bind:style="[tmp[layer].style ? tmp[layer].style : {}, (tmp[layer].tabFormat && !Array.isArray(tmp[layer].tabFormat)) ? tmp[layer].tabFormat[player.subtabs[layer].mainTabs].style : {}]"></div>
 		`
-	}
+	},
+
+	'scroll-box': {
+  		props: ['layer', 'data'],
+  		template: `
+    <div class="scroll-box" v-bind:style="$attrs.style">
+      <column v-if="Array.isArray(data)" :layer="layer" :data="data"></column>
+      <span v-else v-html="data"></span>
+    </div>
+  `
+}
 
 }
 

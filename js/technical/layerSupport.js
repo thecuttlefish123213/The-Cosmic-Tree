@@ -292,3 +292,18 @@ addLayer("changelog-tab", {
     tabFormat() {return ([["raw-html", modInfo.changelog]])},
     row: "otherside"
 })
+
+addLayer("book-tab", {
+    tabFormat: ["book-tab"],
+    row: "otherside"
+})
+
+addLayer("global-tab", {
+    tabFormat: ["global-tab"],
+    row: "otherside"
+})
+
+addLayer("leaderboard-tab", {
+    tabFormat: ["leaderboard-tab"],
+    row: "otherside"
+})

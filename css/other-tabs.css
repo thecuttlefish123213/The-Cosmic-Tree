@@ -8,6 +8,74 @@
 	cursor: pointer;
 }
 
+#mNote {
+	position: absolute;
+	top: 250px;
+	left: 0;
+	height: 50px;
+	width: 50px;
+	cursor: pointer;
+}
+
+#leaderboard {
+	position: absolute;
+	top: 435px;
+	left: 0;
+	height: 50px;
+	width: 50px;
+	cursor: pointer;
+}
+
+#leaderboard:hover {
+	transform: rotate(360deg);
+} 		
+
+#chatIcon {
+	position: absolute;
+	top: 375px;
+	left: 0;
+	height: 50px;
+	width: 50px;
+	cursor: pointer;
+}
+
+#chatIcon:hover {
+	transform: rotate(360deg);
+} 			
+
+
+#mNote:hover {
+	transform: rotate(360deg);
+} 			
+
+#pButton {
+	position: absolute;
+	top: 310px;
+	left: 0;
+	height: 50px;
+	width: 50px;
+	cursor: pointer;
+	color: var(--color);
+	-webkit-text-stroke-width: 1px;
+}
+
+#pButton:hover {
+	transform: rotate(360deg);
+} 		
+
+#guideBook {
+	position: absolute;
+	top: 180px;
+	left: 0;
+	height: 50px;
+	width: 50px;
+	cursor: pointer;
+}
+
+#guideBook:hover {
+	transform: rotate(360deg);
+}
+
 #optionWheel:hover {
 	transform: rotate(360deg);
 }

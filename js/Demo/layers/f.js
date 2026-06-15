@@ -47,7 +47,7 @@ addLayer("f", {
         return getResetGain(this.layer, useType = "static")
     },
     getNextAt(canMax=false) { //  
-        return getNextAt(this.layer, canMax, useType = "static")
+        return getNextAt(this.layer, canMax=false, useType = "static")
     },
     canReset() {
         return tmp[this.layer].baseAmount.gte(tmp[this.layer].nextAt)

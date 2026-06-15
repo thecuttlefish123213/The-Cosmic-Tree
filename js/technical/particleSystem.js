@@ -77,6 +77,40 @@ function setSpeed(particle, speed) {
     particle.yVel = particle.speed * cos(particle.dir) * -1
 }
 
+const snowflake = {
+        
+      shiny() {
+        particleID++
+        return {
+            time: 10,
+            id: particleID,
+            x: Math.random() * (tmp.other.screenWidth - 100) + 50,
+            y: Math.random() * (tmp.other.screenHeight - 100) + 50,
+            width: 100,
+            height: 100,
+            image: "resources/snowflake.png",
+            angle: 0,
+            spread: 0,
+            offset: 0,
+            speed: 0,
+            xVel: 0,
+            yVel: 0,
+            rotation: 0,
+            gravity: 0,
+            fadeOutTime: 1,
+            fadeInTimer: 0,
+            fadeInTime: 0.5,
+            layer: "n",
+            onClick() {
+                player.n.fragments = player.n.fragments.plus(player.n.fragMultiplier())
+                Vue.delete(particles, this.id)
+            },
+        }
+       
+    },
+    
+}
+
 const newParticles = {
     normal() {
         particleID++
@@ -101,6 +135,7 @@ const newParticles = {
             fadeInTime: 0,
         }
     },
+    
     shiny() {
         particleID++
         return {

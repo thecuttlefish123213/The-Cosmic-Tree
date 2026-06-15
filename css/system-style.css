@@ -119,8 +119,8 @@ td {
 
 .col {
 	min-width: 49.5%;
-	max-width: 49.5%;
-	width: 49.5%;
+	max-width: 50%;
+	width: 50%;
 	height: 100%;
 	min-height: 100%;
 	column-span: 1;

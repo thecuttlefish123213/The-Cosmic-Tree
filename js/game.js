@@ -18,10 +18,11 @@ function getResetGain(layer, useType = null) {
 		return new Decimal (0)
 	if (tmp[layer].gainExp.eq(0)) return decimalZero
 	if (type=="static") {
-		if ((!tmp[layer].canBuyMax) || tmp[layer].baseAmount.lt(tmp[layer].requires)) return decimalOne
+		if ((!tmp[layer].canBuyMax) || tmp[layer].baseAmount.lt(tmp[layer].requires)) return decimalOne.times(tmp[layer].directMult)
 		let gain = tmp[layer].baseAmount.div(tmp[layer].requires).div(tmp[layer].gainMult).max(1).log(tmp[layer].base).times(tmp[layer].gainExp).pow(Decimal.pow(tmp[layer].exponent, -1))
-		gain = gain.times(tmp[layer].directMult)
-		return gain.floor().sub(player[layer].points).add(1).max(1);
+		
+		let result = gain.floor().sub(player[layer].points).add(1).max(1);
+		return result
 	} else if (type=="normal"){
 		if (tmp[layer].baseAmount.lt(tmp[layer].requires)) return decimalZero
 		let gain = tmp[layer].baseAmount.div(tmp[layer].requires).pow(tmp[layer].exponent).times(tmp[layer].gainMult).pow(tmp[layer].gainExp)
@@ -52,7 +53,7 @@ function getNextAt(layer, canMax=false, useType = null) {
 	if (type=="static") 
 	{
 		if (!tmp[layer].canBuyMax) canMax = false
-		let amt = player[layer].points.plus((canMax&&tmp[layer].baseAmount.gte(tmp[layer].nextAt))?tmp[layer].resetGain:0).div(tmp[layer].directMult)
+		let amt = player[layer].points.plus((canMax&&tmp[layer].baseAmount.gte(tmp[layer].nextAt))?tmp[layer].resetGain:0)
 		let extraCost = Decimal.pow(tmp[layer].base, amt.pow(tmp[layer].exponent).div(tmp[layer].gainExp)).times(tmp[layer].gainMult)
 		let cost = extraCost.times(tmp[layer].requires).max(tmp[layer].requires)
 		if (tmp[layer].roundUpCost) cost = cost.ceil()
@@ -60,7 +61,7 @@ function getNextAt(layer, canMax=false, useType = null) {
 	} else if (type=="normal"){
 		let next = tmp[layer].resetGain.add(1).div(tmp[layer].directMult)
 		if (next.gte(tmp[layer].softcap)) next = next.div(tmp[layer].softcap.pow(decimalOne.sub(tmp[layer].softcapPower))).pow(decimalOne.div(tmp[layer].softcapPower))
-		next = next.root(tmp[layer].gainExp).div(tmp[layer].gainMult).root(tmp[layer].exponent).times(tmp[layer].requires).max(tmp[layer].requires)
+		next = next.root(tmp[layer].gainExp).root(tmp[layer].exponent).times(tmp[layer].requires).max(tmp[layer].requires)
 		if (tmp[layer].roundUpCost) next = next.ceil()
 		return next;
 	} else if (type=="custom"){
@@ -126,14 +127,23 @@ function canReset(layer)
 		return false
 }
 
-function rowReset(row, layer) {
-	for (lr in ROW_LAYERS[row]){
+ function rowReset(row, layer) {
+	 for (lr in ROW_LAYERS[row]){
+		
 		if(layers[lr].doReset) {
-			if (!isNaN(row)) Vue.set(player[lr], "activeChallenge", null) // Exit challenges on any row reset on an equal or higher row
+			
+		 if (!isNaN(row)) {
+			    if(player["a"].activeChallenge == "21") {
+					return null
+				} else {
+				Vue.set(player[lr], "activeChallenge", null) // Exit challenges on any row reset on an equal or higher row
+				}
+			}
 			run(layers[lr].doReset, layers[lr], layer)
-		}
+		} 
 		else
-			if(tmp[layer].row > tmp[lr].row && !isNaN(row)) layerDataReset(lr)
+			
+			if( tmp[layer].row > tmp[lr].row && !isNaN(row)) layerDataReset(lr)
 	}
 }
 
@@ -180,10 +190,11 @@ function doReset(layer, force=false) {
 		if (tmp[layer].canReset === false) return;
 		
 		if (tmp[layer].baseAmount.lt(tmp[layer].requires)) return;
-		let gain = tmp[layer].resetGain
+		let gain = tmp[layer].resetGain.times(tmp[layer].directMult)
+		let unmaxxedGain = new Decimal(1)
 		if (tmp[layer].type=="static") {
 			if (tmp[layer].baseAmount.lt(tmp[layer].nextAt)) return;
-			gain =(tmp[layer].canBuyMax ? gain : 1)
+			gain =(tmp[layer].canBuyMax ? gain.times(tmp[layer].directMult) : unmaxxedGain.times(tmp[layer].directMult))
 		}
 
 		if (layers[layer].onPrestige){
