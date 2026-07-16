@@ -40,9 +40,11 @@
 
 
 <body onload="load()" onmousemove="updateMouse(event)">
+	<div id="blindingLight" style='display: none; height: 100000px; width: 100000px; background-color: white;'></div>
 	<div id="app">
 		<canvas id="treeCanvas" class="canvas" v-if="!(tmp.gameEnded && !player.keepGoing)"></canvas>
-
+		<div id="DemonEmblem" style=" position: fixed; top: 0; left: 0; width: 100vw; pointer-events: none; height: 100vh; z-index: 99999999; background-color: darkred; opacity: 0.2; display: none;">RUNNN</div>
+		
 		<div v-if="false" id="loadingSection" class="fullWidth">
 			<h1>Loading... (If this takes too long it means there was a serious error!)←</h1>
 		</div>
@@ -74,6 +76,7 @@
 			 :style="{'margin-top': !readData(layoutInfo.showTree) && player.tab == 'info-tab' ? '50px' : ''}">
 			<div id="version" onclick="showTab('changelog-tab')" class="overlayThing" style="margin-right: 13px" >
 				{{VERSION.withoutName}}</div>
+			<div id="NewsOutlet" style="width: 800px; height: 35px; font-size: 20px; font-family: 'Times New Roman', Times, serif;"> Currently Playing: </div>
 			<button
 			v-if="((player.navTab == 'none' && (tmp[player.tab].row == 'side' || tmp[player.tab].row == 'otherside' || player[player.tab].prevTab)) || player[player.navTab]?.prevTab)"				class="other-back overlayThing" onclick="goBack(player.navTab == 'none' ? player.tab : player.navTab)">←</button>
 			<img id="optionWheel" class="overlayThing" v-if="player.tab!='options-tab'" src="options_wheel.png"
@@ -152,8 +155,11 @@
 			
 			<img id="pButton" class="overlayThing" alt="My Icon" width="40" height="40" src="resources/playbutton.png"
 				onclick="skipTrack()"></img>
-	<audio id="bgm" loop>
+			<audio id="bgm" loop>
   			<source src="resources/DJVILetGo.mp3" type="audio/mpeg">
+			</audio>
+			<audio id="sevensuns" loop>
+  			<source src="resources/sevensuns.mp3" type="audio/mpeg">
 			</audio>
 			<audio id="hammer" loop>
   			<source src="resources/hammer.mp3" type="audio/mpeg">
@@ -164,11 +170,37 @@
 			<audio id="mother" loop>
   			<source src="resources/mother.mp3" type="audio/mpeg">
 			</audio>
-			<audio id="cosmic" loop>
-  			<source src="resources/cosmic.mp3" type="audio/mpeg">
+			<audio id="shelterCove" loop>
+  			<source src="resources/shelterCove.wav" type="audio/mpeg">
 			</audio>
 			<audio id="ruine" loop>
   			<source src="resources/ruinedridge.mp3" type="audio/mpeg">
 			</audio>
+			<audio id="flowerman" loop>
+  			<source src="resources/flowerman.mp3" type="audio/mpeg">
+			</audio>
+			<audio id="whobe" loop>
+  			<source src="resources/whobe.mp3" type="audio/mpeg">
+			</audio>
+		</audio>
+	<audio id="flowermanlyrics" loop>
+  			<source src="resources/flowermanlyrics.mp3" type="audio/mpeg">
+	</audio>
+	<audio id="colorRecording" >
+  			<source src="resources/colorRecording.mp3" type="audio/mpeg">
+	</audio>
+	<audio id="wrongSound" >
+  			<source src="resources/wrong.mp3" type="audio/mpeg">
+	</audio>
+	<audio id="recycling" loop>
+  			<source src="resources/recycling.mp3" type="audio/mpeg">
+	</audio>
+	<audio id="HILL" loop>
+  			<source src="resources/HILL.mp3" type="audio/mpeg">
+	</audio>
+	<audio id="explosion">
+  			<source src="resources/explosion.mp3" type="audio/mpeg">
+	</audio>
 	</div>
+	
 </body>

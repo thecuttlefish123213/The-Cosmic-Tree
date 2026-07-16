@@ -36,8 +36,14 @@ addLayer("hm", {
     gainMult() { // Calculate the multiplier for main currency from bonuses
         mult = new Decimal(1)
        if(player.chm.heavyTrox.gte(1)) mult = mult.times(player.chm.hTroxMultiplierFunction())
-        if(hasUpgrade('mm', 11)) mult = mult.times(3)
+        if(player.ct.bdust.gte(1)) mult = mult.times(player.ct.bdustEffect1())
+        if(inChallenge('d', 14)) {
+            return mult;
+        } else {
+            if(hasUpgrade('mm', 11)) mult = mult.times(3)
         if(hasUpgrade('mm', 21)) mult = mult.times(2)
+        }
+        if(hasUpgrade('d', 42)) mult = mult.times(10)
         return mult
     },
     passiveGeneration() {
@@ -54,13 +60,23 @@ addLayer("hm", {
         keep.push("variable")
          if (layers[reset].row > this.row) {layerDataReset("hm", keep)}
     },
-    nodeStyle: {
-        "border-radius": "0px",
+    
+    nodeStyle() {   
+        let style = {
+     "border-radius": "0px",
         "width": "125px",
         "height": "125px",
         "background-image": "linear-gradient( #3b3b3b, #1c1c1c)", 
         "border-color": "rgb(34, 34, 34)",
          "font-size": "50px"
+        }
+        if(tmp.hm.canReset || player.hm.unlocked) {
+            return {...style}
+        }
+        else return { "font-size": "50px", "border-radius": "0px",
+        "width": "125px",
+        "height": "125px",
+         }
     },
     row: 2, // Row the layer is in on the tree (0 is the first row)
     branches: ["h","v"],

@@ -21,10 +21,15 @@
        gavePoint: false,
     }},
     color: "#053863",
-    nodeStyle: {   
+    nodeStyle() {   
+        let style = {
      "background-image": "linear-gradient(90deg,rgb(10, 51, 95) 0%, rgb(13, 55, 162) 50%, rgb(18, 38, 125) 100%)",
          "background-size": "150px 600%",
         "background-position": "40% 50%",
+        }
+        if(tmp.t.canReset || player.t.unlocked) {
+            return {...style}
+        }
     },
     
     requires() {
@@ -64,10 +69,24 @@
     mult = mult.times(player.chm.abzFunction())
     if(player.b.Orbindium.gte(1)) mult = mult.add(player.b.orbindiumMultiplier())   
     if(hasUpgrade('n', 13)) mult = mult.times(2)
+    if(inChallenge('d', 14)) {
+            return mult;
+    } else {
+            if(hasUpgrade('n', 13)) mult = mult.times(2)
+    }
     if(getBuyableAmount('ct', 19).gte(1)) mult = mult.times(buyableEffect('ct', 19))
     if(hasUpgrade('d', 11)) mult = mult.add(10)
     if(hasUpgrade('d', 12)) mult = mult.add(2)
     if(hasUpgrade('d', 14)) mult = mult.add(10)
+    if(hasUpgrade('d', 25)) mult = mult.add(100)
+    if(hasUpgrade('d', 28)) mult = mult.add(100)
+    if(getBuyableAmount('d', 13).gte(1)) mult = mult.add(buyableEffect('d', 13))
+    if(getBuyableAmount('d', 19).gte(1)) mult = mult.times(buyableEffect('d', 19))
+    if(hasUpgrade('d', 30)) mult = mult.add(1000)
+    if(hasUpgrade('d', 31)) mult = mult.add(500)
+    if(hasUpgrade('d', 34)) mult = mult.add(1000)
+    if(player.chm.mechanicalBomb.gte(1)) mult = mult.add(buyableEffect('chm', 24)[0])
+    if(hasUpgrade('d', 41)) mult = mult.add(1000)    
     return mult
    },
    allowedDirect: true,
@@ -79,17 +98,13 @@
    },
     base: 2,
     exponent: 1, // Prestige currency exponent
-    nodeStyle: {
-        
-        "background-image": "linear-gradient( #103688, #254099)", 
-        
-    },
+    
     row: 2, // Row the layer is in on the tree (0 is the first row)
     branches: ["ce","v"],
     hotkeys: [
         {key: "t", description: "T: Reset for Tetras", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
     ],
-    layerShown(){return player.v.unlocked
+    layerShown(){return player.hm.unlocked
     },
     tabFormat: {
     "Tetratum": {
@@ -347,7 +362,7 @@ upgrades: {
     }, 
     22: {
         description: "Frosty Tetras",
-        cost: new Decimal(300),
+        cost: new Decimal(3000),
         style: {
             "width": "200px",
             "height": "200px",
@@ -361,7 +376,7 @@ upgrades: {
     },
      23: {
         description: "Atomic laws",
-        cost: new Decimal(540),
+        cost: new Decimal(540000),
         style: {
             "width": "200px",
             "height": "200px",
@@ -374,7 +389,7 @@ upgrades: {
     },
     24: {
         description: "Into the dark",
-        cost: new Decimal(800),
+        cost: new Decimal(8000000),
         style: {
             "width": "200px",
             "height": "200px",
@@ -387,7 +402,7 @@ upgrades: {
     }, 
     25: {
         description: "Empyrean Island",
-        cost: new Decimal(1111),
+        cost: new Decimal(666666666),
         style: {
             "width": "200px",
             "height": "200px",
@@ -557,7 +572,7 @@ upgrades: {
         
     },    
       94: {
-       cost(x) { return new Decimal(2).plus(x)
+       cost(x) { return new Decimal(10).plus(x)
        },
         title: "Imperial Converter",
         display() { return "Convert your 4D tetra points into Imperial points" +

@@ -3,7 +3,7 @@ addLayer("ct", {
     symbol: "CT", // This appears on the layer's node. Default is the id with the first letter capitalized
     position: 1, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
     startData() { return {
-        unlocked() {return (hasUpgrade("m", 16))},
+        unlocked: false,
 		points: new Decimal(1),
         hq: new Decimal(0), // Hyper Quarks
         sdust: new Decimal(0), // Stardust
@@ -14,8 +14,37 @@ addLayer("ct", {
         index: 0,
         hatom: new Decimal(0),
         agenta: new Decimal(0),
+        nuke: new Decimal(0),
+
         keepLevels: new Decimal(0),
+
         grandeu: new Decimal(0),
+
+        fire: new Decimal(0),
+        bastion: new Decimal(0),
+        volcano: new Decimal(0),
+        supernova: new Decimal(0),
+        galaxy: new Decimal(0),
+        blackhole: new Decimal(0),
+        whitehole: new Decimal(0),
+        bigBang: new Decimal(0),
+        spaceCrystal: new Decimal(0),
+
+        bdust: new Decimal(0), // black dust
+        bdustEffect1() {
+            return new Decimal(2).mul(this.bdust)
+        },
+        bdustEffect2() {
+            return new Decimal(4).mul(this.bdust.mul(20))
+        },
+        vdust: new Decimal(0), // vortex dust
+        edust: new Decimal(0), // ethereal dust
+        pdust: new Decimal(0), // primal dust
+        pmdust: new Decimal(0), // primeval dust
+        pshard: new Decimal(0), // primeval shard
+        blackKnife: new Decimal(0), 
+        dementedCrystal: new Decimal(0) // demented Crystal
+
     }},
     color: "#291103",
     requires: new Decimal(400), // Can be a function that takes requirement increases into account
@@ -41,7 +70,7 @@ addLayer("ct", {
     }
    },
     hotkeys: [],
-    layerShown(){return (hasUpgrade("m", 16)) || player.ct.variable == 1
+    layerShown(){return player.ct.unlocked
 
     },
     update(diff) {
@@ -64,6 +93,9 @@ addLayer("ct", {
             ["row",[["buyable", "15" ], ["buyable", "16"]]],
             ["row",[["buyable", "17" ], ["buyable", "18"]]],
             ["row",[["buyable", "19" ], ["buyable", "20"]]],
+            ["row",[["buyable", "21" ], ["buyable", "22"]]],
+            ["row",[["buyable", "23" ], ["buyable", "24"]]],
+            function() {return inChallenge('d', 18) ? ["row",[["buyable", "25" ]]] : null},
 
 
 
@@ -74,75 +106,46 @@ addLayer("ct", {
     "Inventory": {
         content: [
             "blank",
-          
-            ["display-text", function() {if(hasMilestone('h', 3)) return 'You have ' + format(player.ct.hq) + ' Hyper Quarks'},
-             {"font-size": "30px", 
-                "color": "#000000",
-                 "border": "4px ridge #788C82", 
-                 "padding": "20px", 
-                 "background-image": "linear-gradient(90deg, rgb(0, 255, 21) 0%, rgb(214, 240, 227) 50%, rgb(187, 0, 212) 100%)",
-                  }],
-            ["blank", "46px"],
-            ["display-text", function() { return 'You have ' + format(player.ct.sdust) + ' Stardust'},
-             {"font-size": "30px",
-                 "color": "#000000",
-                  "border": "4px ridge #788C82",
-                   "padding": "20px",
-                    "background-image": "linear-gradient(90deg, rgb(91, 11, 11) 0%, rgb(93, 255, 171) 50%, rgb(11, 11, 128) 100%) ",
-               
-            }],
-            ["blank", "46px"],
-            ["display-text", function() { if(hasUpgrade('hm', 24)) return 'You have ' + format(player.ct.amult) + ' Atomic Multipliers'},
-             {"font-size": "30px",
-                 "color": "#000000",
-                  "border": "4px ridge #788C82",
-                   "padding": "20px", 
-                   "background-image": "linear-gradient(90deg, rgb(91, 11, 11) 0%, rgb(74, 7, 7) 50%, rgb(160, 38, 38) 100%)"}],
-            ["blank", "46px"],   
-            ["display-text", function() {  if(getBuyableAmount('t', 34).gte(1) || player.ct.stars.gte(new Decimal(1))) return 'You have ' + format(player.ct.stars) + ' Stars'},
-             {"font-size": "30px",
-                 "color": "#000000",
-                  "border": "4px ridge #788C82",
-                   "padding": "20px",
-                    "background-image": "linear-gradient(90deg, rgb(230, 109, 3) 0%, rgb(218, 254, 11) 50%, rgb(227, 185, 15) 100%) ",
-               
-            }],
-           ["blank", "46px"],
-            ["display-text", function() { return 'You have ' + format(player.ct.nzet) + ' Neptunic Zets'},
-             {"font-size": "30px",
-                 "color": "#000000",
-                  "border": "4px ridge #788C82",
-                   "padding": "20px",
-                    "background-image": "linear-gradient(90deg, rgb(11, 26, 91) 0%, rgb(0, 247, 255) 50%, rgb(2, 234, 255) 100%) ",
-               
-            }],
-             ["blank", "46px"],
-             ["display-text", function() { if(hasUpgrade('hm', 32)) return 'You have ' + format(player.ct.hatom) + ' Heavy Atoms'},
-                {"font-size": "30px",
-                    "color": "#000000",
-                    "border": "4px ridge #788C82",
-                    "padding": "20px",
-                    "background-image": "linear-gradient(90deg, rgb(34, 23, 23) 0%, rgb(44, 24, 24) 50%, rgb(46, 13, 13) 100%) ",
-               
-            }],
-            ["blank", "46px"],
-             ["display-text", function() { if(hasMilestone('b', 3)) return 'You have ' + format(player.ct.agenta) + ' Agenta'},
-             {"font-size": "30px",
-                 "color": "#000000",
-                "border": "4px ridge #788C82",
-                 "padding": "20px",
-                 "background-image": "linear-gradient(90deg, rgb(211, 60, 29) 0%, rgb(219, 84, 56) 50%, rgb(229, 46, 10)100%)",
-               
-            }],
-            ["blank", "46px"],
-             ["display-text", function() { if(hasUpgrade('n', 23)) return 'You have ' + format(player.ct.grandeu) + ' Grandeu'},
-             {"font-size": "30px",
-                 "color": "#000000",
-                "border": "4px ridge #788C82",
-                 "padding": "20px",
-                 "background-image": "linear-gradient(90deg, rgb(21, 175, 80) 0%, rgb(43, 201, 64) 50%, rgb(26, 191, 65)100%)",
-               
-            }],],
+            ["raw-html", () => {
+                let html = "<div style='width:600px; height:800px; overflow:auto;'>"
+                if(player.ct.hq.gte(1)) {
+                html += `<div style='font-size: 25px'>You have ${player.ct.hq} Hyper Quarks</div>`
+                }
+                if(player.ct.sdust.gte(1)) {
+                html += `<div style='font-size: 25px'>You have ${player.ct.sdust} Star Dust</div>`
+                }
+                if(player.ct.amult.gte(1)) {
+                html += `<div style='font-size: 25px'>You have ${player.ct.amult} Atomic Multiplier</div>`
+                }
+                if(player.ct.hatom.gte(1)) {
+                html += `<div style='font-size: 25px'>You have ${player.ct.hatom} Heavy Atoms</div>`
+                }
+                if(player.ct.stars.gte(1)) {
+                html += `<div style='font-size: 25px'>You have ${player.ct.stars} Stars</div>`
+                }
+                if(player.ct.agenta.gte(1)) {
+                html += `<div style='font-size: 25px'>You have ${player.ct.agenta} Agenta</div>`
+                }
+                if(player.ct.grandeu.gte(1)) {
+                html += `<div style='font-size: 25px'>You have ${player.ct.grandeu} Grandeu</div>`
+                }
+                if(player.ct.fire.gte(1)) {
+                html += `<div style='font-size: 25px'>You have ${player.ct.fire} Units of Fire</div>`
+                }
+                if(player.ct.bastion.gte(1)) {
+                html += `<div style='font-size: 25px'>You have ${player.ct.bastion} Bastions</div>`
+                }
+
+                // Continuation of fire chain, when we eventually make it
+
+                if(player.ct.bdust.gte(1)) {
+                html += `<div style='font-size: 25px'>You have ${player.ct.bdust} Black Dust</div>`
+                }
+                return html;
+            }
+                ]
+           
+            ,],
             
     },
       "Keeps": {
@@ -153,6 +156,11 @@ addLayer("ct", {
    ],
     
     },
+    "The Capsule": {
+        content: [
+            ["buyable", "666"]
+        ]
+    }
     
  },
   milestones: {
@@ -165,7 +173,7 @@ addLayer("ct", {
         requirementDescription: "Keep Level 2",
         effectDescription: "Keep Boracite keeps",
         done() { return hasMilestone('b', 1) },
-        effect() { player.c.permanentGeneration = true }
+        effect() { if(hasMilestone('b', 1)) player.c.permanentGeneration = true }
     },
    
  },
@@ -269,12 +277,21 @@ infoboxes: {
          unlocked() {
            return true
          },
+       buyMax() {
+            let costPerUnit1 = this.cost()[1]
+            let costPerUnit2 = this.cost()[0]
+            let max1 = player.c.points.div(costPerUnit1).floor()
+            let max2 = player.a.points.div(costPerUnit2).floor()
+            let max = Decimal.min(max1, max2).floor()
+           return [costPerUnit1, costPerUnit2, max]
+        },
         buy() {
-             
-            player.a.points = player.a.points.sub(this.cost()[1])
-            player.c.points = player.c.points.sub(this.cost()[0])
-            player.ct.sdust = player.ct.sdust.add(1)
-            setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+            let [costPerUnit1, costPerUnit2, max] = this.buyMax()
+            if (max.lt(1)) max = new Decimal(1)
+            player.c.points = player.c.points.sub(costPerUnit1.mul(max))
+            player.a.points = player.a.points.sub(costPerUnit2.mul(max))
+            player.ct.sdust = player.ct.sdust.add(max)
+            setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
         },
        style() {
             return {backgroundImage: this.canAfford()?"linear-gradient(90deg, rgb(91, 11, 11) 0%, rgb(93, 255, 171) 50%, rgb(11, 11, 128) 100%)":"linear-gradient(90deg, rgb(91, 11, 11) 0%, rgb(93, 255, 171) 50%, rgb(11, 11, 128) 100%)",
@@ -359,6 +376,9 @@ infoboxes: {
          unlocked() {
            return (getBuyableAmount('t', 34).gte(1)) || player.ct.stars > new Decimal(1)
          },
+        buyMax() {
+
+        },
         buy() {
             player.ct.sdust = player.ct.sdust.sub(this.cost())
           
@@ -455,7 +475,7 @@ infoboxes: {
          },
          effectDisplay() { return format(upgradeEffect(this.layer, this.id)) + "x" },
         canAfford() {
-            return player.hm.points.gte(this.cost()[0]) && player.a.points.gte(this.cost()[1])
+            return player.hm.points.gte(this.cost()[1]) && player.a.points.gte(this.cost()[0])
          },
          unlocked() {
            return (hasUpgrade('hm', 32))
@@ -554,11 +574,11 @@ infoboxes: {
     },
     19: {
         
-        cost(x) { return new Decimal(100).mul(x.plus(1))
+        cost(x) { return new Decimal(10).mul(x.plus(1))
              },
         title() { return "Grandeu" },
-        display() { return "A surplus of a fine judgement. Boost Tetra gain with this delicacy " +
-            "cost: " + format(this.cost()) + 
+        display() { return "A surplus of a fine judgement. Boost Tetra gain with this delicacy | " +
+            "Grandulum cost: " + format(this.cost()) + 
             " currently: " + format(buyableEffect(this.layer, this.id)) + "x"
          
          },
@@ -608,6 +628,377 @@ infoboxes: {
        
         
     },
+    20: {
+        
+        cost(x) { return new Decimal(5).mul(x.plus(1))
+             },
+        title() { return "Fire" },
+        display() { return "Burn Basalt to unlock the heat of all evil " +
+            "cost(Basalt): " + format(this.cost()) 
+            
+         
+         },
+         
+        
+        canAfford() {
+            return player.d.basalt.gte(this.cost())
+         },
+         unlocked() {
+           return (hasUpgrade('d', 24))
+         },
+          buyMax() {
+            let costPerUnit = this.cost()
+            
+            let max = player.d.basalt.div(costPerUnit).floor()
+            
+            
+           return [costPerUnit, max]
+        },
+        buy() {
+            let [costPerUnit, max] = this.buyMax()
+            if (max.lt(1)) max = new Decimal(1) 
+            player.d.basalt = player.d.basalt.sub(costPerUnit.mul(max))
+            
+            player.ct.fire = player.ct.fire.add(max)
+            setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
+        },
+       style() {
+            return {backgroundImage: this.canAfford()?"linear-gradient(90deg, rgb(221, 156, 25) 0%, rgb(206, 80, 7) 50%, rgb(226, 223, 7)100%)":"linear-gradient(90deg, rgb(221, 156, 25) 0%, rgb(206, 80, 7) 50%, rgb(226, 223, 7)100%)",
+            borderRadius: "0px", 
+            border: "4px ridge #797979",
+            fontSize: "16px",
+            padding: "20px",
+            width: "400px",
+            height: "150px",
+            backgroundSize: "800% 800%",
+            fontColor: "#000000",
+            
+            fontFamily: "Comic Sans",
+             animation: "rippleMove 20s ease infinite",
+             }
+       },
+       
+         
+       
+        
+    },
+    21: {
+        
+        cost(x) { return new Decimal(15).mul(x.plus(1))
+             },
+        title() { return "Bastions" },
+        display() { return "Combine basalt to create Bastions, the opposite of fire. Bastions boost dimensional points " +
+            "cost(Basalt): " + format(this.cost()) 
+            
+         
+         },
+         effect() {
+            return new Decimal(1).add(player.ct.bastion.mul(0.1))
+         },
+        
+        canAfford() {
+            return player.d.basalt.gte(this.cost())
+         },
+         unlocked() {
+           return (hasUpgrade('d', 29))
+         },
+          buyMax() {
+            let costPerUnit = this.cost()[0]
+            
+            let max = player.d.basalt.div(costPerUnit).floor()
+            
+            
+           return [costPerUnit, max]
+        },
+        buy() {
+            let [costPerUnit, max] = this.buyMax()
+            if (max.lt(1)) max = new Decimal(1)
+            player.d.basalt = player.d.basalt.sub(costPerUnit.mul(max))
+            
+            player.ct.bastion = player.ct.bastion.add(max)
+            setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
+        },
+       style() {
+            return {backgroundImage: this.canAfford()?"linear-gradient(90deg, rgb(49, 45, 37) 0%, rgb(65, 48, 38) 50%, rgb(128, 127, 100)100%)":"linear-gradient(90deg, rgb(49, 45, 37) 0%, rgb(65, 48, 38) 50%, rgb(128, 127, 100)100%)",
+            borderRadius: "0px", 
+            border: "4px ridge #797979",
+            fontSize: "16px",
+            padding: "20px",
+            width: "400px",
+            height: "150px",
+            backgroundSize: "800% 800%",
+            fontColor: "#000000",
+            
+            fontFamily: "Comic Sans",
+             animation: "rippleMove 20s ease infinite",
+             }
+       },
+       
+         
+       
+        
+    },
+    22: {
+        
+        cost(x) { 
+            let y = player.ct.bdust
+            return [new Decimal(5).mul(y.plus(1)), new Decimal(750).mul(y.plus(1)), new Decimal(1e9).mul(y.plus(1))]
+             },
+        title() { return "Black Dust" },
+        display() { return "Combine Nissionite, Boracite, and Cosmic Dust for Black Dust... a very, very interesting material | " +
+            "cost(Nissionite): " + format(this.cost()[0]) + " | cost(Boracite): " + format(this.cost()[1]) + " | cost(Cosmic Dust): "
+            + format(this.cost()[2]) + " | Effect: " + format(player[this.layer].bdustEffect1()) + "x -  boracite, cosmic dust, heavy multiplier + "
+            + format(player[this.layer].bdustEffect2()) + "x - to particles"
+            
+         
+         },
+         
+        
+        canAfford() {
+            return player.n.points.gte(this.cost()[0]) && player.b.points.gte(this.cost()[1]) && player.c.points.gte(this.cost()[2])
+         },
+         unlocked() {
+            let unlocked = false
+            if(player.n.points.gte(20)) unlocked = true
+            return unlocked
+         },
+         
+         
+          buyMax() {
+            let costPerUnit = this.cost()[0]
+            let max = player.n.points.div(costPerUnit).floor()
+            
+            let costPerUnit2 = this.cost()[1]
+            let max2 = player.b.points.div(costPerUnit2).floor()
+
+            let costPerUnit3 = this.cost()[2]
+            let max3 = player.c.points.div(costPerUnit3).floor()
+
+            let trueMax = Decimal.min(max3, Decimal.min(max, max2))
+            return [costPerUnit, costPerUnit2, costPerUnit3, trueMax]
+        },
+        buy() {
+            let [costPerUnit, costPerUnit2, costPerUnit3, trueMax] = this.buyMax()
+            if (trueMax.lt(1)) trueMax = new Decimal(1)
+            player.n.points = player.n.points.sub(costPerUnit.mul(trueMax))
+            player.b.points = player.b.points.sub(costPerUnit2.mul(trueMax))
+            player.c.points = player.c.points.sub(costPerUnit3.mul(trueMax))
+            
+            player.ct.bdust = player.ct.bdust.add(trueMax)
+            setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(trueMax))
+        },
+       style() {
+            return {backgroundImage:"linear-gradient(90deg, rgb(18, 20, 20) 0%, rgb(13, 18, 19) 50%,rgb(13, 13, 22)100%)",
+            borderRadius: "0px", 
+            border: "4px ridge #797979",
+            fontSize: "16px",
+            padding: "20px",
+            width: "400px",
+            height: "185px",
+            backgroundSize: "800% 800%",
+            color: "#817878",
+            
+            fontFamily: "Comic Sans",
+             animation: "rippleMove 20s ease infinite",
+             }
+       },
+       
+         
+       
+        
+    },
+    23: {
+        
+        cost(x) { 
+            let y = player.ct.bdust
+            return [new Decimal(15).mul(y.plus(1)), new Decimal(1500).mul(y.plus(1)), new Decimal(1e10).mul(y.plus(1))]
+             },
+        title() { return "Black Knife" },
+        display() { return "Combine Nissionite, Boracite, and Cosmic Dust for Black Dust... a very, very interesting material | " +
+            "cost(Nissionite): " + format(this.cost()[0]) + " | cost(Boracite): " + format(this.cost()[1]) + " | cost(Cosmic Dust): "
+            + format(this.cost()[2]) + " | Effect: " + format(player[this.layer].bdustEffect1()) + "x -  boracite, cosmic dust, heavy multiplier + "
+            + format(player[this.layer].bdustEffect2()) + "x - to particles"
+            
+         
+         },
+         
+        
+        canAfford() {
+            return false
+         },
+         unlocked() {
+            let unlocked = false
+            if(player.ct.bdust.gte(20)) unlocked = true
+            return unlocked
+         },
+         
+         
+          buyMax() {
+            let costPerUnit = this.cost()[0]
+            let max = player.n.points.div(costPerUnit).floor()
+            
+            let costPerUnit2 = this.cost()[1]
+            let max2 = player.b.points.div(costPerUnit2).floor()
+
+            let costPerUnit3 = this.cost()[2]
+            let max3 = player.c.points.div(costPerUnit3).floor()
+
+            let trueMax = Decimal.min(max3, Decimal.min(max, max2))
+            return [costPerUnit, costPerUnit2, costPerUnit3, trueMax]
+        },
+        buy() {
+            let [costPerUnit, costPerUnit2, costPerUnit3, trueMax] = this.buyMax()
+            if (trueMax.lt(1)) trueMax = new Decimal(1)
+            player.n.points = player.n.points.sub(costPerUnit.mul(trueMax))
+            player.b.points = player.b.points.sub(costPerUnit2.mul(trueMax))
+            player.c.points = player.c.points.sub(costPerUnit3.mul(trueMax))
+            
+            player.ct.bdust = player.ct.bdust.add(trueMax)
+            setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(trueMax))
+        },
+       style() {
+            return {backgroundImage:"linear-gradient(90deg, rgb(18, 20, 20) 0%, rgb(13, 18, 19) 50%,rgb(13, 13, 22)100%)",
+            borderRadius: "0px", 
+            border: "4px ridge #797979",
+            fontSize: "16px",
+            padding: "20px",
+            width: "400px",
+            height: "185px",
+            backgroundSize: "800% 800%",
+            color: "#817878",
+            
+            fontFamily: "Comic Sans",
+             animation: "rippleMove 20s ease infinite",
+             }
+       },
+       
+         
+       
+        
+    },
+    24: {
+        // Make later
+        cost(x) { 
+            let y = player.ct.bdust
+            return [new Decimal(15).mul(y.plus(1)), new Decimal(1500).mul(y.plus(1)), new Decimal(1e10).mul(y.plus(1))]
+             },
+        title() { return "Vortex Dust" },
+        display() { return "Combine Nissionite, Boracite, and Cosmic Dust for Black Dust... a very, very interesting material | " +
+            "cost(Nissionite): " + format(this.cost()[0]) + " | cost(Boracite): " + format(this.cost()[1]) + " | cost(Cosmic Dust): "
+            + format(this.cost()[2]) + " | Effect: " + format(player[this.layer].bdustEffect1()) + "x -  boracite, cosmic dust, heavy multiplier + "
+            + format(player[this.layer].bdustEffect2()) + "x - to particles"
+            
+         
+         },
+         
+        
+        canAfford() {
+            return false
+         },
+         unlocked() {
+            let unlocked = false
+            if(player.ct.bdust.gte(1)) unlocked = true
+            return unlocked
+         },
+         
+         
+          buyMax() {
+            let costPerUnit = this.cost()[0]
+            let max = player.n.points.div(costPerUnit).floor()
+            
+            let costPerUnit2 = this.cost()[1]
+            let max2 = player.b.points.div(costPerUnit2).floor()
+
+            let costPerUnit3 = this.cost()[2]
+            let max3 = player.c.points.div(costPerUnit3).floor()
+
+            let trueMax = Decimal.min(max3, Decimal.min(max, max2))
+            return [costPerUnit, costPerUnit2, costPerUnit3, trueMax]
+        },
+        buy() {
+            let [costPerUnit, costPerUnit2, costPerUnit3, trueMax] = this.buyMax()
+            if (trueMax.lt(1)) trueMax = new Decimal(1)
+            player.n.points = player.n.points.sub(costPerUnit.mul(trueMax))
+            player.b.points = player.b.points.sub(costPerUnit2.mul(trueMax))
+            player.c.points = player.c.points.sub(costPerUnit3.mul(trueMax))
+            
+            player.ct.bdust = player.ct.bdust.add(trueMax)
+            setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(trueMax))
+        },
+       style() {
+            return {backgroundImage:"linear-gradient(90deg, rgb(18, 20, 20) 0%, rgb(13, 18, 19) 50%,rgb(13, 13, 22)100%)",
+            borderRadius: "0px", 
+            border: "4px ridge #797979",
+            fontSize: "16px",
+            padding: "20px",
+            width: "400px",
+            height: "185px",
+            backgroundSize: "800% 800%",
+            color: "#817878",
+            
+            fontFamily: "Comic Sans",
+             animation: "rippleMove 20s ease infinite",
+             }
+       },
+       
+         
+       
+        
+    },
+     25: {
+        
+        cost(x) { 
+            let y = player.ct.nuke
+            return [new Decimal(40), new Decimal(10), new Decimal(1), new Decimal(200), new Decimal(7), new Decimal(1e14)]
+             },
+        title() { return "Nukes" },
+        display() { return "cost(Units of Fire): " + format(this.cost()[0]) + " | cost(Bombs): " + format(this.cost()[1]) + " | cost(Mecha Bombs): "
+            + format(this.cost()[2]) + " | cost(mechanical multiplier): " + format(this.cost()[3]) + " | cost(black dust): " + format(this.cost()[4]) +
+            " | cost(Atoms): " + format(this.cost()[5])
+            
+         
+         },
+         
+        purchaseLimit: new Decimal(1),
+        canAfford() {
+            return player.ct.fire.gte(this.cost()[0]) && player.chm.bomb.gte(this.cost()[1]) && player.chm.mechanicalBomb.gte(this.cost()[2])
+            && player.chm.points.gte(this.cost()[3]) && player.ct.bdust.gte(this.cost()[4]) && player.a.points.gte(this.cost()[5])    },
+         unlocked() {
+            return hasChallenge('d', 17)
+         },
+        buy() {
+            player.ct.fire = player.ct.fire.sub(this.cost()[0])
+            player.chm.bomb = player.chm.bomb.sub(this.cost()[1])
+            player.chm.mechanicalBomb = player.chm.mechanicalBomb.sub(this.cost()[2])
+            player.chm.points = player.chm.points.sub(this.cost()[3])
+            player.ct.bdust = player.ct.bdust.sub(this.cost()[4])
+            player.a.points = player.a.points.sub(this.cost()[5])
+            
+            pkayer.ct.nuke = player.ct.nuke.add(1)
+            setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+        },
+       style() {
+            return {backgroundColor: "Yellow",
+            borderRadius: "0px", 
+            border: "4px ridge #797979",
+            fontSize: "16px",
+            padding: "20px",
+            width: "400px",
+            height: "185px",
+            backgroundSize: "800% 800%",
+            color: "#817878",
+            
+            fontFamily: "Comic Sans",
+             animation: "rippleMove 20s ease infinite",
+             }
+       },
+       
+         
+       
+        
+    },
+    
+    
     
 },
 

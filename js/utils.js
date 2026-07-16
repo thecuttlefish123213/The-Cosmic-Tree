@@ -431,29 +431,536 @@ function gridRun(layer, func, data, id) {
 		return layers[layer].grid[func];
 }
 
+// Minigames
+const correctSequence = ["cyan", "yellow", "violet", "blue", "orange", "green", "black"];
+
+let gameBegun = false;
+let gameOver = false;
+let squareRecordingPlaying = false;
+let squareMusicPlaying = false;
+
+let clicked = {
+			cyanClicked: false,
+			yellowClicked: false,
+			violetClicked: false,
+			blueClicked: false,
+			orangeClicked: false,
+			greenClicked: false,
+			blackClicked: false
+		}
+
+function initiateSquareGame() {
+	// Square minigame(Dimensions)
+	var recording = document.getElementById("colorRecording")
+	var music = document.getElementById("flowermanlyrics");
+	
+	gameBegun = true;
+	if(gameBegun && !player.d.squareGameCompleted) {
+	squareRecordingPlaying = true;
+	
+	if(squareRecordingPlaying) {
+		recording.play();
+	}
+	if(squareMusicPlaying) {
+		music.pause();
+	}
+	recording.addEventListener("ended", function() {
+		squareRecordingPlaying = false;
+		squareMusicPlaying = true;
+		updateMusicDisplay()
+		if(squareMusicPlaying) {
+		music.play();
+		randomizedMovement();
+	}
+	
+	})
+	
+	} else {
+		music.pause();
+		let squares = {
+		cyan: document.getElementById("cyan"),
+		yellow: document.getElementById("yellow"),
+		violet: document.getElementById("purple"),
+		blue: document.getElementById("blue"),
+		orange: document.getElementById("orange"),
+		green: document.getElementById("green"),
+		black: document.getElementById("black"),
+		red: document.getElementById("red")
+		}
+
+		squares.cyan.style.backgroundColor = "lightgreen";
+		squares.yellow.style.backgroundColor = "lightgreen";
+		squares.violet.style.backgroundColor = "lightgreen";
+		squares.blue.style.backgroundColor = "lightgreen";
+		squares.orange.style.backgroundColor = "lightgreen";
+		squares.green.style.backgroundColor = "lightgreen";
+		squares.black.style.backgroundColor = "lightgreen";
+		squares.red.style.backgroundColor = "lightgreen";
+		gameBegun = false;
+		return;
+	}
+	
+}
+function wait(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+async function randomizedMovement() {
+	while(gameBegun) {
+		if(gameOver) {
+			break;
+		}
+		let squares = {
+		cyan: document.getElementById("cyan"),
+		yellow: document.getElementById("yellow"),
+		violet: document.getElementById("purple"),
+		blue: document.getElementById("blue"),
+		orange: document.getElementById("orange"),
+		green: document.getElementById("green"),
+		black: document.getElementById("black")
+		}
+		let colors = ["cyan", "yellow", "purple", "blue", "orange", "green"];
+		let randomIndices = {
+			x1: Math.floor(Math.random() * 6),
+			x2: Math.floor(Math.random() * 6),
+			x3: Math.floor(Math.random() * 6),
+			x4: Math.floor(Math.random() * 6),
+			x5: Math.floor(Math.random() * 6),
+			x6: Math.floor(Math.random() * 6),
+			
+		}
+		squares.cyan.style.backgroundColor = colors[randomIndices.x1];
+		squares.yellow.style.backgroundColor = colors[randomIndices.x2];
+		squares.violet.style.backgroundColor = colors[randomIndices.x3];
+		squares.blue.style.backgroundColor = colors[randomIndices.x4];
+		squares.orange.style.backgroundColor = colors[randomIndices.x5];
+		squares.green.style.backgroundColor = colors[randomIndices.x6];
+		
+		
+		await wait(1400); 
+	}
+}
+function cyanSquare() {
+	var wrongSound = document.getElementById("wrongSound");
+	if(gameBegun) {
+		clicked.cyanClicked = true;
+	}
+}
+function yellowSquare() {
+	var wrongSound = document.getElementById("wrongSound");
+	if(gameBegun&&clicked.cyanClicked) {
+		clicked.yellowClicked = true;
+	} else {
+		wrongSound.play();
+		clicked.cyanClicked = false;
+	}
+}
+function purpleSquare() {
+	var wrongSound = document.getElementById("wrongSound");
+	if(gameBegun&&clicked.cyanClicked&&clicked.yellowClicked) {
+		clicked.violetClicked = true;
+	} else {
+		wrongSound.play();
+		clicked.cyanClicked = false;
+		clicked.yellowClicked = false;
+	}
+}
+function blueSquare() {
+	var wrongSound = document.getElementById("wrongSound");
+	if(gameBegun&&clicked.cyanClicked&&clicked.yellowClicked&&clicked.violetClicked) {
+		clicked.blueClicked = true;
+	} else {
+		wrongSound.play();
+		clicked.cyanClicked = false;
+		clicked.yellowClicked = false;
+		clicked.violetClicked = false;
+	}
+}
+function orangeSquare() {
+	var wrongSound = document.getElementById("wrongSound");
+	if(gameBegun&&clicked.cyanClicked&&clicked.yellowClicked&&clicked.violetClicked&&clicked.blueClicked) {
+		clicked.orangeClicked = true;
+	} else {
+		wrongSound.play();
+		clicked.cyanClicked = false;
+		clicked.yellowClicked = false;
+		clicked.violetClicked = false;
+		clicked.blueClicked = false;
+	}
+}
+function greenSquare() {
+	var wrongSound = document.getElementById("wrongSound");
+	if(gameBegun&&clicked.cyanClicked&&clicked.yellowClicked&&clicked.violetClicked&&clicked.blueClicked&&clicked.orangeClicked) {
+		clicked.greenClicked = true;
+	} else {
+		wrongSound.play();
+		clicked.cyanClicked = false;
+		clicked.yellowClicked = false;
+		clicked.violetClicked = false;
+		clicked.blueClicked = false;
+		clicked.orangeClicked = false;
+	}
+}
+function blackSquare() {
+	var wrongSound = document.getElementById("wrongSound");
+	if(gameBegun&&clicked.cyanClicked&&clicked.yellowClicked&&clicked.violetClicked&&clicked.blueClicked&&clicked.orangeClicked&&clicked.greenClicked) {
+		clicked.blackClicked = true;
+		squareGameProcessed();
+	} else {
+		wrongSound.play();
+		clicked.cyanClicked = false;
+		clicked.yellowClicked = false;
+		clicked.violetClicked = false;
+		clicked.blueClicked = false;
+		clicked.orangeClicked = false;
+		clicked.greenClicked = false;
+	}
+}
+function squareGameProcessed() {
+	let squares = {
+		cyan: document.getElementById("cyan"),
+		yellow: document.getElementById("yellow"),
+		violet: document.getElementById("purple"),
+		blue: document.getElementById("blue"),
+		orange: document.getElementById("orange"),
+		green: document.getElementById("green"),
+		black: document.getElementById("black")
+		}
+	if(gameBegun) {
+		if(clicked.cyanClicked&&clicked.yellowClicked&&clicked.violetClicked&&clicked.blueClicked&&clicked.orangeClicked&&clicked.greenClicked&&clicked.blackClicked) {
+			
+			squareRecordingPlaying = false;
+			sqaureMusicPlaying = false;
+			player.d.squareGameCompleted = true;
+			initiateSquareGame();
+		}
+		
+	}
+}
+
+// Cosmic Quiz
+const questions = [
+    {
+        question: "Who made this quiz?",
+        answer: "Stylinage"
+    },
+    {
+        question: "What color are these squares?",
+        answer: "lightblue"
+    },
+    {
+        question: "Who made TMT?",
+        answer: "Acamaeda"
+    },
+    {
+        question: "Who made The Prestige Tree?",
+        answer: "Jacorb"
+    },
+    {
+        question: "Who invented gravity?",
+        answer: "Newton"
+    },
+    {
+        question: "Who criticized Athenian officials?",
+        answer: "Socrates"
+    },
+    {
+        question: "Who figured we are geocentric?",
+        answer: "Aristotle"
+    },
+    {
+        question: "Who is The Demon?",
+        answer: "You"
+    },
+    {
+        question: "Who corrupted The Cosmos?",
+        answer: "Us"
+    }
+]
+const pAnswers = [
+	["Stylinage","Acamaeda","Flame","Jacorb"],
+	["cyan","turqoise","lightblue","indigo"],
+	["Me","Stylinage","Flame","Acamaeda"],
+	["You","Stylinage","Acamaeda","Jacorb"],
+	["Newton","Einstein","Oppenheimer","Socrates"],
+	["Plato","Hesiod","Socrates","Pericles"],
+	["Copernicus","Tao","Aristotle","Socrates"],
+	["You","You","You","You"],
+	["Us","Us","Us","Us"]
+]
+let quizBegun = false;
+let quizOver = false;
+let quizMusicPlaying = false;
+let questionCount = 0;
+let quizfailed = false;
+let hillPlaying = false;
+// Earth
+function end() {
+	if(player.ct.nuke.gte(1)) {
+	let bLight = document.getElementById("blindingLight")
+	bLight.style.display = "block"
+	player.d.earthNuked = true;
+	var explosion = document.getElementById("explosion")
+	explosion.play()
+	destruction()
+	bLight.style.display = "none"
+	}
+}
+function destruction() {
+	var HILL = document.getElementById("HILL")
+	hillPlaying = true;
+	HILL.play()
+	updateMusicDisplay()
+	toggleMusic()
+	let demon = document.getElementById("DemonEmblem")
+	demon.style.display = "block"
+	
+
+	if(player.d.earthNuked) {
+		player.ct.nuke = new Decimal(0)
+		hillPlaying = false;
+		HILL.pause()
+		updateMusicDisplay()
+		
+		demon.style.display = "none"
+		let earth = document.getElementById("Earth")
+		earth.style.display = "none"
+	}
+	
+}
+function challengeExit() {
+	var HILL = document.getElementById("HILL")
+	hillPlaying = false;
+	HILL.pause()
+	updateMusicDisplay()
+	let demon = document.getElementById("DemonEmblem")
+	demon.style.display = "none"
+}
+// Earth
+function initiateQuiz() {		
+	if(questionCount == 10) {
+		hillPlaying = false;
+		HILL.pause()
+		player.d.cosmicQuizCompleted = true
+		questionSquare.style.backgroundColor = "lightgreen"
+		answerSquare1.style.backgroundColor = "lightgreen"
+		answerSquare2.style.backgroundColor = "lightgreen"
+		answerSquare3.style.backgroundColor = "lightgreen"
+		answerSquare4.style.backgroundColor = "lightgreen"
+		let demon = document.getElementById("DemonEmblem")
+		demon.style.display = "none"
+	} 
+	let questionSquare = document.getElementById("quizIntro")
+	let answerSquare1 = document.getElementById("answerButtonQ1")
+	let answerSquare2 = document.getElementById("answerButtonQ2")
+	let answerSquare3 = document.getElementById("answerButtonQ3")
+	let answerSquare4 = document.getElementById("answerButtonQ4")
+	if(player.d.cosmicQuizCompleted) {
+		questionSquare.style.backgroundColor = "lightgreen"
+		answerSquare1.style.backgroundColor = "lightgreen"
+		answerSquare2.style.backgroundColor = "lightgreen"
+		answerSquare3.style.backgroundColor = "lightgreen"
+		answerSquare4.style.backgroundColor = "lightgreen"
+		quizBegun = false;
+		return;
+	}
+	var HILL = document.getElementById("HILL")
+	HILL.pause()
+	quizBegun = true;
+	quizMusicPlaying = true;
+	updateMusicDisplay()
+	toggleMusic()
+	var music = document.getElementById("recycling")
+	
+	let startButton = document.getElementById("startButtonQ")
+	let questionButton = document.getElementById("quizIntro")
+	
+	if(quizBegun) {
+		
+		
+		if(quizMusicPlaying) {
+			music.play()
+		}
+		startButton.style.display = "none";
+	}
+	questionCount = 1;
+	
+	if(questionCount == 1 || quizfailed) {
+		questionSquare.innerText = questions[0].question
+
+		const numbers = [0,1,2,3]
+		const shuffled = [...numbers].sort(() => Math.random() - 0.5);
+
+		answerSquare1.innerText = pAnswers[0][shuffled[0]]
+		answerSquare2.innerText = pAnswers[0][shuffled[1]]
+		answerSquare3.innerText = pAnswers[0][shuffled[2]]
+		answerSquare4.innerText = pAnswers[0][shuffled[3]]
+
+		quizfailed = false;
+	}
+}
+
+function quizConfiguration() {
+	var music = document.getElementById("recycling")
+	var HILL = document.getElementById("HILL")
+	if(quizBegun) {
+	let questionSquare = document.getElementById("quizIntro")
+	let answerSquare1 = document.getElementById("answerButtonQ1")
+	let answerSquare2 = document.getElementById("answerButtonQ2")
+	let answerSquare3 = document.getElementById("answerButtonQ3")
+	let answerSquare4 = document.getElementById("answerButtonQ4")
+	if(questionCount == 10) {
+		hillPlaying = false;
+		HILL.pause()
+		player.d.cosmicQuizCompleted = true
+		questionSquare.style.backgroundColor = "lightgreen"
+		answerSquare1.style.backgroundColor = "lightgreen"
+		answerSquare2.style.backgroundColor = "lightgreen"
+		answerSquare3.style.backgroundColor = "lightgreen"
+		answerSquare4.style.backgroundColor = "lightgreen"
+		let demon = document.getElementById("DemonEmblem")
+		demon.style.display = "none"
+		quizBegun = false;
+	} 
+	
+	questionSquare.innerText = questions[questionCount-1].question
+
+	const numbers = [0,1,2,3]
+	const shuffled = [...numbers].sort(() => Math.random() - 0.5);
+
+	answerSquare1.innerText = pAnswers[questionCount-1][shuffled[0]]
+	answerSquare2.innerText = pAnswers[questionCount-1][shuffled[1]]
+	answerSquare3.innerText = pAnswers[questionCount-1][shuffled[2]]
+	answerSquare4.innerText = pAnswers[questionCount-1][shuffled[3]]	
+	
+	if(questionCount >= 8) {
+		questionSquare.style.backgroundColor = "darkred"
+		answerSquare1.style.backgroundColor = "darkred"
+		answerSquare2.style.backgroundColor = "darkred"
+		answerSquare3.style.backgroundColor = "darkred"
+		answerSquare4.style.backgroundColor = "darkred"
+		let demon = document.getElementById("DemonEmblem")
+		demon.style.display = "block"
+		music.pause()
+		HILL.play()
+		hillPlaying = true;
+	}
+	
+	}
+}
+
+function processQuiz1() {
+	
+	let answerSquare1 = document.getElementById("answerButtonQ1")
+	if(quizBegun) {
+		if(questions[questionCount-1].answer == answerSquare1.innerText) {
+			questionCount += 1;
+			quizConfiguration()
+		}
+		else {
+		quizfailed = true;
+		initiateQuiz()
+		}
+	}
+	
+}
+function processQuiz2() {
+	
+	let answerSquare2 = document.getElementById("answerButtonQ2")
+	if(quizBegun) {
+		if(questions[questionCount-1].answer == answerSquare2.innerText) {
+			questionCount += 1;
+			quizConfiguration()
+		}
+		else {
+		quizfailed = true;
+		initiateQuiz()
+		}
+	}
+	
+}
+function processQuiz3() {
+	
+	let answerSquare3 = document.getElementById("answerButtonQ3")
+	if(quizBegun) {
+		if(questions[questionCount-1].answer == answerSquare3.innerText) {
+			questionCount += 1;
+			quizConfiguration()
+		} else {
+		quizfailed = true;
+		initiateQuiz()
+		}
+	}
+	
+}
+function processQuiz4() {
+	
+	let answerSquare4 = document.getElementById("answerButtonQ4")
+	if(quizBegun) {
+		if(questions[questionCount-1].answer == answerSquare4.innerText) {
+			questionCount += 1
+			quizConfiguration()
+		} else {
+		quizfailed = true;
+		initiateQuiz()
+		}
+	}
+	
+}
 // music controls
 var musicPlay = false;
 var trackIndex = 0;
-var trackIds = ['cosmic', 'bgm','ruine', 'mother', 'spear', 'hammer'];
+var trackIds = ['whobe', 'sevensuns', 'bgm','ruine', 'mother', 'spear', 'hammer', 'flowerman'];
+var trackNames = ['Who Might You Be?', 'Sunset of The Seven Suns', 'Theory of Everything 2', 'Ruined Ridge', "A Mother's Love", "Spear of Justice", "Hammer of Justice", "Flowerman"]
 var currentAudio;
-
+var currentTrack;
 function getCurrentAudio() {
     if (!currentAudio) {
         currentAudio = document.getElementById(trackIds[trackIndex]);
     }
+	updateMusicDisplay()
     return currentAudio;
 }
-
+function updateMusicDisplay() {
+    const musicDisplay = document.getElementById("NewsOutlet");
+    if (musicDisplay) {
+		if(squareMusicPlaying) {
+			musicDisplay.innerText = 'Currently Playing: Flowerman with lyrics'
+		}
+		else {musicDisplay.innerText = `Currently Playing: ${trackNames[trackIndex]}`}
+		if(quizMusicPlaying) {
+			musicDisplay.innerText = 'Currently Playing: Inappropiate Recycling'
+		}
+		else {musicDisplay.innerText = `Currently Playing: ${trackNames[trackIndex]}`}
+		if(hillPlaying) {
+			musicDisplay.innerText = 'Currently Playing: HILL'
+		}
+        else {musicDisplay.innerText = `Currently Playing: ${trackNames[trackIndex]}`}
+    }
+	
+}
 function toggleMusic() {
     let audioEl = getCurrentAudio();
     if (!audioEl) return;
-
+	if((squareRecordingPlaying || squareMusicPlaying) && gameBegun) {
+		audioEl.pause()
+		return;
+	}
+	if(quizMusicPlaying && quizBegun) {
+		audioEl.pause();
+		return;
+	}
+	if(hillPlaying) {
+		audioEl.pause()
+		return;
+	}
     if (musicPlay) {
         audioEl.pause();
     } else {
         audioEl.play();
     }
+	
     musicPlay = !musicPlay;
+	updateMusicDisplay()
 }
 
 function skipTrack() {
@@ -467,6 +974,7 @@ function skipTrack() {
         if (oldAudio) oldAudio.pause();
         if (currentAudio) currentAudio.play();
     }
+	updateMusicDisplay()
 }
 
 function addText(id) {
@@ -490,12 +998,16 @@ function addText(id) {
 			tab.style.fontWeight = "bold";
 			break;
         case "Music":
-            tab.innerHTML = `Tracks: Main,The Cosmic Theme by freesound_community;<br>
+            tab.innerHTML = `Tracks: Main, Shelter Cove by me;<br>
 			1, DJ-NATE Theory of Everything 2;<br> 
 			2, MHXX ruined ridge;<br> 
 			3, MasterSwordRemix A Mother's love; <br>
 			4, Toby Fox Spear of Justice;<br>
 			5, Toby Fox Hammer of Justice;<br> 
+			6, Toby Fox Flower Man;<br>
+			7, Toby Fox Sunset of The Seven Suns;<br>
+			Square Minigame: Toby Fox-Nongagos Flower Man with lyrics;<br>
+			Cosmic Quiz: Toby Fox: Innapropiate Recycling, Sonic.exe - HILL theme;<br>
 			Simply click on the red music note to enable or mute, and the blue play button to skip tracks`;
              tab.style.fontSize = "26px";
 			tab.style.fontWeight = "bold";

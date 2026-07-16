@@ -27,22 +27,29 @@ addLayer("v", {
         mult = new Decimal(1)
         if(buyableEffect('ce', 14)) mult = mult.times(buyableEffect('ce', 14))
          if(player.ct.stars.gte(1)) mult = mult.times(buyableEffect('ct', 15))
-        if(hasUpgrade('mm', 11)) mult = mult.times(3)
+        
          if (getBuyableAmount('t', 14).gte(1)) mult = mult.times(buyableEffect('t', 14))
         if (getBuyableAmount('t', 41).gte(1)) mult = mult.times(buyableEffect('t', 41))
         if(getBuyableAmount('ct', 14).gte(1)) mult = mult.times(buyableEffect('ct', 14))
          if(getBuyableAmount('ce', 107).gte(1)) mult = mult.times(buyableEffect("ce", 107))
-        if(hasUpgrade('mm', 13)) mult = mult.times(7)
-        if(hasUpgrade('mm', 22)) mult = mult.times(upgradeEffect('mm', 22))
-        if(getBuyableAmount('mm', 13).gte(1)) mult = mult.times(buyableEffect('mm', 13))
-        if(challengeCompletions('n', 11) >= 1) mult = mult.times(challengeEffect('n', 11))
+        
         if(inChallenge('t', 11)) {
 
         } else {
               if(hasUpgrade('a', 23)) mult = mult.times(2)
         }
+        if(inChallenge('d', 14)) {
+            return mult;
+        } else {
+        if(hasUpgrade('mm', 13)) mult = mult.times(7)
+        if(hasUpgrade('mm', 22)) mult = mult.times(upgradeEffect('mm', 22))
+        if(getBuyableAmount('mm', 13).gte(1)) mult = mult.times(buyableEffect('mm', 13))
+        if(challengeCompletions('n', 11) >= 1) mult = mult.times(challengeEffect('n', 11))
+        if(hasUpgrade('mm', 11)) mult = mult.times(3)
+        }
         if(player.b.Voidstone.gte(1)) mult = mult.times(player.b.voidstoneMultiplier())   
         if(hasUpgrade('d', 12)) mult = mult.times(100)
+        if(hasUpgrade('d', 46)) mult = mult.times(10)
         return mult
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
@@ -140,6 +147,9 @@ buyables: {
             return (hasUpgrade('v', 16))
         },
         effect(x) {
+            if(inChallenge('d', 14)) {
+            return new Decimal(2).mul(x)
+            } 
             if(getBuyableAmount('mm', 12).gte(1)) {
                 return new Decimal(2).mul(x).mul(buyableEffect('mm', 12))
             }

@@ -76,8 +76,14 @@ addLayer("a", {
           
         }
           if(player.b.Realgar.gte(1)) mult = mult.times(player.b.realgarMultiplier())   
-        if(hasUpgrade('n', 12)) mult = mult.times(3)
+        
         mult = mult.times(player.b.kessiumMultiplier())
+        if(inChallenge('d', 14)) {
+            return mult;
+        } else {
+            if(hasUpgrade('n', 12)) mult = mult.times(3)
+        }
+        if(hasUpgrade('d', 44)) mult = mult.times(1e12)
         return mult
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
@@ -284,7 +290,7 @@ challenges: {
         goalDescription: "Obtain 1e9 points",
         canComplete: function() {return player.points.gte(1e9)},
         unlocked() {
-            return (player.c.unlocked4.gte(1) || player.a.aChallengeUnlocked == true)
+            return player.a.points.gte(100000)
         },
         completionLimit: 1,
         rewardDescription: "Atoms now boost multiplier",

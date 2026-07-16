@@ -10,7 +10,7 @@ addLayer("o", {
        
     }},
     color: "#ff5100", // eventually a linear gradient
-  requires: new Decimal(150), 
+  requires: new Decimal(15000), 
     resource: "Organs", // Name of prestige currency
     baseResource: "Blood Cells", // Name of resource prestige is based on
     baseAmount() {return player.ce.bloodcells}, // Get the current amount of baseResource

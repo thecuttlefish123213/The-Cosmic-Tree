@@ -328,6 +328,48 @@ addLayer("ach", {
        
         
     },
+    82: {
+        name: "Dynasty of the Cosmos",
+        done() {return player.d.points.gte(1)},
+        tooltip: "Spacetime itself is tearing at the immense increments you hold",
+       
+        
+    },
+    83: {
+        name: "Retaliation of the Cosmos",
+        done() {return hasChallenge('d', 13)},
+        tooltip: "Spacetime strikes back!",
+       
+        
+    },
+    84: {
+        name: "Reign of the Primates",
+        done() {return hasChallenge('d', 13)},
+        tooltip: "Sage of logic: Socrates",
+       
+        
+    },
+    85: {
+        name: "The Demon's Tail",
+        done() {return hasChallenge('d', 15)},
+        tooltip: "The Demon's Tail begins to tear apart the Cosmos...",
+        style() {
+            if(this.done()) {
+                return {
+                    "background-color": "black",
+                    "font-color": "white",
+                }
+            }
+        }
+        
+    },
+     86: {
+        name: "End of Humanity",
+        done() {return hasChallenge('d', 18)},
+        tooltip: "They're gone... but you were never human to begin with",
+       
+        
+    },
 
     
     

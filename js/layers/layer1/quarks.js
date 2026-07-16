@@ -228,7 +228,9 @@ infoboxes: {
         description: "Particles boost particles",
         cost: new Decimal(10),
         effect() {
-             if(inChallenge("a", 11)) return new Decimal(1)
+            
+            if(hasUpgrade('d', 38)) return player.points.add(1).pow(0.30)
+            if(inChallenge("a", 11)) return new Decimal(1)
              else return player.points.add(1).pow(0.20)
         },
         effectDisplay() {

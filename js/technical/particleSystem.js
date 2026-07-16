@@ -103,6 +103,15 @@ const snowflake = {
             layer: "n",
             onClick() {
                 player.n.fragments = player.n.fragments.plus(player.n.fragMultiplier())
+                if(hasUpgrade('d', 19)) {
+                    let chance = Math.floor(Math.random() * 100)
+                    if (chance < 20) { 
+                        if(getBuyableAmount('d', 20).gte(1)) {
+                            player.d.polymetrics = player.d.polymetrics.plus(50).plus(buyableEffect('d', 20))
+                        }
+                        else {player.d.polymetrics = player.d.polymetrics.plus(50)}
+                    }
+                }
                 Vue.delete(particles, this.id)
             },
         }

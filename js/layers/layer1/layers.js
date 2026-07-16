@@ -29,16 +29,15 @@ addLayer("m", {
         if (hasUpgrade('m', 22)) mult = mult.times(2)
         if (hasUpgrade('m', 24)) mult = mult.times(1.1)
         if (inChallenge("a", 12)) mult = mult.times(0.33333) 
-        if (hasUpgrade('mm', 11)) mult = mult.times(3)
-        if(hasUpgrade('mm', 22)) mult = mult.times(upgradeEffect('mm', 22))
+        
         if(hasUpgrade('n', 13)) mult = mult.times(10)
         if (hasUpgrade('hm', 11)) mult = mult.times(10)
         if (hasUpgrade('m', 32)) mult = mult.times(1.5)
         mult = mult.times(player.m.multiplier())
         if (getBuyableAmount('t', 11).gte(1)) mult = mult.times(buyableEffect('t', 11))
         if (getBuyableAmount('t', 22).gte(1)) mult = mult.times(buyableEffect('t', 22))
-              if(inChallenge('t', 11)) {
-            mult = mult.times(1)
+        if(inChallenge('t', 11)) {
+         mult = mult.times(1)
         } else {
                if (getBuyableAmount('v', 11).gte(1))  mult = mult.times(buyableEffect('v', 11).plus(1))
                 if (hasUpgrade('v', 11)) mult = mult.times(3)
@@ -48,17 +47,25 @@ addLayer("m", {
               if(inChallenge('a', 12)) {mult = mult.times(1)}
          else if (hasMilestone('h', 2)) {mult = mult.times(player.h.points.pow(0.5).plus(1))}
         } 
-                    return mult
+        if(inChallenge('d', 14)) {
+            return mult;
+        } else {
+            if (hasUpgrade('mm', 11)) mult = mult.times(3)
+            if(hasUpgrade('mm', 22)) mult = mult.times(upgradeEffect('mm', 22))
+        }
+        
+        return mult
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
         return new Decimal(1)
     },
     doReset(reset){
+        let keep = []
         if(player.n.layer1CanReset) {
             return null
         }
-        let keep = []
-        if(hasUpgrade('hm', 31) && hasMilestone('ct', 1)) {keep.push("upgrades")}
+        
+        if(hasUpgrade('hm', 31) || hasMilestone('ct', 1)) {keep.push("upgrades")}
         if (layers[reset].row > this.row) {layerDataReset("m", keep)}
     },
 
@@ -142,7 +149,7 @@ addLayer("m", {
         title: "Humility",
         description: "Unlock the Crafting Table and Inventory",
         cost: new Decimal(120),
-       effect() {if(hasUpgrade('m', 16)) player.ct.points = 1}
+       effect() {if(hasUpgrade('m', 16)) player.ct.unlocked = true}
     },
     21: {
         title: "Ferocity",

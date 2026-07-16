@@ -15,6 +15,25 @@ addLayer("ac", {
         bparticle: new Decimal(0),
         aparticle: new Decimal(0),
         gammaray: new Decimal(0),
+        gluon: new Decimal(0),
+
+        trueElementaryParticle: new Decimal(0),
+        strings: new Decimal(0),
+        matterCrystal: new Decimal(0),
+
+        element122: new Decimal(0),
+        timeon: new Decimal(0),
+        encapsulatedTimeon: new Decimal(0),
+        timeStaff: new Decimal(0),
+        timeCrystal: new Decimal(0),
+
+        mutatedParticle: new Decimal(0),
+        cellAmalgamate: new Decimal(0),
+        imperfectTissue: new Decimal(0),
+        imperfectOrgan: new Decimal(0),
+        humanityPurifyingProject: false,
+        perfectEarth: new Decimal(0),
+        perfectCrystal: new Decimal(0),
     }},
     color: "#a23c01",
     requires: new Decimal(400), // Can be a function that takes requirement increases into account
@@ -61,5 +80,8 @@ addLayer("ac", {
         
         
         
-    },}
+    },
+    "Elementary Particles": {
+        content: []
+    }}
 } )

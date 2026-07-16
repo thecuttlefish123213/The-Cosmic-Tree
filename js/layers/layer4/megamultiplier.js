@@ -34,7 +34,9 @@
     exponent: 0.5, // Prestige currency exponent
     gainMult() { // Calculate the multiplier for main currency from bonuses
         mult = new Decimal(1)
-        
+        if(getBuyableAmount('d', 14).gte(1)) mult = mult.times(buyableEffect('mm', 14))
+        if(hasUpgrade('d', 35)) mult = mult.times(1.5)
+        if(hasUpgrade('d', 47)) mult = mult.times(2)
         return mult
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
@@ -46,7 +48,7 @@
     hotkeys: [
         {key: "Ctrl + M", description: "Ctrl + M: Reset for Mega Multiplier", onPress(){if (canReset(this.layer)) doReset(this.layer)}},
     ],
-     layerShown(){return player.hm.unlocked
+     layerShown(){return player.chm.unlocked
     },
 
     upgrades: {
@@ -142,28 +144,23 @@ buyables: {
         effect(x) { return new Decimal(12).pow(x) },
         canAfford() { return player[this.layer].points.gte(this.cost()) },
         canBuyMax: true,
-         buyMax() {
-            
-            let c = getBuyableAmount(this.layer, this.id).toNumber()
-            let B = player.mm.points.toNumber()
-            
+         buyMax() {  
+            let costPerUnit = this.cost()
+             
+            let max = new Decimal(1)
 
-            let affordable = Math.floor((log(2 * (3^(c + 1)/2 + B)) + c * (-log(3)) - 2 * log(3))/log(3))
-            let summedCost = Math.floor((1/2)*3^(1 + c) * (-1 + 3^(1 + affordable)))
-            if(new Decimal(summedCost).gt(player.mm.points)) return;
-
-            
-            player.mm.points = player.mm.points.sub(new Decimal(summedCost))
-            setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(new Decimal(affordable)))
-           
-        }, // fix tommorow
-        buy() {
-            if(this.canBuyMax) {
-                this.buyMax()
-                return;
+            max = player.mm.points.div(costPerUnit).floor()
+            if(max.lte(1)) {
+                max = new Decimal(1)
             }
-            player.mm.points = player.mm.points.sub(this.cost())
-            setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+
+            return [max, costPerUnit]},
+        buy() {
+              
+            let [max, costPerUnit] = this.buyMax()
+            player.mm.points = player.mm.points.sub(costPerUnit.mul(max))
+            
+            setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
         },
         style: {"width": "300px", "height": "300px",  "font-size": "21px",  "animation": "shake 10s linear infinite",},
     },
@@ -174,32 +171,26 @@ buyables: {
             + " <br>cost: " + format(this.cost()) + " Mega Multipliers |" +
             " effect: " + format(this.effect()) + "x" 
          },
-        effect(x) { return new Decimal(5).pow(x) },
+        effect(x) { return new Decimal(2).pow(x) },
         canBuyMax: true,
         canAfford() { return player[this.layer].points.gte(this.cost()) },
-        buyMax() {
-            
-            let c = getBuyableAmount(this.layer, this.id).toNumber()
-            let B = player.mm.points.toNumber()
-            
+         buyMax() {  
+            let costPerUnit = this.cost()
+             
+            let max = new Decimal(1)
 
-            let affordable = Math.floor(-1 * (-216 * c**3 - 324 * c**2 + Math.sqrt((-216 * c**3 - 324 * c**2 - 108 * c - 648 * B)**2 - 108) - 108 * c - 648 * B)**(1/3)/
-            (6 * 2**(1/3)) - 1/(2**(2/3) (-216 * c**3 - 324 * c**2 + Math.sqrt((-216 * c**3 - 324 * c**2 - 108 * c - 648 * B)**2 - 108) - 108 * c - 648 * B)**(1/3)) + 1/2 (-2 * c - 3))
-            let summedCost = Math.floor(1/6 * (1 + affordable) * (6 + 6 * c**2 + 7 * affordable + 2 * affordable**2 + 6 * c * (2 + affordable)))
-            if(new Decimal(summedCost).gt(player.mm.points)) return;
-
-            
-            player.mm.points = player.mm.points.sub(new Decimal(summedCost))
-            setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(new Decimal(affordable)))
-           
-        }, // fix tommorow
-        buy() {
-            if(this.canBuyMax) {
-                this.buyMax()
-                return;
+            max = player.mm.points.div(costPerUnit).floor()
+            if(max.lte(1)) {
+                max = new Decimal(1)
             }
-            player.mm.points = player.mm.points.sub(this.cost())
-            setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+
+            return [max, costPerUnit]},
+        buy() {
+              
+            let [max, costPerUnit] = this.buyMax()
+            player.mm.points = player.mm.points.sub(costPerUnit.mul(max))
+            
+            setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
         },
         style: {"width": "300px", "height": "300px",  "font-size": "27px",  "animation": "shake 12s linear infinite",},
     },
@@ -213,28 +204,23 @@ buyables: {
         effect(x) { return player.hm.points.add(1).add(x).pow(0.8) },
         canAfford() { return player[this.layer].points.gte(this.cost()) },
         canBuyMax: true,
-        buyMax() {
-            
-            let c = getBuyableAmount(this.layer, this.id).toNumber()
-            let B = player.mm.points.toNumber()
-            
+         buyMax() {  
+            let costPerUnit = this.cost()
+             
+            let max = new Decimal(1)
 
-            let affordable = Math.floor((-(6*c+5)+Math.sqrt((6*c-1)**2+12*B))/6)
-            let summedCost = Math.floor((1 + affordable) * (2 + 6 * c + 3 * affordable))
-            if(new Decimal(summedCost).gt(player.mm.points)) return;
-
-            
-            player.mm.points = player.mm.points.sub(new Decimal(summedCost))
-            setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(new Decimal(affordable)))
-           
-        }, // fix tommorow
-        buy() {
-            if(this.canBuyMax) {
-                this.buyMax()
-                return;
+            max = player.mm.points.div(costPerUnit).floor()
+            if(max.lte(1)) {
+                max = new Decimal(1)
             }
-            player.mm.points = player.mm.points.sub(this.cost())
-            setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
+
+            return [max, costPerUnit]},
+        buy() {
+              
+            let [max, costPerUnit] = this.buyMax()
+            player.mm.points = player.mm.points.sub(costPerUnit.mul(max))
+            
+            setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
         },
         style: {"width": "300px", "height": "300px",  "font-size": "22px",  "animation": "shake 12s linear infinite",},
     },

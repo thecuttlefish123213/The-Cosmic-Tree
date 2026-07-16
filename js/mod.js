@@ -23,10 +23,12 @@ C) Vinyl returns infinity - error
 D) Frost arz may not be unlocked properly - remember to fix this especially
 */
 
+
+
 // Set your version in num and name
 let VERSION = {
 	num: "0.1",
-	name: "Ultimate Return",
+	name: "The Tearing of SpaceTime",
 }
 
 let changelog = `<h1>Changelog:</h1><br>
@@ -72,7 +74,7 @@ function getPointGen() {
 	if(hasUpgrade("m", 17)) gain = gain.times(1.5)
 	if(hasUpgrade("q", 16)) gain = gain.times(1.5)
 	if(hasUpgrade("q", 13)) gain = gain.times(upgradeEffect('q', 13))
-	if(hasUpgrade('mm', 12)) gain = gain.times(30)
+	
     if(hasMilestone('hm', 1)) gain = gain.times(10)
 	if(hasUpgrade('m', 31)) gain = gain.times(2)
 	if(hasUpgrade('m', 33)) gain = gain.times(3)
@@ -110,7 +112,18 @@ function getPointGen() {
 		if(hasUpgrade('c', 22)) gain = gain.times(1.5)
 		if(hasChallenge('a', 22)) gain = gain.times(challengeEffect('a', 22))
 	}
+	if(player.ct.bdust.gte(1)) mult = mult.times(player.ct.bdustEffect2())
+	if(inChallenge('d', 14)) {
+            gain = gain.times(1)
+    } else {
+		if(hasUpgrade('mm', 12)) gain = gain.times(30)
+		if(hasUpgrade('mm', 31)) gain = gain.times(20)
+	}
+	if(getBuyableAmount('d', 18)) mult = mult.times(buyableEffect('d', 18))
 	if(inChallenge('a', 22)) gain = gain.times(0.00000000000000000001)
+	if(hasUpgrade('d', 33)) gain = gain.times(upgradeEffect('d', 33))
+	if(hasUpgrade('d', 37)) gain = gain.times(upgradeEffect('d', 37))
+	if(hasUpgrade('d', 50)) mult = mult.times(1e9)
 	return gain
 }
 

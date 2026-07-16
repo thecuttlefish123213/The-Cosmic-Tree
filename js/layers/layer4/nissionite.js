@@ -23,6 +23,7 @@ addLayer("n", {
         timer: 3000,
         random: 0,
         fragments: new Decimal(0),
+        snowflakeTimer: 0,
        fragMultiplier() {
         
         let multiplier = player.n.points.add(1)
@@ -52,6 +53,7 @@ addLayer("n", {
          if (layers[reset].row > this.row) {layerDataReset("n", keep)}
     },
    update() {
+    updateMusicDisplay()
     if(player.n.unlocked) {
     if(player.n.timer > 0) {
         player.n.timer -= 1
@@ -70,11 +72,15 @@ addLayer("n", {
     }
     if(player.n.snowStorm) {
     player.n.random -= 1
+    player.n.snowflakeTimer += 0.1
     if(player.n.random <= 0) {
         player.n.snowStorm = false
         
     }
+    if(player.n.snowflakeTimer > 0.5) {
     makeShinies(snowflake.shiny(), 1)
+    player.n.snowflakeTimer = 0
+    }
     }
     }
    },
@@ -83,7 +89,7 @@ addLayer("n", {
     return {
     "background-image": "linear-gradient(180deg,rgb(10, 255, 206) 0%, rgb(19, 103, 168) 50%, rgb(0, 42, 255) 100%)",
     "background-size": "300px 600%",
-    "height": "1500px",
+    "height": "2000px",
     "animation": "backgroundMove 4s linear infinite",
     }
     
@@ -109,6 +115,9 @@ addLayer("n", {
     gainMult() { // Calculate the multiplier for main currency from bonuses
         mult = new Decimal(1)
         if(hasUpgrade('n', 22)) mult = mult.times(2)
+        if(getBuyableAmount('d', 17)) mult = mult.times(buyableEffect('d', 17))
+        if(hasUpgrade('d', 35)) mult = mult.times(1.5)
+        if(hasUpgrade('d', 48)) mult = mult.times(2)
         return mult
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
@@ -184,7 +193,10 @@ addLayer("n", {
         currencyDisplayName: "Fragments",
         currencyInternalName: "fragments",
         currencyLayer: "n",
-        effect() {player.n.layer1CanReset = true},
+        effect() {
+            if(hasUpgrade('n', 11)) {
+            player.n.layer1CanReset = true
+            }},
         style: {"width": "200px", "height": "200px",  "font-size": "12px",  "animation": "backgroundMove 1.2s linear infinite", "border-radius": "100px",},
        
         

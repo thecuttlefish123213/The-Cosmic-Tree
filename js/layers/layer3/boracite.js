@@ -120,20 +120,32 @@
     exponent: 0.5, // Prestige currency exponent
     gainMult() { // Calculate the multiplier for main currency from bonuses
         mult = new Decimal(1)
-        if(hasUpgrade('n', 12)) mult = mult.times(4)
+        if(player.ct.bdust.gte(1)) mult = mult.times(player.ct.bdustEffect1())
+        if(inChallenge('d', 14)) {
+            return mult;
+        } else {
+            if(hasUpgrade('n', 12)) mult = mult.times(4)
+        }
+    if(hasUpgrade('d', 31)) mult = mult.times(20)
+    if(hasUpgrade('d', 43)) mult = mult.times(100)
         return mult
     },
     gainExp() { // Calculate the exponent on main currency from bonuses
         return new Decimal(1)
     },
     
-    nodeStyle: {
+    nodeStyle() {
+        let style = {
         "border-radius": "0px",
          "animation": "spin 8s linear infinite",
         "background-image": "linear-gradient( #35bee0, #39c0ff)",
         "width": "100px",
         "height": "100px", 
-        
+        }
+        if(player.b.unlocked || tmp.b.canReset){
+            return {...style}
+        }
+        else return {"border-radius": "0px",}
     },
     update() {
         if(player.b.boraciteGeodePoint.gte(1)) {

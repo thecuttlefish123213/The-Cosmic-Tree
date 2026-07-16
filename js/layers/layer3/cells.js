@@ -27,6 +27,8 @@ addLayer("ce", {
 
         mSmithii: new Decimal(0),
         sSolfataricus: new Decimal(0),
+        halobacterium: new Decimal(0),
+        mJannaschii: new Decimal(0),
 
         bloodcells: new Decimal(0),
         bonecells: new Decimal(0),
@@ -41,7 +43,17 @@ addLayer("ce", {
 
         cellMultiplier() {
             let mult = new Decimal(1)
+            
+            if(hasUpgrade('d', 23)) mult = mult.times(upgradeEffect('d', 23))
+            if(inChallenge('d', 14)) {
+            return mult;
+            } else {
             if(hasUpgrade('mm', 33)) mult = mult.times(2)
+            }
+            if(getBuyableAmount('ce', 43).gte(1)) mult = mult.times(buyableEffect('ce', 43))
+            if(hasUpgrade('d', 31)) mult = mult.times(2)
+            if(hasUpgrade('d', 40)) mult = mult.times(2)
+            if(hasUpgrade('d', 51)) mult = mult.times(100)
             return mult
         }
     }},
@@ -57,7 +69,7 @@ addLayer("ce", {
     baseAmount() {return player.a.points}, // Get the current amount of baseResource
     type: "static", // normal: cost to gain currency depends on amount gained. static: cost depends on how much you already have
      doReset(reset){
-        let keep = ["mSmithii", "sSolfataricus"]
+        let keep = ["mSmithii", "sSolfataricus", 'halobacterium']
       
       
          if (layers[reset].row > this.row) {layerDataReset("ce", keep)}
@@ -78,6 +90,10 @@ addLayer("ce", {
         {player.ce.atp = player.ce.atp.plus(new Decimal(0.1).mul(diff).mul(player.ce.mito).pow(0.5))}
         if(player.ce.nucleus >= 1)
         {  
+            if(hasUpgrade('d', 39)) {
+                player.ce.dnaNumber = player.ce.nucleus
+                player.ce.rnaNumber = player.ce.nucleus
+            }
             if( player.ce.dna.gte(player.ce.number.mul(player.ce.dnaNumber)))
         { player.ce.dna = player.ce.dna} else {
             player.ce.dna = player.ce.dna.plus(new Decimal(0.1).mul(diff).mul(player.ce.nucleus).pow(0.5).mul(player.ce.cellnumber.add(1)))}
@@ -379,10 +395,13 @@ tabFormat: {
            ["display-text", function() {return "<u>Archaebacteria</u>"}, {"font-size": "60px"}],
            "blank",
             ["display-text", function() {return "You have " + format(player.ce.mSmithii) + " <i>M. Smithii</i>"}],
-           ["column",[["row",[["buyable", "41", ], ["display-image", "resources/MSmithii.png", {"width": "200px", "height": "200px",}],]],
-           ["display-text", function() {return "You have " + format(player.ce.sSolfataricus) + " <i>S. Solfataricus</i>"}],
-           ["row",[["buyable", "42", ], ["display-image", "resources/Solfataricus.jpg", {"width": "200px", "height": "200px",}],]],]],
-    ]
+           ["row",[["buyable", "41", ], ["display-image", "resources/MSmithii.png", {"width": "200px", "height": "200px",}],]],
+          function() { return hasUpgrade('hm', 38) ? ["display-text",  "You have " + format(player.ce.sSolfataricus) + " <i>S. Solfataricus</i>"] : null},
+          function() { return hasUpgrade('hm', 38) ? ["row",[["buyable", "42"], ["display-image", "resources/Solfataricus.jpg", {"width": "200px", "height": "200px"}]]] : null},
+          function() { return hasChallenge('d', 12) ? ["display-text", "You have " + format(player.ce.halobacterium) + " <i>Halobacterium Salinarum</i>"] : null},
+          function() { return hasChallenge('d', 12) ? ["row",[["buyable", "43"], ["display-image", "resources/halobacterium.webp", {"width": "200px", "height": "200px"}]]] : null},
+          function() { return hasUpgrade('d', 39) ? ["display-text", "You have " + format(player.ce.mJannaschii) + " <i>Methanococcus Jannaschii</i>"] : null},
+          function() { return hasUpgrade('d', 39) ? ["row",[["buyable", "44"], ["display-image", "resources/mJan.jpg", {"width": "200px", "height": "200px"}]]] : null},]
 },},
   microtabs: {
     unlocked() {return hasUpgrade('ce', 25)},
@@ -531,7 +550,7 @@ buyables: {
         if (max.lt(1)) max = new Decimal(1) // buy at least 1
     }
             player.ce.points = player.ce.points.sub(costPerUnit.mul(max))
-            player.ce.bloodcells = player.ce.bloodcells.add(max.mul(player.ce.cellMultiplier()))
+            player.ce.bloodcells = player.ce.bloodcells.add(max)
             setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
         },
         style: {
@@ -569,7 +588,7 @@ buyables: {
     }
             let multiplier1 = getBuyableEffect('ce', 41)
             player.ce.points = player.ce.points.sub(costPerUnit.mul(max))
-            player.ce.hepaticcells = player.ce.hepaticcells.add(max.mul(multiplier1).mul(player.ce.cellMultiplier()))
+            player.ce.hepaticcells = player.ce.hepaticcells.add(max.mul(multiplier1))
             setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
         },
         style: {
@@ -601,7 +620,7 @@ buyables: {
         if (max.lt(1)) max = new Decimal(1) // buy at least 1
     }
             player.ce.points = player.ce.points.sub(costPerUnit.mul(max))
-            player.ce.lungcells = player.ce.lungcells.add(max.mul(player.ce.cellMultiplier()))
+            player.ce.lungcells = player.ce.lungcells.add(max)
             setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
         },
         style: {
@@ -638,7 +657,7 @@ buyables: {
         if (max.lt(1)) max = new Decimal(1) // buy at least 1
     }
             player.ce.points = player.ce.points.sub(costPerUnit.mul(max))
-            player.ce.bonecells = player.ce.bonecells.add(max.mul(getBuyableEffect('ce', 107)).mul(player.ce.cellMultiplier()))
+            player.ce.bonecells = player.ce.bonecells.add(max.mul(getBuyableEffect('ce', 107)))
             setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
         },
         style: {
@@ -671,7 +690,7 @@ buyables: {
     }
             let multiplier1 = getBuyableEffect('ce', 42)
             player.ce.points = player.ce.points.sub(costPerUnit.mul(max))
-            player.ce.musclecells = player.ce.musclecells.add(max.mul(getBuyableEffect('ce', 107)).mul(multiplier1).mul(player.ce.cellMultiplier()))
+            player.ce.musclecells = player.ce.musclecells.add(max.mul(getBuyableEffect('ce', 107)).mul(multiplier1))
             setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
         },
         style: {
@@ -708,7 +727,7 @@ buyables: {
         if (max.lt(1)) max = new Decimal(1) // buy at least 1
     }
             player.ce.bloodcells = player.ce.bloodcells.sub(costPerUnit.mul(max))
-            player.ce.renalcells = player.ce.renalcells.add(max.mul(player.ce.cellMultiplier()))
+            player.ce.renalcells = player.ce.renalcells.add(max)
             setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
         },
         style: {
@@ -743,7 +762,7 @@ buyables: {
         if (max.lt(1)) max = new Decimal(1) // buy at least 1
     }
             player.ce.prot = player.ce.prot.sub(costPerUnit.mul(max))
-            player.ce.procomplex = player.ce.procomplex.add(max.mul(player.ce.cellMultiplier()))
+            player.ce.procomplex = player.ce.procomplex.add(max)
             setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
         },
         style: {
@@ -780,7 +799,7 @@ buyables: {
         if (max.lt(1)) max = new Decimal(1) // buy at least 1
     }
             player.ce.points = player.ce.points.sub(costPerUnit.mul(max))
-            player.ce.neurons = player.ce.neurons.add(max.mul(player.ce.cellMultiplier()))
+            player.ce.neurons = player.ce.neurons.add(max)
             setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
         },
         style: {
@@ -1100,7 +1119,7 @@ buyables: {
             if(getBuyableAmount(this.layer, 101).gte(1)) cenergyMaximum = cenergyMaximum.mul(buyableEffect(this.layer, 101))
             
             player.ce.atp = player.ce.atp.sub(this.cost())
-            player.ce.adp = player.ce.adp.add(new Decimal(1).mul(player.ce.cellMultiplier()))
+            player.ce.adp = player.ce.adp.add(new Decimal(1))
             player.ce.cenergy = player.ce.cenergy.add(cenergyMaximum.mul(player.ce.cellMultiplier()))
             setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(1))
         },
@@ -1203,7 +1222,7 @@ buyables: {
         canAfford() { return (player.ce.rna.gte(this.cost())) },
         buyMax() {return true},
         buy() {
-              let costPerUnit = this.cost(1)
+              let costPerUnit = this.cost()
     let max = new Decimal(1)
 
     if(this.buyMax()) {
@@ -1242,7 +1261,7 @@ buyables: {
         canAfford() { return (player.ce.rna.gte(this.cost())) },
         buyMax() {return true},
         buy() {
-              let costPerUnit = this.cost(1)
+              let costPerUnit = this.cost()
     let max = new Decimal(1)
 
     if(this.buyMax()) {
@@ -1259,6 +1278,84 @@ buyables: {
             "border-color": "#000000",
             "font-family": "Times New Roman",
             "font-size": "16px"
+        },
+        
+    },
+     43: {
+         cost() { return new Decimal(255000).mul(new Decimal(1.3).mul(player.ce.halobacterium.plus(3)).pow(0.4)) }, // some sort of error
+        display() { return "Buy one <i>Halobacterium Salinarum</i>. Each H. Salinarum boosts general cell gain and can automatically convert nitrogen and hydrogen into ammonia, see guide for more information."
+            + " cost: " + format(this.cost()) + " RNA.   " + 
+            " effect: " + format(buyableEffect(this.layer, this.id)) + "x"
+         },
+         tooltip: `Wikipedia says: Halobacteria are single-celled, rod-shaped microorganisms that are among the most ancient forms of life and appeared on Earth billions of years ago. 
+         Amino acids are the main source of chemical energy for H. salinarum, particularly arginine and aspartate, though they are able to metabolize other amino acids, as well.[4] H. salinarum 
+         have been reported to be unable to grow on sugars, and therefore need to encode enzymes capable of performing gluconeogenesis to create sugars. Although H. salinarum is unable to catabolize glucose, the transcription factor TrmB has been proven to regulate the gluconeogenic production of sugars found on the S-layer glycoprotein.`,
+        effect() {
+            if(inChallenge('a', 21)) return new Decimal(1)
+            else if(player.ce.halobacterium <= 0.9) return new Decimal(1)
+            else return new Decimal(1.5).mul(new Decimal(1).mul(player.ce.halobacterium.mul(0.1)))
+         },
+        
+        canAfford() { return (player.ce.rna.gte(this.cost())) },
+        buyMax() {return true},
+        buy() {
+              let costPerUnit = this.cost()
+    let max = new Decimal(1)
+
+    if(this.buyMax()) {
+        // calculate how many can be bought
+        max = player.ce.rna.div(costPerUnit).floor()
+        if (max.lt(1)) max = new Decimal(1) // buy at least 1
+    }
+            player.ce.rna = player.ce.rna.sub(costPerUnit.mul(max))
+            player.ce.halobacterium = player.ce.halobacterium.add(max.mul(player.ce.cellMultiplier()))
+            setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
+        },
+        style: {
+            "border-radius": "0px",
+            "border-color": "#000000",
+            "font-family": "Times New Roman",
+            "font-size": "15px"
+        },
+        
+    },
+    44: {
+         cost() { return new Decimal(375000).mul(new Decimal(1.7).mul(player.ce.mJannaschii.plus(3)).pow(0.4)) }, // some sort of error
+        display() { return "Buy one <i>Methanococcus Jannaschii</i>. Each M. Jannaschii boosts dimensional point gain and can convert fire into Methane under alchemy lab, see guide for more information."
+            + " cost: " + format(this.cost()) + " RNA.   " + 
+            " effect: " + format(buyableEffect(this.layer, this.id)) + "x"
+         },
+         tooltip: `Wikipedia says: Methanocaldococcus jannaschii is a thermophilic methanogen, meaning it grows by making methane as a metabolic byproduct. 
+         It is only capable of growth on carbon dioxide and hydrogen as primary energy sources, unlike many other methanococci 
+         (such as Methanococcus maripaludis) which can also use formate as a primary energy source.[4] 
+         The genome includes many hydrogenases, such as a 5,10-methenyltetrahydromethanopterin hydrogenase,[8] 
+         a ferredoxin hydrogenase (eha), and a coenzyme F420 hydrogenase.[9]`,
+        effect() {
+             if(inChallenge('a', 21)) return new Decimal(1)
+          else if(player.ce.mJannaschii <= 0.9) return new Decimal(1)
+            else return new Decimal(1.5).mul(new Decimal(1).sqrt(player.ce.mJannaschii))
+         },
+        
+        canAfford() { return (player.ce.rna.gte(this.cost())) },
+        buyMax() {return true},
+        buy() {
+              let costPerUnit = this.cost()
+        let max = new Decimal(1)
+
+        if(this.buyMax()) {
+        // calculate how many can be bought
+        max = player.ce.rna.div(costPerUnit).floor()
+        if (max.lt(1)) max = new Decimal(1) // buy at least 1
+        }
+            player.ce.rna = player.ce.rna.sub(costPerUnit.mul(max))
+            player.ce.mJannaschii = player.ce.mJannaschii.add(max.mul(player.ce.cellMultiplier()))
+            setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
+        },
+        style: {
+            "border-radius": "0px",
+            "border-color": "#000000",
+            "font-family": "Times New Roman",
+            "font-size": "15px"
         },
         
     },

@@ -12,6 +12,34 @@
   font-size: 25px;
 }
 
+.fly {
+    transform: translateX(500px);
+    transition: transform 2s linear;
+}
+
+.scroll-box {
+  width: 300px;
+  white-space: nowrap;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+@keyframes slice {
+  0%   { clip-path: inset(20% 0 60% 0); }
+  25%  { clip-path: inset(80% 0 5% 0); }
+  50%  { clip-path: inset(10% 0 75% 0); }
+  75%  { clip-path: inset(40% 0 30% 0); }
+  100% { clip-path: inset(20% 0 60% 0); }
+}
+
+#horizontalBox {
+   width: 800px;
+  height: 200px;
+  border: 2px solid;
+  border-color: #ffffff;
+  background-color: transparent;
+}
+
 @keyframes radioactivePulse {
   0%, 100% {
     transform: scale(0.95);

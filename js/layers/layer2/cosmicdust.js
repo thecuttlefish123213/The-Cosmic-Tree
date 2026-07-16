@@ -71,7 +71,7 @@ addLayer("c", {
         mult = new Decimal(1)
         mult = mult.times(player.c.multiplier())
         if(hasUpgrade('ce', 12)) mult = mult.times(2)
-        if(hasUpgrade('n', 12)) mult = mult.times(5)
+        
         if(inChallenge('a', 21)) mult = mult.times(0.5)
          if (getBuyableAmount('t', 12).gte(1)) mult = mult.times(buyableEffect('t', 12))
         if(player.ct.stars.gte(1)) mult = mult.times(buyableEffect('ct', 15))
@@ -82,9 +82,16 @@ addLayer("c", {
         if(getBuyableAmount('ce', 42).gte(1)) mult = mult.times(buyableEffect("ce", 42))
         if(player.b.Arbitorite.gte(1)) mult = mult.times(player.b.arbitoriteMultiplier()) 
         if(player.b.Bloodstone.gte(1)) mult = mult.times(player.b.bloodstoneMultiplier()) 
-        if(challengeCompletions('n', 11) >= 1) mult = mult.times(challengeEffect('n', 11))
+        if(player.ct.bdust.gte(1)) mult = mult.times(player.ct.bdustEffect1())
         mult = mult.times(player.b.koriumMultiplier())
-    
+        if(inChallenge('d', 14)) {
+            return mult;
+        } else {
+            if(hasUpgrade('n', 12)) mult = mult.times(5)
+            if(challengeCompletions('n', 11) >= 1) mult = mult.times(challengeEffect('n', 11))
+        }
+        if(hasUpgrade('d', 39)) mult = mult.times(1e12)
+        if(hasUpgrade('d', 45)) mult = mult.times(1e13)
         return mult
     },
      passiveGeneration() {

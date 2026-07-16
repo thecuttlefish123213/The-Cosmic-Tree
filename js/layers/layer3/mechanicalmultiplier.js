@@ -46,10 +46,13 @@ addLayer("chm", {
         chance2: 0,
         chance3: 0,
         chance4: 0,
+        chance5: 0,
         rollTimer: 0,
         rollTimer2: 0,
         rollTimer3: 0,
         rollTimer4: 0,
+        rollTimer5: 0,
+
 
         // Highland resources
         hTroxMultiplierFunction() {
@@ -119,6 +122,32 @@ addLayer("chm", {
         marianicShards: new Decimal(0),
         aquamarine: new Decimal(0),
         abyssalCrystals: new Decimal(0),
+
+        // Tier 4 - Anatomic Arzendics
+
+        hBot: new Decimal(0),
+        tesseract: new Decimal(0),
+        hDrone: new Decimal(0),
+        mechanicalBomb: new Decimal(0),
+        hDroneInQuantumRealm: new Decimal(0),
+        // Anatomic/Hyperionic Resources
+
+        hZet: new Decimal(0),
+        hTrox: new Decimal(0),
+        hShard: new Decimal(0),
+        bomb: new Decimal(0),
+
+        hFunction() {
+            let maxForhDrone = player.chm.hDrone.toNumber()
+                     if(maxForhDrone < 1) {
+                        return 0
+                    }
+                     if(maxForhDrone > 1e300) {
+                        return [1e300]
+                     }
+                     return [maxForhDrone] 
+        },
+        
     }},
     color: "#696969",
     requires: new Decimal(100000000), // Can be a function that takes requirement increases into account
@@ -129,15 +158,22 @@ addLayer("chm", {
 
     scrapMultiplier() {
             let mult = new Decimal(1)
-            if(getBuyableAmount('chm', 13).gte(1)) mult = mult.times(buyableEffect('chm', 13))
-            if(getBuyableAmount('chm', 11).gte(1)) mult = mult.times(buyableEffect('chm', 11))
-            if(getBuyableAmount('chm', 14).gte(1)) mult = mult.times(buyableEffect('chm', 14))
+            if(player.chm.scrapBot.gte(1)) mult = mult.times(buyableEffect('chm', 13))
+            if(player.chm.droneMK1.gte(1)) mult = mult.times(buyableEffect('chm', 11))
+            if(player.chm.scrapBotMK2.gte(1)) mult = mult.times(buyableEffect('chm', 14))
             if(hasUpgrade('mm', 21)) mult = mult.times(5)
             if(player.b.Vauqrase.gte(1)) mult = mult.times(player.b.vauqraseMultiplier())   
-            if(getBuyableAmount('chm', 17).gte(1)) mult = mult.times(buyableEffect('chm', 17))
+            if(player.chm.iceBot.gte(1)) mult = mult.times(buyableEffect('chm', 17))
            if(mult.lte(1)) {
             mult = new Decimal(1)
            }
+           if(inChallenge('d', 14)) {
+            return mult;
+            } else {
+            if(hasUpgrade('mm', 21)) mult = mult.times(5)
+            }
+            if(player.chm.hBot.gte(1)) mult = mult.times(buyableEffect('chm', 21))
+            if(player.chm.hDrone.gte(1)) mult = mult.times(buyableEffect('chm', 23)[0])
             return mult
         },
      doReset(reset){
@@ -147,7 +183,8 @@ addLayer("chm", {
         if(hasUpgrade('mm', 13)) {
             keep.push("scrap","highlandScrap","lowlandScrap","empyreanScrap","scrapBot","droneScrap","droneMK1","castingMaterial","lowlandzet","zet","empzet",
             "protozet","alphabetasyntax","trox","highlandZet","heavyTrox","multiplicativeInverse","droneMK2","scrapBotMK2","geometricDome", "iceBot",
-            "metallicBerg","frostDrone","submarines","snow","frost","icebergs","iceshelves","coral","pearl","marianicShards","aquamarine","abyssalCrystals")}
+            "metallicBerg","frostDrone","submarines","snow","frost","icebergs","iceshelves","coral","pearl","marianicShards","aquamarine","abyssalCrystals",
+        "hBot","tesseract","hDrone")}
          if (layers[reset].row > this.row) {layerDataReset("chm", keep)}
     },
    update(diff) {
@@ -317,13 +354,53 @@ addLayer("chm", {
         player.chm.rollTimer4 = 0
         }
    }
+    if(player.chm.hDroneInQuantumRealm >= 1) {
+        let hMultiplier = new Decimal(player.chm.hDroneInQuantumRealm).ln().times(0.1)
+        if(hMultiplier.lte(1)) {
+         hMultiplier = new Decimal(1)
+        } 
+        
+        let chance5 = player.chm.chance5
+        player.chm.rollTimer5 += 0.1
+         
+        if (player.chm.rollTimer5 >= 11) {
+        chance5 = Math.random() * 100
+        if(chance5 >= 75) {
+            if(player.chm.hZet.gte(2)) {
+            player.chm.hZet = player.chm.hZet.add(new Decimal(1).mul(hMultiplier))
+            } else
+            {player.chm.hZet = player.chm.hZet.add(new Decimal(1))}
+        } else if(chance5 >= 42) {
+            if(player.chm.hTrox.gte(2)) {
+            player.chm.hTrox = player.chm.hTrox.add(new Decimal(1).mul(hMultiplier))
+            } else
+            {player.chm.hTrox = player.chm.hTrox.add(new Decimal(1))}
+        } else if (chance5 >= 21) { 
+             if(player.chm.hShard.gte(2)) {
+            player.chm.hShard = player.chm.hShard.add(new Decimal(1).mul(hMultiplier))
+            } else
+            {player.chm.hShard = player.chm.hShard.add(new Decimal(1))}
+        }  else { 
+             if(player.chm.bomb.gte(2)) {
+            player.chm.bomb = player.chm.bomb.add(new Decimal(1).mul(hMultiplier))
+            } else
+            {player.chm.bomb = player.chm.bomb.add(new Decimal(1))}
+        } 
+        player.chm.rollTimer5 = 0
+        }
+   }
   },
     canBuyMax() {return false},
     exponent: 0.5, // Prestige currency exponent
     directMult() { // Calculate the multiplier for main currency from bonuses
         mult = new Decimal(1)
         if(player.b.Vauqrase.gte(1)) mult = mult.times(player.b.vauqraseMultiplier())   
-        if(hasUpgrade('mm', 13)) mult = mult.times(2)
+        if(inChallenge('d', 14)) {
+            return mult;
+            } else {
+            if(hasUpgrade('mm', 13)) mult = mult.times(2)
+        }
+        if(getBuyableAmount('chm', 23).gte(1)) mult = mult.times(buyableEffect('chm', 23)[1])
         return mult
     },
     gainMult() {
@@ -334,9 +411,7 @@ addLayer("chm", {
     },
     nodeStyle: {
         classes: ['hexNode'],
-        "background-image": "linear-gradient( #888686, #865656)", 
-        "background-size": "150px 600%",
-        "background-position": "40% 50%",
+        
         "width": "125px",
         "height": "100px"
     },
@@ -436,6 +511,7 @@ addLayer("chm", {
             ],
                
         ]],
+        
          ["display-text", function() {return hasUpgrade('n', 13) ? '<i>Tier 3/Frost Arzendics</i>' : null},{"font-size": "50px", "color": "#dfdfdf", "font-family": "Times New Roman"}],
      ["row",[
                 function() {return hasUpgrade('n', 13) ? ["display-text",  'You have ' + format(player.chm.iceBot) + ' Ice Bots',
@@ -465,7 +541,38 @@ addLayer("chm", {
                  "font-family": "Times New Roman" }
                 ] : null},
                
-        ]]]],
+        ]],
+    ["display-text", function() {return inChallenge('d', 16) || hasChallenge('d', 16) ? '<i>Tier 4/Hyperionic/Anatomic Arzendics</i>' : null},{"font-size": "50px", "color": "#dfdfdf", "font-family": "Times New Roman"}],
+     ["row",[
+                function() {return inChallenge('d', 16) || hasChallenge('d', 16) ? ["display-text",  'You have ' + format(player.chm.hBot) + ' Hyperionic Bots',
+                    {"font-size": "25px", "display": "inline-block", "color": "#333131", "border": "2px dashed #ffffff","width": "400px", 
+                    "height": "57px", "background-image": "linear-gradient(90deg,rgb(224, 226, 103) 0%, rgb(194, 196, 121) 50%, rgb(161, 165, 99) 100%)", 
+                    "font-family": "Times New Roman"}
+                 ] : null},
+            
+                function() {return inChallenge('d', 16) || hasChallenge('d', 16) ? ["display-text", 'You have ' + format(player.chm.tesseract) + ' Tesseracts',
+                {"font-size": "25px", "display": "inline-block",
+                 "color": "#dfdfdf", "border": "2px dashed #ffffff", "width": "400px", "height": "57px",
+                  "background-image": "linear-gradient(90deg,rgb(103, 222, 226) 0%, rgb(121, 181, 196) 50%, rgb(99, 157, 165) 100%)",
+                   "font-family": "Times New Roman" }
+                ] : null}],],
+     ["row",[ 
+       
+                function() {return inChallenge('d', 16) || hasChallenge('d', 16) ? ["display-text",  'You have ' + format(player.chm.hDrone) + ' Hyperionic Drones',
+                    {"font-size": "25px", "display": "inline-block", 
+                    "color": "#3b3737", "border": "2px dashed #ffffff","width": "400px", "height": "57px", 
+                    "background-image": "linear-gradient(90deg,rgb(174, 175, 89) 0%, rgb(234, 238, 117) 50%, rgb(232, 236, 176) 100%)",
+                    "font-family": "Times New Roman" }]
+                   : null},
+                function() {return hasChallenge('d', 16) ? ["display-text", 'You have ' + format(player.chm.mechanicalBomb) + ' Mecha Bombs',
+                {"font-size": "25px", "display": "inline-block",
+                 "color": "#dfdfdf", "border": "2px dashed #ffffff", "width": "400px", "height": "57px", 
+                 "background-image": "linear-gradient(90deg,rgba(5, 58, 8, 0.3) 0%, rgba(5, 48, 16, 0.45) 50%, rgba(24, 75, 31, 0.45)100%)", 
+                 "font-family": "Times New Roman" }
+                ] : null},
+               
+        ]],
+    ]],
          "blank",
         "blank",
         ["display-text", function() {return '<u>Lowland Resources</u>'}, 
@@ -625,6 +732,34 @@ addLayer("chm", {
         ]
         ] 
         ]] : null},
+         ["display-text", function() {return hasChallenge('d', 16) ? '<u>Anatomic Resources</u>' : ''},   {"font-size": "50px"} ],
+            "blank",
+           function(){return hasChallenge('d', 16) ? ["column",[
+             ["row",[
+                    
+                 ["display-text", 'You have ' + format(player.chm.hZet) + ' Hyperionic Zet ' ,
+             {"font-size": "25px", "display": "inline-block", "color": "#161616", "border": "2px ridge #989898", "width": "600px", "height": "57px","background-image": "linear-gradient(90deg,rgb(35, 122, 32) 0%, rgb(199, 201, 102) 50%, rgb(207, 205, 92) 100%)", "font-family": "Comic Sans"  }
+            ], 
+        ]], 
+                ["row",[
+                    
+                 ["display-text", 'You have ' + format(player.chm.hTrox) + ' Hyperionic Trox ' , 
+             {"font-size": "25px", "display": "inline-block", "color": "#161616", "border": "2px ridge #989898", "width": "600px", "height": "57px","background-image": "linear-gradient(90deg,rgb(143, 59, 59) 0%, rgb(203, 204, 114) 50%, rgb(192, 190, 84) 100%)", "font-family": "Comic Sans"  }
+            ], 
+        ]],
+                ["row",[
+                    
+                 ["display-text",  'You have ' + format(player.chm.hShards) + ' Hyperionic Shards',
+             {"font-size": "25px", "display": "inline-block", "color": "#161616", "border": "2px ridge #989898", "width": "600px", "height": "57px","background-image": "linear-gradient(90deg,rgb(56, 92, 146) 0%, rgb(155, 150, 84) 50%, rgb(190, 178, 109) 100%)", "font-family": "Comic Sans"  }
+            ], 
+        ]],
+                ["row",[
+                    
+                 ["display-text",  'You have ' + format(player.chm.mechanicalBomb) + ' Bombs' ,
+             {"font-size": "25px", "display": "inline-block", "color": "#161616", "border": "2px ridge #989898", "width": "600px", "height": "57px","background-color":"lightgreen", "font-family": "Comic Sans"  }
+            ], 
+        ]],
+        ]] : null},
              "blank",
            ["microtabs", "features"],
 
@@ -650,7 +785,10 @@ addLayer("chm", {
                                     ["display-text", "Tier 2",{"font-size": "30px"}],
                                     ["row",[["buyable", "14"],["buyable", "15"],["buyable", "16"]]],
                                     ["display-text", function() {return hasUpgrade('n', 13) ? 'Tier 3' : null},{"font-size": "30px"}],
-                                   function() {return hasUpgrade('n', 13) ? ["row",[["buyable", "17"],["buyable", "18"],["buyable", "19"],["buyable", "20"]]] : null}],]],
+                                    function() {return hasUpgrade('n', 13) ? ["row",[["buyable", "17"],["buyable", "18"],["buyable", "19"],["buyable", "20"]]] : null},
+                                    ["display-text", function() {return hasChallenge('d', 16) || inChallenge('d', 16) ? 'Tier 4' : null},{"font-size": "30px"}],
+                                    function() {return hasChallenge('d', 16) || inChallenge('d', 16) ? ["row",[["buyable", "21"],["buyable", "22"],["buyable", "23"],["buyable", "24"]]] : null},
+                                ],]],
            
         },
         Assignments: {
@@ -679,7 +817,9 @@ addLayer("chm", {
                 ["display-text", function() {return hasUpgrade('n', 13) ? 'Assign frost drones to the Arctic to gather Arctic resources. Each frost drone assigned to the Arctic will boost Arctic resource gain(not chance).' : null},{"font-size": "25px"}],
                 function() {return hasUpgrade('n', 13) ? ["column",[["row",[["slider", ["frostDronesInArctic", 0, player.chm.frostFunction()]]]]]] : null},
                 ["display-text", function() {return hasUpgrade('n', 21) ? 'Assign submarines to the Great Ocean to gather oceanic resources. Each submarine assigned to the Great Ocean will boost oceanic resource gain(not chance).' : null},{"font-size": "25px"}],
-                function() {return hasUpgrade('n', 21) ? ["column",[["row",[["slider", ["submarinesInOcean", 0, player.chm.seaFunction()  , ]]]]]] : null}, ] 
+                function() {return hasUpgrade('n', 21) ? ["column",[["row",[["slider", ["submarinesInOcean", 0, player.chm.seaFunction()  , ]]]]]] : null},
+                ["display-text", function() {return hasChallenge('d', 16) ? 'Assign hyperionic drones to the Quantum Realm to gather Anatomic resources. Each hyperionic drone assigned to the Quantum Realm will boost Anatomic resource gain(not chance).' : null},{"font-size": "25px"}],
+                function() {return hasChallenge('d', 16) ? ["column",[["row",[["slider", ["hDroneInQuantumRealm", 0, player.chm.hFunction()]]]]]] : null}, ] 
             
             
         }
@@ -1154,7 +1294,7 @@ buyables: {
             }
             let max3 = new Decimal(1)
 
-            max3 = player.c.sat.div(costPerUnit1).floor()
+            max3 = player.c.sat.div(costPerUnit3).floor()
             if(max3.lte(1)) {
                 max3 = new Decimal(1)
             }
@@ -1168,6 +1308,287 @@ buyables: {
             player.chm.iceshelves = player.chm.iceshelves.sub(costPerUnit2.mul(max))
             player.c.sat = player.c.sat.sub(costPerUnit3.mul(max))
             player.chm.droneMK2 = player.chm.droneMK2.add(max)
+            setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
+        },
+        style: {
+            "border-radius": "0px",
+            "border-color": "#000000",
+            "font-family": "Times New Roman",
+            "font-size": "14px"
+        },
+        
+    },
+    21: {
+        cost() { return [new Decimal(150).mul(player.chm.hDrone.add(1)), new Decimal(300).mul(player.chm.hDrone.add(1)), new Decimal(10000).mul(player.chm.hDrone.add(1)), new Decimal(7).mul(player.chm.hDrone.add(1))] }, 
+        display() { return "Create a hBot, a beast at multiplying scrap."
+            + " Ice Bot cost: " + format(this.cost()[0]) + " | Aquamarine Cost: " + format(this.cost()[1]) + " | Polymetric cost: " + format(this.cost()[2]) + " | Unit of Fire cost:" + format(this.cost()[3])
+            + " | Currently: " + format(this.effect()) + "x"
+         },
+         effect() {
+            return new Decimal(27).mul(player.chm.hBot.mul(9))
+         },
+         unlocked() { return hasChallenge('d', 16) || inChallenge('d', 16) },
+        canAfford() { return (player.chm.iceBot.gte(this.cost()[0]) && player.chm.aquamarine.gte(this.cost()[1]) && player.d.polymetrics.gte(this.cost()[2]) && player.ct.fire.gte(this.cost()[3])) },
+         buyMax() {
+            let costPerUnit1 = this.cost()[0]
+            let costPerUnit2 = this.cost()[1]
+            let costPerUnit3 = this.cost()[2]
+            let costPerUnit4 = this.cost()[3]
+            if(costPerUnit1.lte(1)) {
+                costPerUnit1 = new Decimal(1)
+            }
+            let max1 = new Decimal(1)
+
+            max1 = player.chm.iceBot.div(costPerUnit1).floor()
+            if(max1.lte(1)) {
+                max1 = new Decimal(1)
+            }
+            if(costPerUnit2.lte(1)) {
+                costPerUnit2 = new Decimal(1)
+            }
+            let max2 = new Decimal(1)
+
+            max2 = player.chm.aquamarine.div(costPerUnit2).floor()
+            if(max2.lte(1)) {
+                max2 = new Decimal(1)
+            }
+
+            if(costPerUnit3.lte(1)) {
+                costPerUnit3 = new Decimal(1)
+            }
+            let max3 = new Decimal(1)
+
+            max3 = player.d.polymetrics.div(costPerUnit3).floor()
+            if(max3.lte(1)) {
+                max3 = new Decimal(1)
+            }
+
+            if(costPerUnit4.lte(1)) {
+                costPerUnit4 = new Decimal(1)
+            }
+            let max4 = new Decimal(1)
+
+            max4 = player.ct.fire.div(costPerUnit4).floor()
+            if(max4.lte(1)) {
+                max4 = new Decimal(1)
+            }
+            let max = Decimal.min(max1, max2, max3, max4)
+            return [max, costPerUnit1, costPerUnit2, costPerUnit3, costPerUnit4]
+        
+        },
+        buy() {
+             let [max, costPerUnit1, costPerUnit2, costPerUnit3, costPerUnit4] = this.buyMax()
+            player.chm.iceBot = player.chm.iceBot.sub(costPerUnit1.mul(max))
+            player.chm.aquamarine = player.chm.aquamarine.sub(costPerUnit2.mul(max))
+            player.d.polymetrics = player.d.polymetrics.sub(costPerUnit3.mul(max))
+            player.ct.fire = player.ct.fire.sub(costPerUnit4.mul(max))
+            player.chm.hBot.add(max)
+            setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
+        },
+        style: {
+            "border-radius": "0px",
+            "border-color": "#000000",
+            "font-family": "Times New Roman",
+            "font-size": "14px"
+        },
+        
+    },
+    22: {
+        cost() { return [new Decimal(100).mul(player.chm.tesseract.add(1)), new Decimal(2000).mul(player.chm.tesseract.add(1)), new Decimal(50).mul(player.chm.tesseract.add(1)), new Decimal(1000).mul(player.chm.tesseract.add(1))] }, 
+        display() { return "Create a tesseract, a hybrid of Tetra-dimensional anomalies."
+            + " Dimensional Point cost: " + format(this.cost()[0]) + " | ABZ Cost: " + format(this.cost()[1]) + " | Metallic Iceberg cost: " + format(this.cost()[2]) + " | Atomic Multiplier cost:" + format(this.cost()[3])
+           
+         },
+         unlocked() { return hasChallenge('d', 16) || inChallenge('d', 16) },
+        canAfford() { return (player.d.points.gte(this.cost()[0]) && player.chm.alphabetasyntax.gte(this.cost()[1]) && player.chm.metallicBerg.gte(this.cost()[2]) && player.ct.amult.gte(this.cost()[3])) },
+         buyMax() {
+            let costPerUnit1 = this.cost()[0]
+            let costPerUnit2 = this.cost()[1]
+            let costPerUnit3 = this.cost()[2]
+            let costPerUnit4 = this.cost()[3]
+            if(costPerUnit1.lte(1)) {
+                costPerUnit1 = new Decimal(1)
+            }
+            let max1 = new Decimal(1)
+
+            max1 = player.d.points.div(costPerUnit1).floor()
+            if(max1.lte(1)) {
+                max1 = new Decimal(1)
+            }
+            if(costPerUnit2.lte(1)) {
+                costPerUnit2 = new Decimal(1)
+            }
+            let max2 = new Decimal(1)
+
+            max2 = player.chm.alphabetasyntax.div(costPerUnit2).floor()
+            if(max2.lte(1)) {
+                max2 = new Decimal(1)
+            }
+
+            if(costPerUnit3.lte(1)) {
+                costPerUnit3 = new Decimal(1)
+            }
+            let max3 = new Decimal(1)
+
+            max3 = player.chm.metallicBerg.div(costPerUnit3).floor()
+            if(max3.lte(1)) {
+                max3 = new Decimal(1)
+            }
+
+            if(costPerUnit4.lte(1)) {
+                costPerUnit4 = new Decimal(1)
+            }
+            let max4 = new Decimal(1)
+
+            max4 = player.ct.amult.div(costPerUnit4).floor()
+            if(max4.lte(1)) {
+                max4 = new Decimal(1)
+            }
+            let max = Decimal.min(max1, max2, max3, max4)
+            return [max, costPerUnit1, costPerUnit2, costPerUnit3, costPerUnit4]
+        
+        },
+        buy() {
+             let [max, costPerUnit1, costPerUnit2, costPerUnit3, costPerUnit4] = this.buyMax()
+            player.d.points = player.d.points.sub(costPerUnit1.mul(max))
+            player.chm.alphabetasyntax = player.chm.alphabetasyntax.sub(costPerUnit2.mul(max))
+            player.chm.metallicBerg = player.chm.metallicBerg.sub(costPerUnit3.mul(max))
+            player.ct.amult = player.ct.amult.sub(costPerUnit4.mul(max))
+            player.chm.tesseract = player.chm.tesseract.add(max)
+            setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
+        },
+        style: {
+            "border-radius": "0px",
+            "border-color": "#000000",
+            "font-family": "Times New Roman",
+            "font-size": "14px"
+        },
+        
+    },
+    23: {
+        cost() { return [new Decimal(50).mul(player.chm.hDrone.add(1)), new Decimal(100).mul(player.chm.hDrone.add(1)), new Decimal(3).mul(player.chm.hDrone.add(1))] }, 
+        display() { return "Create a hyperionic Drone... it boosts scrap and Mechanical Multiplier"
+            + " Frost Drone cost: " + format(this.cost()[0]) + " | Mechanical Multiplier Cost: " + format(this.cost()[1]) + " | Tesseract cost: " + format(this.cost()[2]) +
+             ' | Currently: ' + format(this.effect()[0]) + "x to scrap | " + format(this.effect()[1]) + "x to Mechanical Multiplier"
+           
+         },
+         effect() {
+            return [new Decimal(18).mul(player.chm.hDrone.mul(40)), new Decimal(1).mul(player.chm.hDrone)]
+         },
+         unlocked() { return hasChallenge('d', 16) || inChallenge('d', 16) },
+        canAfford() { return (player.chm.frostDrone.gte(this.cost()[0]) && player.chm.points.gte(this.cost()[1]) && player.chm.tesseract.gte(this.cost()[2])) },
+         buyMax() {
+            let costPerUnit1 = this.cost()[0]
+            let costPerUnit2 = this.cost()[1]
+            let costPerUnit3 = this.cost()[2]
+            
+            if(costPerUnit1.lte(1)) {
+                costPerUnit1 = new Decimal(1)
+            }
+            let max1 = new Decimal(1)
+
+            max1 = player.chm.frostDrone.div(costPerUnit1).floor()
+            if(max1.lte(1)) {
+                max1 = new Decimal(1)
+            }
+            if(costPerUnit2.lte(1)) {
+                costPerUnit2 = new Decimal(1)
+            }
+            let max2 = new Decimal(1)
+
+            max2 = player.chm.points.div(costPerUnit2).floor()
+            if(max2.lte(1)) {
+                max2 = new Decimal(1)
+            }
+
+            if(costPerUnit3.lte(1)) {
+                costPerUnit3 = new Decimal(1)
+            }
+            let max3 = new Decimal(1)
+
+            max3 = player.chm.tesseract.div(costPerUnit3).floor()
+            if(max3.lte(1)) {
+                max3 = new Decimal(1)
+            }
+
+           
+            let max = Decimal.min(max1, max2, max3)
+            return [max, costPerUnit1, costPerUnit2, costPerUnit3]
+        
+        },
+        buy() {
+             let [max, costPerUnit1, costPerUnit2, costPerUnit3] = this.buyMax()
+            player.chm.frostDrone = player.chm.points.sub(costPerUnit1.mul(max))
+            player.chm.points = player.chm.points.sub(costPerUnit2.mul(max))
+            player.chm.tesseract = player.chm.tesseract.sub(costPerUnit3.mul(max))
+            player.d.hDrone = player.d.hDrone.add(max)
+            setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
+        },
+        style: {
+            "border-radius": "0px",
+            "border-color": "#000000",
+            "font-family": "Times New Roman",
+            "font-size": "14px"
+        },
+        
+    },
+    24: { 
+        cost() { return [new Decimal(7500).mul(player.chm.mechanicalBomb.add(1)), new Decimal(200).mul(player.chm.mechanicalBomb.add(1)), new Decimal(10).mul(player.chm.mechanicalBomb.add(1))] }, 
+        display() { return "Create a bomb! Massive boosts to dimensional points and tetra"
+            + " Boracite: " + format(this.cost()[0]) + " | Mechanical Multiplier Cost: " + format(this.cost()[1]) + " | Grandeu cost: " + format(this.cost()[2]) +
+             ' | Currently: ' + format(this.effect()[0]) + "x to DP | " + format(this.effect()[1]) + "x to tetra"
+           
+         },
+         effect() {
+            return [new Decimal(1).add(player.chm.hDrone.mul(0.1)), new Decimal(1000).mul(player.chm.hDrone.mul(0.1).plus(1))]
+         },
+         unlocked() { return hasChallenge('d', 16) },
+        canAfford() { return (player.b.points.gte(this.cost()[0]) && player.chm.points.gte(this.cost()[1]) && player.ct.grandeu.gte(this.cost()[2])) },
+         buyMax() {
+            let costPerUnit1 = this.cost()[0]
+            let costPerUnit2 = this.cost()[1]
+            let costPerUnit3 = this.cost()[2]
+            
+            if(costPerUnit1.lte(1)) {
+                costPerUnit1 = new Decimal(1)
+            }
+            let max1 = new Decimal(1)
+
+            max1 = player.b.points.div(costPerUnit1).floor()
+            if(max1.lte(1)) {
+                max1 = new Decimal(1)
+            }
+            if(costPerUnit2.lte(1)) {
+                costPerUnit2 = new Decimal(1)
+            }
+            let max2 = new Decimal(1)
+
+            max2 = player.chm.points.div(costPerUnit2).floor()
+            if(max2.lte(1)) {
+                max2 = new Decimal(1)
+            }
+
+            if(costPerUnit3.lte(1)) {
+                costPerUnit3 = new Decimal(1)
+            }
+            let max3 = new Decimal(1)
+
+            max3 = player.ct.grandeu.div(costPerUnit3).floor()
+            if(max3.lte(1)) {
+                max3 = new Decimal(1)
+            }
+
+           
+            let max = Decimal.min(max1, max2, max3)
+            return [max, costPerUnit1, costPerUnit2, costPerUnit3]
+        
+        },
+        buy() {
+             let [max, costPerUnit1, costPerUnit2, costPerUnit3] = this.buyMax()
+            player.b.points = player.b.points.sub(costPerUnit1.mul(max))
+            player.chm.points = player.chm.points.sub(costPerUnit2.mul(max))
+            player.ct.grandeu = player.ct.grandeu.sub(costPerUnit3.mul(max))
+            player.chm.mechanicalBomb = player.chm.mechanicalBomb.add(max)
             setBuyableAmount(this.layer, this.id, getBuyableAmount(this.layer, this.id).add(max))
         },
         style: {
