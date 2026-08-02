@@ -99,12 +99,7 @@
 			<img id="guideBook" class="overlayThing" alt="My Icon" width="40" height="40" v-if="player.tab!='book-tab'" src="resources/books.png"
 				onclick="showTab('book-tab')"></img>
 			
-			<img id="chatIcon" class="overlayThing" alt="My Icon" width="40" height="40" v-if="player.tab!='global-tab'" src="resources/chaticon.png"
-				onclick="showTab('global-tab')"></img>
-		
-			<img id="leaderboard" class="overlayThing" alt="My Icon" width="40" height="40" v-if="player.tab!='leaderboard-tab'" src="resources/leaderboard.png"
-				onclick="showTab('leaderboard-tab')"></img>
-
+	
 			<overlay-head v-if="!(tmp.gameEnded && !player.keepGoing)"></overlay-head>
 			<div class="sideLayers">
 				<div v-for="(node, index) in OTHER_LAYERS['side']">
