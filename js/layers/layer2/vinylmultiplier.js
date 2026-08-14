@@ -24,7 +24,7 @@ addLayer("v", {
   },
   nodeStyle: {
     "background-image":
-      "linear-gradient(90deg,rgb(216, 255, 45) 0%, rgb(174, 199, 7) 50%, rgb(252, 249, 33) 100%)",
+      "linear-gradient(90deg,rgb(216, 255, 45) 0%, rgb(218, 233, 17) 50%, rgb(252, 249, 33) 100%)",
     "background-size": "150px 600%",
     "background-position": "40% 50%",
   },

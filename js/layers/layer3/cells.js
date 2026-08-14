@@ -202,7 +202,7 @@ addLayer("ce", {
     },
   ],
   layerShown() {
-    return getClickableState("c", 43) || player.c.cellUnlocked;
+    return getGridData("OS", 104) == 2 || player.ce.unlocked ? true : false;
   },
 
   upgrades: {

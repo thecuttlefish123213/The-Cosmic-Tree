@@ -50,6 +50,9 @@ addLayer("n", {
       },
     },
   ],
+  passiveGeneration() {
+    if (player.art.godlyTherm.gte(1)) return 1;
+  },
   softcap() {
     let sMetal = player.sm.points.toNumber();
     let equation = 1000 + sMetal * 10 - challengeCompletions("sm", 11) * 100;
@@ -105,6 +108,11 @@ addLayer("n", {
         }
       }
     }
+    if (player.art.godlyTherm.gte(1)) {
+      player[this.layer].fragments = player[this.layer].fragments.add(
+        new Decimal(1).mul(player[this.layer].fragMultiplier()),
+      );
+    }
   },
   style() {
     return {
@@ -145,6 +153,7 @@ addLayer("n", {
     if (hasMilestone("sm", 0)) mult = mult.times(10);
 
     if (hasMilestone("sm", 2)) mult = mult.pow(1.1);
+    if (player.art.godlyTherm.gte(1)) mult = mult.pow(2);
     return mult;
   },
   gainExp() {
@@ -400,13 +409,16 @@ addLayer("n", {
     },
     32: {
       title: "Forevermore",
-      description: "Unlock the Temperature Matrix(artifact)",
+      description: "Unlock the Godly Thermostat(artifact)",
       cost: new Decimal(1e8),
       currencyDisplayName: "Fragments",
       currencyInternalName: "fragments",
       currencyLayer: "n",
       unlocked() {
         return challengeCompletions("n", 11) >= 7;
+      },
+      onPurchase() {
+        player.art.godlyTherm = new Decimal(1);
       },
       style: {
         width: "200px",

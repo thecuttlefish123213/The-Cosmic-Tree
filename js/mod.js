@@ -35,6 +35,16 @@ let modInfo = {
     "layers/layer7/entropy.js",
     "layers/layer8/pendulums.js",
     "layers/layer8/supermultiplier.js",
+    "layers/layer8/supercomputers.js",
+    "layers/layer9/quantummultiplier.js",
+    "layers/layer9/prisms.js",
+    "layers/layer9/quantumcomputers.js",
+    "layers/layer10/ai.js",
+    "layers/layer10/physics.js",
+    "layers/layer10/virtualengine.js",
+    "layers/layer11/matrix.js",
+    "layers/layer11/singularity.js",
+    "layers/layer12/encapsulatedsingularity.js",
   ],
 
   discordName:
@@ -49,20 +59,23 @@ A) Mechanical has no tooltip
 B) UI redo
 C) Vinyl returns infinity - error
 D) Frost arz may not be unlocked properly - remember to fix this especially
+E) Fix Math game under axiom such that hard and insane can be randomly generated
 */
 
 // Set your version in num and name
 let VERSION = {
   num: "0.1",
-  name: "The Tearing of SpaceTime",
+  name: "The Voltaic Sector",
 };
 
 let changelog = `<h1>Changelog:</h1><br>
-	<h3>v0.0</h3><br>
-		- Added things.<br>
-		- Added stuff.`;
+	<h3>v0.1</h3><br>
+		- 21 Main Layers to progress through.<br>
+		- Over 100 subcurrencies to collect and view!.;
+    - Many sidelayers with cool features! Some unfinished.
+    - Music and Guide.`;
 
-let winText = `Congratulations! You have reached the end and beaten this game, but for now...`;
+let winText = `Congratulations! You have reached the end and beaten this game, for now...`;
 
 // If you add new functions anywhere inside of a layer, and those functions have an effect when called, add them here.
 // (The ones here are examples, all official functions are already taken care of)
@@ -97,6 +110,7 @@ function getPointGen() {
       mult = mult.times(player.sm.starglassFunction());
     return mult;
   }
+  if (getGridData("art", 302) == 2) mult = mult.times(10);
   if (hasUpgrade("m", 11)) gain = gain.times(1 + Math.log(1 + x));
   if (player.b.Panenite.gte(1))
     gain = gain.times(player.b.paneniteMultiplier());
@@ -153,7 +167,7 @@ function getPointGen() {
     gain = gain.times(1);
   } else {
     if (hasUpgrade("a", 21)) gain = gain.times(2);
-    if (player.c.unlocked1.gte(1)) gain = gain.times(clickableEffect("c", 31));
+
     if (hasUpgrade("v", 11)) gain = gain.times(upgradeEffect("v", 11));
     if (hasMilestone("h", 1)) gain = gain.times(4);
     if (hasMilestone("h", 10)) gain = gain.times(2);
@@ -181,6 +195,8 @@ function getPointGen() {
   if (hasUpgrade("ax", 13)) gain = gain.times(1e10);
   if (hasUpgrade("ax", 14)) gain = gain.times(upgradeEffect("ax", 14));
   if (hasUpgrade("ax", 15)) gain = gain.times(upgradeEffect("ax", 15));
+  if (player.ax.mathGamePoints.gte(1))
+    gain = gain.times(player.ax.mathGameBoost());
   if (player.sm.starglass.gte(1))
     gain = gain.times(player.sm.starglassFunction());
   return gain;
@@ -188,15 +204,22 @@ function getPointGen() {
 
 // You can add non-layer related variables that should to into "player" and be saved here, along with default values
 function addedPlayerData() {
-  return {};
+  return {
+    equipped: "",
+    dmg: 0,
+    hp: 100,
+    critdmg: 0,
+    critChance: 0.01,
+    armor: 0,
+  };
 }
 
 // Display extra things at the top of the page
-var displayThings = [];
+var displayThings = ["Current endgame: 100K Volts"];
 
 // Determines when the game "ends"
 function isEndgame() {
-  return player.vo.points.gte(new Decimal("27"));
+  return player.vo.points.gte(new Decimal(100000));
 }
 
 function showText(text) {
@@ -207,7 +230,12 @@ function showText(text) {
 // Less important things beyond this point!
 
 // Style for the background, can be a function
-var backgroundStyle = {};
+var backgroundStyle = {
+  "background-image": "url('resources/space2.avif')",
+  width: "100%",
+  height: "100%",
+  "background-size": "cover",
+};
 
 // You can change this if you have things that can be messed up by long tick lengths
 function maxTickLength() {

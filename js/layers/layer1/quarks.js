@@ -29,18 +29,28 @@ addLayer("q", {
   type: "normal", // normal: cost to gain currency depends on amount gained. static: cost depends on how much you already have
 
   exponent: 0.4, // Prestige currency exponent
-  nodeStyle: {
-    "border-radius": "100px",
-    width: "80px",
-    height: "120px",
-    "background-image":
-      "linear-gradient(90deg,rgb(195, 20, 195) 0%, rgb(254, 45, 254) 50%, rgb(132, 11, 113) 100%)",
-    "background-size": "600% 600%",
-    "background-position": "40% 50%",
+  nodeStyle() {
+    if (tmp.q.canReset || player.q.unlocked) {
+      return {
+        "background-image":
+          "linear-gradient(90deg,rgb(255, 47, 255) 0%, rgb(245, 64, 252) 50%, rgb(211, 23, 202) 100%)",
+        "background-size": "150px 600%",
+        "background-position": "40% 50%",
+        "border-radius": "100px",
+        width: "86px",
+        height: "123px",
+      };
+    } else
+      return {
+        width: "86px",
+        height: "123px",
+        "border-radius": "100px",
+      };
   },
   gainMult() {
     // Calculate the multiplier for main currency from bonuses
     mult = new Decimal(1);
+
     if (hasUpgrade("m", 15)) mult = mult.times(1.5);
     if (getBuyableAmount("ce", 104).gte(1))
       mult = mult.times(buyableEffect("ce", 104));
@@ -74,6 +84,7 @@ addLayer("q", {
     }
     if (player.ce.points.gte(1))
       mult = mult.times(new Decimal(4).mul(player.ce.points));
+
     return mult;
   },
   doReset(reset) {
@@ -98,6 +109,7 @@ addLayer("q", {
   gainExp() {
     // Calculate the exponent on main currency from bonuses
 
+    if (player.art.dquark.gte(1)) return new Decimal(2);
     return new Decimal(1);
   },
   row: 0, // Row the layer is in on the tree (0 is the first row)

@@ -54,10 +54,26 @@ addLayer("sm", {
       setClickableState(this.layer, 11, false);
     }
   },
-  nodeStyle: {
-    "border-radius": "0px",
+  nodeStyle() {
+    if (tmp.ax.canReset || player.ax.unlocked) {
+      return {
+        "background-image":
+          "linear-gradient(90deg,rgb(108, 27, 146) 0%, rgb(157, 14, 170) 50%, rgb(117, 11, 91) 100%)",
+        "background-size": "150px 600%",
+        "background-position": "40% 50%",
+        "border-radius": "0px",
+      };
+    } else
+      return {
+        "border-radius": "0px",
+      };
   },
   exponent: 0.5, // Prestige currency exponent
+  directMult() {
+    let mult = new Decimal(1);
+    if (player.art.pureGlass.gte(1)) mult = mult.times(10);
+    return mult;
+  },
   gainMult() {
     // Calculate the multiplier for main currency from bonuses
     mult = new Decimal(1);
@@ -245,7 +261,7 @@ addLayer("sm", {
     12: {
       name: "Hell's Allstars",
       challengeDescription:
-        "Disable every gain increase to particles(except starglass), every completion raises the goal requirement ",
+        "Disable every gain increase to particles(except starglass & related buyables), every completion raises the goal requirement ",
       goalDescription() {
         return (
           "Obtain: " + format(player[this.layer].challengeGoal) + " Particles"

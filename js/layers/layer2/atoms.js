@@ -9,7 +9,7 @@ addLayer("a", {
       protons: new Decimal(0),
       neutrons: new Decimal(0),
       electrons: new Decimal(0),
-      lbaryon: new Decimal(0),
+
       variable: new Decimal(0),
 
       stored: {

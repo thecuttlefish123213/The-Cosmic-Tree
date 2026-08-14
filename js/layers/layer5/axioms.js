@@ -7,9 +7,28 @@ addLayer("ax", {
       unlocked: false,
       points: new Decimal(0),
       canReset1: true,
+      mathGamePoints: new Decimal(0),
+      mathGameBoost() {
+        return this.mathGamePoints.add(1).pow(4);
+      },
+      mathQuestion: "",
+      mathAnswer: "",
+      mathAnswers: [],
+      mathGameActive: false,
+      flag: true,
     };
   },
   color: "#810f0f",
+  nodeStyle() {
+    if (tmp.ax.canReset || player.ax.unlocked) {
+      return {
+        "background-image":
+          "linear-gradient(90deg,rgb(134, 14, 14) 0%, rgb(161, 12, 12) 50%, rgb(122, 11, 11) 100%)",
+        "background-size": "150px 600%",
+        "background-position": "40% 50%",
+      };
+    } else return {};
+  },
   requires: new Decimal(100000), // Can be a function that takes requirement increases into account
   resource: "Axioms", // Name of prestige currency
   baseResource: "Dimensional Points", // Name of resource prestige is based on
@@ -90,6 +109,19 @@ addLayer("ax", {
             );
           },
         ],
+        "blank",
+        [
+          "display-text",
+          function () {
+            return (
+              "You have " +
+              format(player.ax.mathGamePoints) +
+              " Math Game Points | Boosting particle gain by: " +
+              format(player[this.layer].mathGameBoost()) +
+              "x"
+            );
+          },
+        ],
 
         "milestones",
         "clickables",
@@ -97,9 +129,15 @@ addLayer("ax", {
         ["infobox", "axioms"],
         [
           "raw-html",
-          `<div class='horizontalBox' style='width: 700px; height: 600px; border: 2px solid white; box-sizing: border-box;'><br><br>
-            <div class='mathDisplay' style='width: 425px; height: 175px; border: 2px solid white; box-sizing: border-box;'>
-            </div></div>`,
+          `<div class='horizontalBox' style='width: 700px; height: 800px; border: 2px solid white; box-sizing: border-box; background-image: linear-gradient(90deg, #b41f1f 0%, rgb(255, 0, 242) 50%, rgb(180, 32, 32) 100%);'><br><br>
+           <br><div id="MathTimer"  style='width: 500px; height: 100px; border: 2px solid white; box-sizing: border-box; font-size: 50px; font-family: Fantasy; color: black;'>Timer: 0</div>
+            <div id="MathIntro" data-answer="7" style='width: 500px; height: 100px; border: 2px solid white; box-sizing: border-box; font-size: 50px; font-family: Fantasy; color: black;'>5+2</div>
+            <br>
+            <br><br><br><br><button id="answerButtonAX1" onclick="processMathGame(this)"style='width: 150px; height: 150px; margin-right: 80px; border: 2px solid white; box-sizing: border-box; font-size: 27px; font-family: Fantasy; background-color:  red;'>7</button>
+            <button id="answerButtonAX2" onclick="processMathGame(this)"style='width: 150px; height: 150px; border: 2px solid white; box-sizing: border-box; font-size: 27px; font-family: Fantasy; background-color:  red;'>6</button>
+            <br><br><br><br><button id="answerButtonAX3" onclick="processMathGame(this)"style='width: 150px; height: 150px; margin-right: 80px; border: 2px solid white; box-sizing: border-box; font-size: 27px; font-family: Fantasy; background-color: red;'>8</button>
+            <button id="answerButtonAX4" onclick="processMathGame(this)"style='width: 150px; height: 150px; border: 2px solid white; box-sizing: border-box; font-size: 27px; font-family: Fantasy; background-color:  red;'>3</button>
+           </div>`,
         ],
       ],
     },

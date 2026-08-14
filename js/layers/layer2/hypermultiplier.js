@@ -66,16 +66,7 @@ addLayer("h", {
   },
   row: 1, // Row the layer is in on the tree (0 is the first row)
   branches: ["m"],
-  update() {
-    if (
-      player.m.points.gte(400) ||
-      player.h.points >= 1 ||
-      player.hm.points >= 1 ||
-      player.ce.points >= 1
-    ) {
-      player.h.variable = new Decimal(1);
-    }
-  },
+  update() {},
   hotkeys: [
     {
       key: "h",
@@ -107,7 +98,7 @@ addLayer("h", {
       },
     },
     3: {
-      requirementDescription: "3 Hyper Multiplier",
+      requirementDescription: "3 Hyper Multipliers",
       effectDescription:
         "Earn the ability to craft Hyper Quarks. Hyper Quarks can stack up quickly. Maximum of 5 allowed",
       done() {
@@ -115,7 +106,7 @@ addLayer("h", {
       },
     },
     4: {
-      requirementDescription: "4 Hyper Multiplier",
+      requirementDescription: "4 Hyper Multipliers",
       effectDescription: "Autobuy row 1 multiplier upgrades",
       done() {
         return player.h.points.gte(4);
@@ -135,7 +126,7 @@ addLayer("h", {
     },
 
     6: {
-      requirementDescription: "6 Hyper Multiplier",
+      requirementDescription: "6 Hyper Multipliers",
       effectDescription: "Passively generate 1% of multiplier",
       done() {
         return player.h.points.gte(6);
@@ -145,7 +136,7 @@ addLayer("h", {
       },
     },
     7: {
-      requirementDescription: "8 Hyper Multiplier",
+      requirementDescription: "8 Hyper Multipliers",
       effectDescription: "Autobuy row 2 multiplier upgrades",
       done() {
         return player.h.points.gte(8);
@@ -166,7 +157,7 @@ addLayer("h", {
       },
     },
     8: {
-      requirementDescription: "28 Hyper Multiplier",
+      requirementDescription: "28 Hyper Multipliers",
       effectDescription:
         "Double Multiplier gain(hint: buy more vinyl multiplier",
       done() {
@@ -177,7 +168,7 @@ addLayer("h", {
       },
     },
     9: {
-      requirementDescription: "35 Hyper Multiplier",
+      requirementDescription: "35 Hyper Multipliers",
       effectDescription: "Vinyl multiplier now boosts atom gain",
       done() {
         return player.h.points.gte(35);
@@ -190,7 +181,7 @@ addLayer("h", {
       },
     },
     10: {
-      requirementDescription: "80 Hyper Multiplier",
+      requirementDescription: "80 Hyper Multipliers",
       effectDescription: "Pretty high, 2x particle boost",
       done() {
         return player.h.points.gte(80);
@@ -200,7 +191,7 @@ addLayer("h", {
       },
     },
     11: {
-      requirementDescription: "95 Hyper Multiplier",
+      requirementDescription: "95 Hyper Multipliers",
       effectDescription: "Hyper multiplier now boosts particles",
       done() {
         return player.h.points.gte(80);
@@ -210,11 +201,11 @@ addLayer("h", {
       },
     },
     12: {
-      requirementDescription: "15000 Hyper Multipliers",
+      requirementDescription: "250 Hyper Multipliers",
       effectDescription:
         "Complete hyper multipliers FOR GOOD! and unlock an artifact for doing so",
       done() {
-        return player.h.points.gte(15000);
+        return player.h.points.gte(250);
       },
       unlocked() {
         if (hasUpgrade("hm", 33)) return true;

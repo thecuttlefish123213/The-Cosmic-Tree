@@ -47,7 +47,8 @@ addLayer("e", {
         "font-size": "20px",
         "font-family": "Arial",
         "text-align": "center",
-        color: "black",
+
+        color: "white",
       },
       borderStyle: { border: "4px solid white", "border-radius": "0px" },
       display() {
@@ -62,7 +63,16 @@ addLayer("e", {
       },
     },
   },
-
+  nodeStyle() {
+    if (tmp.e.canReset || player.e.unlocked) {
+      return {
+        "background-image":
+          "linear-gradient(90deg,rgb(30, 121, 196) 0%, rgb(49, 197, 255) 50%, rgb(31, 119, 153) 100%)",
+        "background-size": "150px 600%",
+        "background-position": "40% 50%",
+      };
+    } else return {};
+  },
   color: "#2688e4",
   best: new Decimal(0),
   requires() {

@@ -13,7 +13,16 @@ addLayer("m", {
     };
   },
   color: "#ff0000",
-
+  nodeStyle() {
+    if (tmp.m.canReset || player.m.unlocked) {
+      return {
+        "background-image":
+          "linear-gradient(90deg,rgb(255, 0, 0) 0%, rgb(255, 80, 80) 50%, rgb(177, 8, 8) 100%)",
+        "background-size": "150px 600%",
+        "background-position": "40% 50%",
+      };
+    } else return {};
+  },
   requires: new Decimal(10), // Can be a function that takes requirement increases into account
   resource: "Multipliers", // Name of prestige currency
   baseResource: "particles", // Name of resource prestige is based on
@@ -69,6 +78,7 @@ addLayer("m", {
   },
   gainExp() {
     // Calculate the exponent on main currency from bonuses
+    if (player.art.alienEssence.gte(1)) return new Decimal(2);
     return new Decimal(1);
   },
   doReset(reset) {

@@ -1054,7 +1054,7 @@ addLayer("ct", {
       },
       unlocked() {
         let unlocked = false;
-        if (player.ct.bdust.gte(20)) unlocked = true;
+
         return unlocked;
       },
 
@@ -1138,7 +1138,7 @@ addLayer("ct", {
       },
       unlocked() {
         let unlocked = false;
-        if (player.ct.bdust.gte(1)) unlocked = true;
+
         return unlocked;
       },
 

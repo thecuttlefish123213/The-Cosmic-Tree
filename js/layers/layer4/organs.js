@@ -78,6 +78,16 @@ addLayer("o", {
       },
     },
   ],
+  nodeStyle() {
+    if (tmp.o.canReset || player.o.unlocked) {
+      return {
+        "background-image":
+          "linear-gradient(90deg, #ff5100 0%, rgb(214, 119, 30) 50%, rgb(214, 121, 14) 100%)",
+        "background-size": "150px 600%",
+        "background-position": "40% 50%",
+      };
+    } else return {};
+  },
   color: "#ff5100", // eventually a linear gradient
   requires: new Decimal(15000),
   resource: "Organs", // Name of prestige currency

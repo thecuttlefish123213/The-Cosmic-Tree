@@ -33,7 +33,9 @@ addLayer("t", {
       return { ...style };
     }
   },
-
+  passiveGeneration() {
+    if (player.art.sigil.gte(1)) return 1;
+  },
   requires() {
     return new Decimal(1000);
   }, // Can be a function that takes requirement increases into account
@@ -1887,7 +1889,7 @@ addLayer("t", {
       title: "Tetra 5D Frequency Table",
       display() {
         return (
-          " Unlock gamma rays under alchemy lab.  " +
+          " Unlock sulfur under alchemy lab.  " +
           "   You have: " +
           format(getBuyableAmount(this.layer, this.id))
         );
@@ -2152,7 +2154,7 @@ addLayer("t", {
       display() {
         let [formula1, formula2, formula3] = this.effect();
         return (
-          " Gamma Rays, Beta Particles, and Alpha particles boost particle gain. Buy more to improve formula " +
+          " Sulfur, Electrons, and Helium Atoms boost particle gain. Buy more to improve formula " +
           "   cost:" +
           format(this.cost()) +
           " " +
@@ -2161,11 +2163,11 @@ addLayer("t", {
           format(getBuyableAmount(this.layer, this.id)) +
           "|Effects: " +
           format(formula1) +
-          "x to gamma rays, " +
+          "x to sulfur, " +
           format(formula2) +
-          "x to beta particles, and " +
+          "x to electrons, and " +
           format(formula3) +
-          "x to alpha particles"
+          "x to helium atoms"
         );
       },
       unlocked() {
@@ -2173,20 +2175,13 @@ addLayer("t", {
       },
       effect(x) {
         let formula1 = new Decimal(1)
-          .mul(
-            player.ac.gammaray.plus(1).mul(player.ac.gammaray.plus(1).mul(15)),
-          )
+          .mul(player.ac.sulfur.plus(1).mul(player.ac.sulfur.plus(1).mul(15)))
           .mul(x.plus(1));
         let formula2 = new Decimal(1)
-          .mul(player.ac.bparticle.plus(1).pow(1.05))
+          .mul(player.a.electrons.plus(1).pow(1.05))
           .mul(x.plus(1));
         let formula3 = new Decimal(1)
-          .mul(
-            player.ac.aparticle
-              .plus(1)
-              .mul(100)
-              .mul(player.ac.aparticle.plus(1)),
-          )
+          .mul(player.ac.helium.plus(1).mul(100).mul(player.ac.helium.plus(1)))
           .mul(x.plus(1));
         return [formula1, formula2, formula3];
       },

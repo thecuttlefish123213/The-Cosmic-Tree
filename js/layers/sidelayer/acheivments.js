@@ -5,6 +5,7 @@ addLayer("ach", {
         return true;
       },
       points: new Decimal(0),
+      halfway: false,
     };
   },
   symbol: "ACH",
@@ -12,14 +13,18 @@ addLayer("ach", {
   color: "#dbdbdb",
   row: "side",
   baseResource: "particles",
-  resource: "achievemnts",
+  resource: "achievements",
   baseAmount() {
     return player.points;
   },
   requires: new Decimal(10),
   type: "none",
   exponent: 0.5,
-
+  update() {
+    if (player.vo.points.gte(1)) {
+      player[this.layer].halfway = true;
+    }
+  },
   gainMult() {
     return new Decimal(1);
   },
@@ -29,7 +34,134 @@ addLayer("ach", {
   layerShown() {
     return true;
   },
-
+  tabFormat: {
+    achievements: {
+      content: [
+        "main-display",
+        [
+          "row",
+          [
+            ["achievement", 11],
+            ["achievement", 12],
+            ["achievement", 13],
+            ["achievement", 14],
+            ["achievement", 15],
+            ["achievement", 16],
+            ["achievement", 17],
+          ],
+        ],
+        [
+          "row",
+          [
+            ["achievement", 21],
+            ["achievement", 22],
+            ["achievement", 23],
+            ["achievement", 24],
+            ["achievement", 25],
+            ["achievement", 26],
+            ["achievement", 27],
+          ],
+        ],
+        [
+          "row",
+          [
+            ["achievement", 31],
+            ["achievement", 32],
+            ["achievement", 33],
+            ["achievement", 34],
+            ["achievement", 35],
+            ["achievement", 36],
+            ["achievement", 37],
+          ],
+        ],
+        [
+          "row",
+          [
+            ["achievement", 41],
+            ["achievement", 42],
+            ["achievement", 43],
+            ["achievement", 44],
+            ["achievement", 45],
+            ["achievement", 46],
+            ["achievement", 47],
+          ],
+        ],
+        [
+          "row",
+          [
+            ["achievement", 51],
+            ["achievement", 52],
+            ["achievement", 53],
+            ["achievement", 54],
+            ["achievement", 55],
+            ["achievement", 56],
+            ["achievement", 57],
+          ],
+        ],
+        [
+          "row",
+          [
+            ["achievement", 61],
+            ["achievement", 62],
+            ["achievement", 63],
+            ["achievement", 64],
+            ["achievement", 65],
+            ["achievement", 66],
+            ["achievement", 67],
+          ],
+        ],
+        [
+          "row",
+          [
+            ["achievement", 71],
+            ["achievement", 72],
+            ["achievement", 73],
+            ["achievement", 74],
+            ["achievement", 75],
+            ["achievement", 76],
+            ["achievement", 77],
+          ],
+        ],
+        [
+          "row",
+          [
+            ["achievement", 81],
+            ["achievement", 82],
+            ["achievement", 83],
+            ["achievement", 84],
+            ["achievement", 85],
+            ["achievement", 86],
+            ["achievement", 87],
+          ],
+        ],
+        [
+          "row",
+          [
+            ["achievement", 91],
+            ["achievement", 92],
+            ["achievement", 93],
+            ["achievement", 94],
+            ["achievement", 95],
+            ["achievement", 96],
+            ["achievement", 97],
+          ],
+        ],
+        ["h-line", "800px"],
+        [
+          "row",
+          [
+            ["achievement", 101],
+            ["achievement", 102],
+            ["achievement", 103],
+            ["achievement", 104],
+            ["achievement", 105],
+            ["achievement", 106],
+            ["achievement", 107],
+          ],
+        ],
+      ],
+    },
+  },
   achievements: {
     11: {
       name: "Experienced",
@@ -648,6 +780,41 @@ addLayer("ach", {
       tooltip: "Glass",
       onComplete() {
         player[this.layer].points = player[this.layer].points.add(1);
+      },
+    },
+    96: {
+      name: "Massless Construct",
+      done() {
+        return player.ac.neutrino.gte(1);
+      },
+      tooltip: "1 Neutrino",
+      onComplete() {
+        player[this.layer].points = player[this.layer].points.add(1);
+      },
+    },
+    97: {
+      name: "The Axiomic Problem",
+      done() {
+        return player.ax.points.gte(1);
+      },
+      tooltip: "1 Axiom",
+      onComplete() {
+        player[this.layer].points = player[this.layer].points.add(1);
+      },
+    },
+    101: {
+      name: "THE VOLTAIC SECTOR",
+      done() {
+        return player.vo.points.gte(1);
+      },
+      tooltip: "The halfway mark",
+      onComplete() {
+        player[this.layer].points = player[this.layer].points.add(1);
+      },
+      style: {
+        width: "125px",
+        height: "125px",
+        animation: "spin 5s linear infinite",
       },
     },
   },

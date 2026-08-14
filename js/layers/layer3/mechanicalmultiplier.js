@@ -188,6 +188,7 @@ addLayer("chm", {
     if (player.chm.hBot.gte(1)) mult = mult.times(buyableEffect("chm", 21));
     if (player.chm.hDrone.gte(1))
       mult = mult.times(buyableEffect("chm", 23)[0]);
+    if (player.art.kingCrystal.gte(1)) mult = mult.pow(2);
     return mult;
   },
   doReset(reset) {
@@ -562,6 +563,7 @@ addLayer("chm", {
     }
     if (getBuyableAmount("chm", 23).gte(1))
       mult = mult.times(buyableEffect("chm", 23)[1]);
+    if (player.art.kingCrystal.gte(1)) mult = mult.pow(2);
     return mult;
   },
   gainMult() {
@@ -571,11 +573,27 @@ addLayer("chm", {
     // Calculate the exponent on main currency from bonuses
     return new Decimal(1);
   },
-  nodeStyle: {
-    classes: ["hexNode"],
-
-    width: "125px",
-    height: "100px",
+  nodeStyle() {
+    if (tmp.chm.canReset || player.chm.unlocked) {
+      return {
+        "background-image":
+          "linear-gradient(90deg,rgb(122, 112, 112) 0%, rgb(161, 144, 144) 50%, rgb(139, 128, 128) 100%)",
+        "background-size": "150px 600%",
+        "background-position": "40% 50%",
+        "border-radius": "0px",
+        "clip-path":
+          "polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)",
+        width: "125px",
+        height: "100px",
+      };
+    } else
+      return {
+        "clip-path":
+          "polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%)",
+        width: "125px",
+        height: "100px",
+        "border-radius": "0px",
+      };
   },
   row: 2, // Row the layer is in on the tree (0 is the first row)
   branches: ["h", "hm"],
