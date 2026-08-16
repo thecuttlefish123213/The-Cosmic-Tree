@@ -13,6 +13,7 @@ addLayer("v", {
   requires: new Decimal(5), // Can be a function that takes requirement increases into account
   resource: "Vinyl Multipliers", // Name of prestige currency
   baseResource: "Hyper Multipliers", // Name of resource prestige is based on
+  best: new Decimal(0),
   baseAmount() {
     return player.h.points;
   }, // Get the current amount of baseResource
@@ -22,11 +23,15 @@ addLayer("v", {
     if (getBuyableAmount("t", 31).gte(1))
       return new Decimal(0.1).mul(getBuyableAmount("t", 31));
   },
-  nodeStyle: {
-    "background-image":
-      "linear-gradient(90deg,rgb(216, 255, 45) 0%, rgb(218, 233, 17) 50%, rgb(252, 249, 33) 100%)",
-    "background-size": "150px 600%",
-    "background-position": "40% 50%",
+  nodeStyle() {
+    if (tmp.v.canReset || player.v.unlocked) {
+      return {
+        "background-image":
+          "linear-gradient(90deg,rgb(216, 255, 45) 0%, rgb(218, 233, 17) 50%, rgb(252, 249, 33) 100%)",
+        "background-size": "150px 600%",
+        "background-position": "40% 50%",
+      };
+    }
   },
   exponent: 0.5, // Prestige currency exponent
   gainMult() {
@@ -159,11 +164,11 @@ addLayer("v", {
     },
     15: {
       title: "Plasticity",
-      description: "Vinyl Multipliers now boost multipliers",
+      description: "Best Vinyl Multipliers now boost multipliers",
       cost: new Decimal(5),
       effect() {
         if (inChallenge("a", 12)) return new Decimal(1);
-        else return player[this.layer].points.add(1).pow(0.75);
+        else return Decimal.log(player.v.best.add(1.001), 1.001);
       },
       effectDisplay() {
         return format(upgradeEffect(this.layer, this.id)) + "x";

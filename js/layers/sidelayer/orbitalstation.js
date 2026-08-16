@@ -129,7 +129,7 @@ addLayer("OS", {
       if (data == 1) {
         switch (id) {
           case 104:
-            return player.c.adt.gte(150) && player.c.t.gte(150);
+            return player.c.adt.gte(15) && player.c.t.gte(150);
           case 201:
             return player.c.sat.gte(15);
           case 302:
@@ -137,15 +137,16 @@ addLayer("OS", {
           case 403:
             return player.c.sat.gte(150) && player.c.adt.gte(1000);
         }
-      }
+      } else return true;
     },
     onClick(data, id) {
       if (data == 2) {
         switch (id) {
           case 104:
             player[this.layer].grid[id]++;
-            player.c.adt = player.c.adt.sub(150);
+            player.c.adt = player.c.adt.sub(15);
             player.c.t = player.c.t.sub(150);
+            player.ce.unlocked = true;
           case 201:
             player[this.layer].grid[id]++;
             player.c.sat = player.c.sat.sub(15);
@@ -184,7 +185,7 @@ addLayer("OS", {
         }
         switch (id) {
           case 104:
-            return "150 Advanced Telescopes and 150 Telescopes to unlock cells";
+            return "15 Advanced Telescopes and 150 Telescopes to unlock cells";
           case 201:
             return "15 Super Advanced Telescopes for a 5x Cosmic Dust Boost";
           case 302:

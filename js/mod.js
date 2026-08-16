@@ -44,7 +44,7 @@ let modInfo = {
     "layers/layer10/virtualengine.js",
     "layers/layer11/matrix.js",
     "layers/layer11/singularity.js",
-    "layers/layer12/encapsulatedsingularity.js",
+    "layers/layerFinal/encapsulatedsingularity.js",
   ],
 
   discordName:
@@ -115,6 +115,7 @@ function getPointGen() {
   if (player.b.Panenite.gte(1))
     gain = gain.times(player.b.paneniteMultiplier());
   if (hasUpgrade("m", 12)) gain = gain.times(1 + Math.log(1 + x));
+
   if (hasUpgrade("m", 13)) gain = gain.times(upgradeEffect("m", 13));
   if (hasUpgrade("q", 15)) gain = gain.times(upgradeEffect("q", 15));
   if (hasUpgrade("q", 11)) gain = gain.times(1 + Math.log(0.5 + x));
@@ -177,6 +178,7 @@ function getPointGen() {
     if (hasUpgrade("a", 13)) gain = gain.times(3);
     if (hasUpgrade("c", 21)) gain = gain.times(1.5);
     if (hasUpgrade("c", 22)) gain = gain.times(1.5);
+    if (hasUpgrade("c", 15)) gain = gain.times(upgradeEffect("c", 15));
     if (hasChallenge("a", 22)) gain = gain.times(challengeEffect("a", 22));
   }
   if (player.ct.bdust.gte(1)) gain = gain.times(player.ct.bdustEffect2());

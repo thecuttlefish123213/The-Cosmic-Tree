@@ -219,8 +219,8 @@ addLayer("hm", {
       unlocked() {
         return hasUpgrade("hm", 12);
       },
-      effect() {
-        player.hm.atomicm = new Decimal(1);
+      onPurchase() {
+        player.hm.atomicm = player.hm.atomic.add(1);
       },
       branches: [36],
     },

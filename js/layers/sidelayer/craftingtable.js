@@ -157,37 +157,37 @@ addLayer("ct", {
             let html =
               "<div style='width:600px; height:800px; overflow:auto;'>";
             if (player.ct.hq.gte(1)) {
-              html += `<div style='font-size: 25px'>You have ${player.ct.hq} Hyper Quarks</div>`;
+              html += `<div style='font-size: 35px'>You have ${player.ct.hq} Hyper Quarks</div>`;
             }
             if (player.ct.sdust.gte(1)) {
-              html += `<div style='font-size: 25px'>You have ${player.ct.sdust} Star Dust</div>`;
+              html += `<div style='font-size: 35px'>You have ${player.ct.sdust} Star Dust</div>`;
             }
             if (player.ct.amult.gte(1)) {
-              html += `<div style='font-size: 25px'>You have ${player.ct.amult} Atomic Multiplier</div>`;
+              html += `<div style='font-size: 35px'>You have ${player.ct.amult} Atomic Multiplier</div>`;
             }
             if (player.ct.hatom.gte(1)) {
-              html += `<div style='font-size: 25px'>You have ${player.ct.hatom} Heavy Atoms</div>`;
+              html += `<div style='font-size: 35px'>You have ${player.ct.hatom} Heavy Atoms</div>`;
             }
             if (player.ct.stars.gte(1)) {
-              html += `<div style='font-size: 25px'>You have ${player.ct.stars} Stars</div>`;
+              html += `<div style='font-size: 35px'>You have ${player.ct.stars} Stars</div>`;
             }
             if (player.ct.agenta.gte(1)) {
-              html += `<div style='font-size: 25px'>You have ${player.ct.agenta} Agenta</div>`;
+              html += `<div style='font-size: 35px'>You have ${player.ct.agenta} Agenta</div>`;
             }
             if (player.ct.grandeu.gte(1)) {
-              html += `<div style='font-size: 25px'>You have ${player.ct.grandeu} Grandeu</div>`;
+              html += `<div style='font-size: 35px'>You have ${player.ct.grandeu} Grandeu</div>`;
             }
             if (player.ct.fire.gte(1)) {
-              html += `<div style='font-size: 25px'>You have ${player.ct.fire} Units of Fire</div>`;
+              html += `<div style='font-size: 35px'>You have ${player.ct.fire} Units of Fire</div>`;
             }
             if (player.ct.bastion.gte(1)) {
-              html += `<div style='font-size: 25px'>You have ${player.ct.bastion} Bastions</div>`;
+              html += `<div style='font-size: 35px'>You have ${player.ct.bastion} Bastions</div>`;
             }
 
             // Continuation of fire chain, when I eventually make it
 
             if (player.ct.bdust.gte(1)) {
-              html += `<div style='font-size: 25px'>You have ${player.ct.bdust} Black Dust</div>`;
+              html += `<div style='font-size: 35px'>You have ${player.ct.bdust} Black Dust</div>`;
             }
             return html;
           },
@@ -358,7 +358,7 @@ addLayer("ct", {
         }
       },
       unlocked() {
-        return true;
+        return player.c.points.gte(1);
       },
       buyMax() {
         let costPerUnit1 = this.cost()[1];
@@ -424,6 +424,7 @@ addLayer("ct", {
         return format(upgradeEffect(this.layer, this.id)) + "x";
       },
       canAfford() {
+        if (player.ct.amult.gte(1e9)) return false;
         if (
           player.a.points.gte(this.cost()[1]) &&
           player.v.points.gte(this.cost()[0])
@@ -488,6 +489,7 @@ addLayer("ct", {
         return format(upgradeEffect(this.layer, this.id)) + "x";
       },
       canAfford() {
+        if (player.ct.stars.gte(1e9)) return false;
         return player.ct.sdust.gte(this.cost());
       },
       unlocked() {
@@ -549,13 +551,14 @@ addLayer("ct", {
         return format(upgradeEffect(this.layer, this.id)) + "x";
       },
       canAfford() {
+        if (player.ct.nzet.gte(1e9)) return false;
         return (
           player.chm.empzet.gte(this.cost()) &&
           player.chm.protozet.gte(this.cost())
         );
       },
       unlocked() {
-        return true;
+        return player.chm.empzet.gte(1);
       },
       buyMax() {
         let costPerUnit = new Decimal(100000).mul(
@@ -631,6 +634,7 @@ addLayer("ct", {
         return format(upgradeEffect(this.layer, this.id)) + "x";
       },
       canAfford() {
+        if (player.ct.hatom.gte(1e9)) return false;
         return (
           player.hm.points.gte(this.cost()[1]) &&
           player.a.points.gte(this.cost()[0])
@@ -702,6 +706,7 @@ addLayer("ct", {
         return format(upgradeEffect(this.layer, this.id)) + "x";
       },
       canAfford() {
+        if (player.ct.agenta.gte(1e9)) return false;
         return player.b.Agate.gte(this.cost());
       },
       unlocked() {
@@ -769,6 +774,7 @@ addLayer("ct", {
         return format(upgradeEffect(this.layer, this.id)) + "x";
       },
       canAfford() {
+        if (player.ct.grandeu.gte(1e9)) return false;
         return player.b.Grandulum.gte(this.cost());
       },
       unlocked() {
@@ -828,6 +834,7 @@ addLayer("ct", {
       },
 
       canAfford() {
+        if (player.ct.fire.gte(1e9)) return false;
         return player.d.basalt.gte(this.cost());
       },
       unlocked() {
@@ -890,6 +897,7 @@ addLayer("ct", {
       },
 
       canAfford() {
+        if (player.ct.fire.gte(1e9)) return false;
         return player.d.basalt.gte(this.cost());
       },
       unlocked() {
@@ -963,6 +971,7 @@ addLayer("ct", {
       },
 
       canAfford() {
+        if (player.ct.bdust.gte(1e9)) return false;
         return (
           player.n.points.gte(this.cost()[0]) &&
           player.b.points.gte(this.cost()[1]) &&

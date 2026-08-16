@@ -16,7 +16,7 @@ addLayer("c", {
       permanentGeneration: false,
       multiplier() {
         if (inChallenge("a", 21)) return new Decimal(1);
-        else return player.ce.dna.plus(1).pow(0.3);
+        else return player.ce.dna.plus(1).pow(0.1);
       },
     };
   },
@@ -68,6 +68,7 @@ addLayer("c", {
       };
     } else return {};
   },
+  best: new Decimal(0),
   requires: new Decimal(1000000), // Can be a function that takes requirement increases into account
   resource: "Cosmic Dust", // Name of prestige currency
   baseResource: "Quarks", // Name of resource prestige is based on
@@ -209,9 +210,13 @@ addLayer("c", {
         [
           "display-text",
           function () {
-            return (
-              "You have " + format(player.c.sat) + " super advanced telescopes."
-            );
+            if (player.c.adt.gte(1)) {
+              return (
+                "You have " +
+                format(player.c.sat) +
+                " super advanced telescopes."
+              );
+            }
           },
           { "border-radius": "0px", "font-size": "28px" },
         ],
@@ -309,14 +314,28 @@ addLayer("c", {
       description: "Passively generate 1% of Quarks",
       cost: new Decimal(3),
     },
+    15: {
+      title: "Best Buy",
+      description: "Best Cosmic Dust boosts particles",
+      cost: new Decimal(2),
+      effect() {
+        return Decimal.log(player.c.best.add(1.001), 1.005);
+      },
+      effectDisplay() {
+        return "Currently: " + format(this.effect()) + "x";
+      },
+    },
     12: {
       title: "Radar technology",
       description:
-        "Utilized advanced telescopes to perform a search of the universe. Who knows what you may unlock",
+        "Utilized advanced telescopes to perform a search of the universe. Who knows what you may unlock. Unlock the Orbital Station",
       cost: new Decimal(3),
       currencyDisplayName: "advanced telescopes",
       currencyInternalName: "adt",
       currencyLayer: "c",
+      onPurchase() {
+        player.OS.unlocked = true;
+      },
       unlocked() {
         return hasChallenge("a", 11);
       },
@@ -424,7 +443,7 @@ addLayer("c", {
         return player.c.adt.gte(this.cost(1));
       },
       unlocked() {
-        return player.c.updated;
+        return player.c.adt.gte(1);
       },
       buyMax() {
         return true;

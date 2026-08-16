@@ -47,12 +47,12 @@ addLayer("a", {
   type: "normal", // normal: cost to gain currency depends on amount gained. static: cost depends on how much you already have
   softcap() {
     if (inChallenge("d", 11)) return new Decimal(10).mul(player.d.points);
-    else return new Decimal(1000);
+    else return new Decimal(10000);
   },
   softcapPower() {
     if (inChallenge("d", 11))
       return new Decimal(0.01).add(player.d.points.mul(0.01));
-    else return new Decimal(0.2);
+    else return new Decimal(0.4);
   },
   exponent: 0.5, // Prestige currency exponent
   gainMult() {
@@ -65,7 +65,7 @@ addLayer("a", {
     if (inChallenge("a", 21)) mult = mult.times(0.5);
     if (getBuyableAmount("ce", 18).gte(1))
       mult = mult.times(buyableEffect("ce", 18));
-
+    if (player.ce.mito.gte(1)) mult = mult.times(buyableEffect("ce", 11));
     if (getBuyableAmount("ce", 101).gte(1))
       mult = mult.times(buyableEffect("ce", 101));
     if (getBuyableAmount("ce", 108).gte(1))
@@ -106,7 +106,7 @@ addLayer("a", {
   },
   doReset(reset) {
     let keep = [];
-    if (player.ax.canReset1) {
+    if (!player.ax.canReset1) {
       return null;
     }
     keep.push("protons");

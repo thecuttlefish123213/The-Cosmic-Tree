@@ -180,14 +180,12 @@ addLayer("e", {
     },
     13: {
       title: "Extraterrestrial Beginnings",
-      description: "5000x Cell Gain, auto-unlock the Orbital Station",
+      description: "5000x Cell Gain",
       cost() {
         if (hasUpgrade("e", 14)) return new Decimal(20);
         else return new Decimal(2);
       },
-      onPurchase() {
-        player.OS.unlocked = true;
-      },
+
       unlocked() {
         return hasUpgrade("e", 12);
       },

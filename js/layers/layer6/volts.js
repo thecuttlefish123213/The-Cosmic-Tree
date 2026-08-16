@@ -28,7 +28,7 @@ addLayer("vo", {
       title: "Volts",
       body() {
         return `Electricity is created by the transfer of electrons(note the elec part). Volts measure electrical pressure, amps
-        measure the flow rate of a current, and Watts = Volts * Amps(Total power). Effects buyables have are hidden as a challenge for the community
+        measure the flow rate of a current, and Watts = Volts * Amps(Total power). 
         to calculate
              `;
       },

@@ -4,7 +4,7 @@ addLayer("ce", {
   position: 3, // Horizontal position within a row. By default it uses the layer id and sorts in alphabetical order
   startData() {
     return {
-      unlocked: true,
+      unlocked: false,
       points: new Decimal(0),
 
       mito: new Decimal(0),
@@ -73,11 +73,15 @@ addLayer("ce", {
     };
   },
   color: "#3b0134",
-  nodeStyle: {
-    "background-image":
-      "linear-gradient(90deg,rgb(51, 6, 58) 0%, rgb(48, 2, 34) 50%, rgb(68, 17, 68) 100%)",
-    "background-size": "150px 600%",
-    "background-position": "40% 50%",
+  nodeStyle() {
+    if (tmp.ce.canReset || player.a.points.gte(4000) || player.ce.unlocked) {
+      return {
+        "background-image":
+          "linear-gradient(90deg,rgb(51, 6, 58) 0%, rgb(48, 2, 34) 50%, rgb(68, 17, 68) 100%)",
+        "background-size": "150px 600%",
+        "background-position": "40% 50%",
+      };
+    }
   },
   passiveGeneration() {
     if (hasMilestone("e", 0)) {
@@ -1530,15 +1534,18 @@ addLayer("ce", {
       }, // some sort of error
       display() {
         return (
-          "Buy one mitochondria. Each mitochondria generates ATP and gives a 1.5x compounding boost to Atoms." +
+          "Buy one mitochondria. Each mitochondria generates ATP and boosts Atoms logarithmnically." +
           " cost: " +
-          format(this.cost())
+          format(this.cost()) +
+          " | Currently: " +
+          format(this.effect()) +
+          "x"
         );
       },
       effect() {
         if (inChallenge("a", 21)) return new Decimal(1);
         else if (player.ce.mito <= 0.9) return new Decimal(1);
-        else return new Decimal(1.5).mul(player.ce.mito);
+        else return Decimal.log(player.ce.mito.plus(1), 1.4);
       },
       canAfford() {
         return player.a.points.gte(this.cost());
@@ -1584,7 +1591,11 @@ addLayer("ce", {
           format(this.cost())
         );
       },
-
+      effect() {
+        if (inChallenge("a", 21)) return new Decimal(1);
+        else if (player.ce.nucleus <= 0.9) return new Decimal(1);
+        else return Decimal.log(player.ce.nucleus.plus(1), 1.4);
+      },
       canAfford() {
         return player.a.points.gte(this.cost(1));
       },

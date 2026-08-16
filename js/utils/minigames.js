@@ -1409,13 +1409,7 @@ function skipTrack() {
 
 function addText(id) {
   // All tab content IDs
-  const tabs = [
-    "Introduction",
-    "Music",
-    "Guide",
-    "Description & Info",
-    "Advanced Guide",
-  ];
+  const tabs = ["Introduction", "Music", "Description & Info"];
 
   // Hide all tabs
   tabs.forEach((tabId) => {
