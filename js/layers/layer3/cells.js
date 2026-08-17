@@ -362,7 +362,7 @@ addLayer("ce", {
         height: "150px",
       },
       effect() {
-        return new Decimal(4).mul(player.ce.points);
+        return Decimal.log(player.ce.points.add(2), 1.01);
       },
     },
   },
@@ -410,7 +410,7 @@ addLayer("ce", {
           "display-text",
           function () {
             return (
-              "Each cell boosts cosmic dust by 4, atoms by 4, quarks by 4, and particles by 4" +
+              "Each cell boosts cosmic dust, atoms,and quarks" +
               "   currently: " +
               format(upgradeEffect("ce", 24)) +
               "x"

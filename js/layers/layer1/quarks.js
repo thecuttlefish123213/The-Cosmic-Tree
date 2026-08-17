@@ -50,7 +50,7 @@ addLayer("q", {
   gainMult() {
     // Calculate the multiplier for main currency from bonuses
     mult = new Decimal(1);
-
+    if (player.ce.points.gte(1)) mult = mult.times(upgradeEffect("ce", 24));
     if (hasUpgrade("m", 15)) mult = mult.times(1.5);
     if (getBuyableAmount("ce", 104).gte(1))
       mult = mult.times(buyableEffect("ce", 104));

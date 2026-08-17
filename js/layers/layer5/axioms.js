@@ -9,7 +9,9 @@ addLayer("ax", {
       canReset1: true,
       mathGamePoints: new Decimal(0),
       mathGameBoost() {
-        return this.mathGamePoints.add(1).pow(4);
+        let boost = subExp(this.mathGamePoints.add(1), 0.9);
+        if (boost.gte(1e100)) boost = new Decimal(1e50);
+        return boost;
       },
       mathQuestion: "",
       mathAnswer: "",
@@ -61,7 +63,7 @@ addLayer("ax", {
       title: "Axioms",
       body() {
         return `An Axiom is an accepted truth, usually self-evident, that can function without proof. For example, the equality problem: 'a=a' is an accepted truth
-        with no proof because it is self-evident. The Commutative property: 'a+b=b+a', is also self-evident.
+        with no proof because it is self-evident. The Commutative property: 'a+b=b+a', is also self-evident. If you suck at math, spam click the same answer box over and over
              `;
       },
     },
@@ -166,7 +168,7 @@ addLayer("ax", {
       description: "particles boost particles again!",
       cost: new Decimal(7),
       effect() {
-        return player.points.add(1).pow(0.3);
+        return player.points.add(1).pow(0.05);
       },
       effectDisplay() {
         return format(upgradeEffect(this.layer, this.id)) + "x";
@@ -177,7 +179,7 @@ addLayer("ax", {
       description: "Evolution Points now boost particle gain",
       cost: new Decimal(11),
       effect() {
-        return player.e.points.add(1).mul(1e9);
+        return player.e.points.add(1).mul(1e7);
       },
       effectDisplay() {
         return format(upgradeEffect(this.layer, this.id)) + "x";

@@ -35,6 +35,7 @@ addLayer("n", {
       layer1CanReset: false,
       savedBoracite: new Decimal(0),
       savedCosmicDust: new Decimal(0),
+      timer2: 0,
     };
   },
   color() {
@@ -80,7 +81,11 @@ addLayer("n", {
     }
   },
   update() {
-    updateMusicDisplay();
+    player.n.timer2++;
+    if (player.n.timer2 > 100) {
+      updateMusicDisplay();
+      player.n.timer2 = 0;
+    }
     if (player.n.unlocked) {
       if (player.n.timer > 0) {
         player.n.timer -= 1;
@@ -152,13 +157,13 @@ addLayer("n", {
     if (hasMilestone("nm", 2)) mult = mult.times(10);
     if (hasMilestone("sm", 0)) mult = mult.times(10);
 
-    if (hasMilestone("sm", 2)) mult = mult.pow(1.1);
     if (player.art.godlyTherm.gte(1)) mult = mult.pow(2);
     return mult;
   },
   gainExp() {
-    // Calculate the exponent on main currency from bonuses
-    return new Decimal(1);
+    let mult = new Decimal(1);
+    if (hasMilestone("sm", 2)) mult = mult.add(0.1);
+    return mult;
   },
   bars: {
     bigBar: {

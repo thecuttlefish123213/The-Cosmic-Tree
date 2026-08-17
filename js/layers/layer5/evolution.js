@@ -182,7 +182,7 @@ addLayer("e", {
       title: "Extraterrestrial Beginnings",
       description: "5000x Cell Gain",
       cost() {
-        if (hasUpgrade("e", 14)) return new Decimal(20);
+        if (hasUpgrade("e", 14)) return new Decimal(10);
         else return new Decimal(2);
       },
 
@@ -200,7 +200,7 @@ addLayer("e", {
       title: "Alien Bindings",
       description: "Unlock cosmic cells, under the Orbital Station",
       cost() {
-        if (hasUpgrade("e", 16)) return new Decimal(25);
+        if (hasUpgrade("e", 16)) return new Decimal(15);
         else return new Decimal(3);
       },
       unlocked() {
@@ -220,7 +220,7 @@ addLayer("e", {
       title: "Cosmic Catastrophe",
       description: "Cosmic Cells now boost Cell Gain",
       cost() {
-        if (hasUpgrade("e", 18)) return new Decimal(30);
+        if (hasUpgrade("e", 18)) return new Decimal(20);
         else return new Decimal(4);
       },
       unlocked() {
@@ -243,10 +243,17 @@ addLayer("e", {
     },
     19: {
       title: "Astronomical Odyssey",
-      description: "Unlock Foreign Organs in the Orbital Station",
+      description:
+        "Unlock Foreign Organs in the Orbital Station, best evolution points now also boost MM",
       cost() {
-        if (hasUpgrade("e", 20)) return new Decimal(35);
+        if (hasUpgrade("e", 20)) return new Decimal(25);
         else return new Decimal(5);
+      },
+      effect() {
+        return Decimal.log2(player.e.best.add(2)).mul(5);
+      },
+      effectDisplay() {
+        return "Currently: " + format(this.effect()) + "x";
       },
       unlocked() {
         return hasUpgrade("e", 17);
@@ -265,7 +272,7 @@ addLayer("e", {
       title: "E.T.",
       description: "Foreign Organs now boost Organ Gain",
       cost() {
-        if (hasUpgrade("e", 20)) return new Decimal(40);
+        if (hasUpgrade("e", 20)) return new Decimal(30);
         else return new Decimal(6);
       },
       effect() {
@@ -290,9 +297,9 @@ addLayer("e", {
     23: {
       title: "NASA's Big Break",
       description:
-        "Unlock Alien Lifeforms in the Orbital Station, 10 times Mega Multiplier Boost",
+        "Unlock Alien Lifeforms in the Orbital Station, 100 times Mega Multiplier Boost",
       cost() {
-        if (hasUpgrade("e", 24)) return new Decimal(50);
+        if (hasUpgrade("e", 24)) return new Decimal(35);
         else return new Decimal(7);
       },
 
@@ -314,7 +321,7 @@ addLayer("e", {
       title: "Coral Keep",
       description: "50x Tetra Gain",
       cost() {
-        if (hasUpgrade("e", 13)) return new Decimal(20);
+        if (hasUpgrade("e", 13)) return new Decimal(10);
         else return new Decimal(2);
       },
       unlocked() {
@@ -331,7 +338,7 @@ addLayer("e", {
       title: "Great Barrier Reef",
       description: "Double Organism gain, Organisms now boost cell gain",
       cost() {
-        if (hasUpgrade("e", 15)) return new Decimal(25);
+        if (hasUpgrade("e", 15)) return new Decimal(15);
         else return new Decimal(3);
       },
       unlocked() {
@@ -355,7 +362,7 @@ addLayer("e", {
       description:
         "Double Organ gain(not the actual currency, but the organs themselves)",
       cost() {
-        if (hasUpgrade("e", 17)) return new Decimal(30);
+        if (hasUpgrade("e", 17)) return new Decimal(20);
         else return new Decimal(4);
       },
       unlocked() {
@@ -372,7 +379,7 @@ addLayer("e", {
       title: "Schools in fishion",
       description: "Triple Organ Gain",
       cost() {
-        if (hasUpgrade("e", 19)) return new Decimal(35);
+        if (hasUpgrade("e", 19)) return new Decimal(25);
         else return new Decimal(5);
       },
       unlocked() {
@@ -389,7 +396,7 @@ addLayer("e", {
       title: "Reign of the Ape Lord",
       description: "Double Organ Gain, Ten Times Mega Multiplier Gain",
       cost() {
-        if (hasUpgrade("e", 21)) return new Decimal(40);
+        if (hasUpgrade("e", 21)) return new Decimal(30);
         else return new Decimal(6);
       },
       unlocked() {
@@ -404,9 +411,9 @@ addLayer("e", {
     },
     24: {
       title: "Revival of Origin",
-      description: "Triple Organ Gain, Twenty Times Mega Multiplier Gain",
+      description: "Triple Organ Gain, Fifty Times Mega Multiplier Gain",
       cost() {
-        if (hasUpgrade("e", 23)) return new Decimal(50);
+        if (hasUpgrade("e", 23)) return new Decimal(35);
         else return new Decimal(7);
       },
       unlocked() {
@@ -420,6 +427,44 @@ addLayer("e", {
     },
   },
   buyables: {
+    101: {
+      cost(x) {
+        return new Decimal(1).mul(x.plus(1));
+      },
+      display() {
+        return (
+          "Buy a Mega Multiplier multiplier(no pun intended)" +
+          " | Cost: " +
+          format(this.cost()) +
+          " | effect: " +
+          format(this.effect()) +
+          "x"
+        );
+      },
+
+      canAfford() {
+        return player.e.points.gte(this.cost());
+      },
+      effect(x) {
+        return new Decimal(5).mul(x.plus(1));
+      },
+      buy() {
+        player.e.points = player.e.points.sub(this.cost());
+        setBuyableAmount(
+          this.layer,
+          this.id,
+          getBuyableAmount(this.layer, this.id).add(1),
+        );
+      },
+      style: {
+        "border-radius": "0px",
+        "border-color": "#000000",
+        "font-family": "Times New Roman",
+        "font-size": "20px",
+        width: "300px",
+        height: "300px",
+      },
+    },
     11: {
       cost(x) {
         return [
@@ -761,11 +806,7 @@ addLayer("e", {
         ["infobox", "evolution"],
         "blank",
         "milestones",
-        [
-          "display-text",
-          "I reccomend going down the right path, left is much harder",
-          { "font-size": "40px" },
-        ],
+        ["buyable", "101"],
         [
           "upgrade-tree",
           [

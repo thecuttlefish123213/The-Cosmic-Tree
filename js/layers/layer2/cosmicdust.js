@@ -82,7 +82,7 @@ addLayer("c", {
     mult = new Decimal(1);
     mult = mult.times(player.c.multiplier());
     if (hasUpgrade("ce", 12)) mult = mult.times(2);
-
+    if (player.ce.points.gte(1)) mult = mult.times(upgradeEffect("ce", 24));
     if (inChallenge("a", 21)) mult = mult.times(0.5);
     if (getBuyableAmount("t", 12).gte(1))
       if (getGridData("art", 201) == 2) mult = mult.times(5);

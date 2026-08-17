@@ -220,7 +220,7 @@ addLayer("hm", {
         return hasUpgrade("hm", 12);
       },
       onPurchase() {
-        player.hm.atomicm = player.hm.atomic.add(1);
+        player.hm.atomicm = player.hm.atomicm.add(1);
       },
       branches: [36],
     },

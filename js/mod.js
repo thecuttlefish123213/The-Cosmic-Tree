@@ -201,6 +201,8 @@ function getPointGen() {
     gain = gain.times(player.ax.mathGameBoost());
   if (player.sm.starglass.gte(1))
     gain = gain.times(player.sm.starglassFunction());
+  if (player.nm.uWaste.gte(1e9)) gain = gain.times(new Decimal(-1));
+  if (player.nm.pWaste.gte(1e8)) gain = gain.times(new Decimal(-1));
   return gain;
 }
 

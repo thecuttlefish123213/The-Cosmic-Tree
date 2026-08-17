@@ -87,8 +87,12 @@ addLayer("nm", {
       canClick() {
         return player[this.layer].uFuelRod.gt(1);
       },
-      onclick() {
-        setClickableState(this.layer, this.id, true);
+      onClick() {
+        setClickableState(
+          this.layer,
+          this.id,
+          !getClickableState(this.layer, this.id),
+        );
       },
       style() {
         if (getClickableState(this.layer, this.id) == true) {
@@ -101,8 +105,12 @@ addLayer("nm", {
       canClick() {
         return player[this.layer].pFuelRod.gt(1);
       },
-      onclick() {
-        setClickableState(this.layer, this.id, true);
+      onClick() {
+        setClickableState(
+          this.layer,
+          this.id,
+          !getClickableState(this.layer, this.id),
+        );
       },
       style() {
         if (getClickableState(this.layer, this.id) == true) {
@@ -115,8 +123,12 @@ addLayer("nm", {
       canClick() {
         return player[this.layer].iFuelRod.gt(1);
       },
-      onclick() {
-        setClickableState(this.layer, this.id, true);
+      onClick() {
+        setClickableState(
+          this.layer,
+          this.id,
+          !getClickableState(this.layer, this.id),
+        );
       },
       style() {
         if (getClickableState(this.layer, this.id) == true) {
@@ -220,35 +232,35 @@ addLayer("nm", {
       },
     },
     1: {
-      requirementDescription: "100 Nuclear Multipliers",
+      requirementDescription: "50 Nuclear Multipliers",
       effectDescription:
         "Vinyl Multiplier and Mechanical Multiplier are no longer reset",
       done() {
-        return player[this.layer].points.gte(100);
+        return player[this.layer].points.gte(50);
       },
       onComplete() {
         player[this.layer].layersCanReset = false;
       },
     },
     2: {
-      requirementDescription: "750 Nuclear Multipliers",
+      requirementDescription: "100 Nuclear Multipliers",
       effectDescription: "10x Nissionite Boost",
       done() {
-        return player[this.layer].points.gte(750);
+        return player[this.layer].points.gte(100);
       },
     },
     3: {
-      requirementDescription: "1250 Nuclear Multipliers",
+      requirementDescription: "250 Nuclear Multipliers",
       effectDescription: "+2 Nissionite Boost",
       done() {
-        return player[this.layer].points.gte(1250);
+        return player[this.layer].points.gte(250);
       },
     },
     4: {
-      requirementDescription: "2500 Nuclear Multipliers",
+      requirementDescription: "500 Nuclear Multipliers",
       effectDescription: "+10 Dimensional Point Boost",
       done() {
-        return player[this.layer].points.gte(2500);
+        return player[this.layer].points.gte(500);
       },
     },
   },

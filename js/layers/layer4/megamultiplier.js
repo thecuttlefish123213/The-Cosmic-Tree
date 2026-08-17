@@ -43,8 +43,10 @@ addLayer("mm", {
     if (hasUpgrade("d", 35)) mult = mult.times(1.5);
     if (hasUpgrade("d", 47)) mult = mult.times(2);
     if (hasUpgrade("e", 22)) mult = mult.times(10);
-    if (hasUpgrade("e", 23)) mult = mult.times(10);
-    if (hasUpgrade("e", 24)) mult = mult.times(20);
+    if (hasUpgrade("e", 23)) mult = mult.times(100);
+    if (hasUpgrade("e", 24)) mult = mult.times(50);
+    if (getBuyableAmount("e", 101).gte(1))
+      mult = mult.times(buyableEffect("e", 101));
     return mult;
   },
   gainExp() {

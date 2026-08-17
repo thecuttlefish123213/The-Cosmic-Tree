@@ -358,7 +358,7 @@ addLayer("ct", {
         }
       },
       unlocked() {
-        return player.c.points.gte(1);
+        return player.c.points.gte(1) || player.ct.sdust.gte(1);
       },
       buyMax() {
         let costPerUnit1 = this.cost()[1];

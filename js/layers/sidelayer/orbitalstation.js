@@ -23,7 +23,11 @@ addLayer("OS", {
   },
 
   color: "#868592",
-
+  tooltip() {
+    if (!player.OS.unlocked) {
+      return "s p a c e";
+    } else return "s p a c e";
+  },
   row: "side",
 
   requires: new Decimal(10),
@@ -126,6 +130,9 @@ addLayer("OS", {
       return true;
     },
     getCanClick(data, id) {
+      if (data == 0) {
+        return true;
+      }
       if (data == 1) {
         switch (id) {
           case 104:
@@ -137,10 +144,11 @@ addLayer("OS", {
           case 403:
             return player.c.sat.gte(150) && player.c.adt.gte(1000);
         }
-      } else return true;
+      }
+      return false;
     },
     onClick(data, id) {
-      if (data == 2) {
+      if (data == 1) {
         switch (id) {
           case 104:
             player[this.layer].grid[id]++;

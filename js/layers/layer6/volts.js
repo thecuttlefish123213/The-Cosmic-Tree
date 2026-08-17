@@ -66,7 +66,7 @@ addLayer("vo", {
     return mult;
   },
   update() {
-    if (player.vo.unlocked) {
+    if (hasUpgrade("vo", 11)) {
       if (player.vo.thunderTimer > 0) {
         player.vo.thunderTimer -= 1;
       }

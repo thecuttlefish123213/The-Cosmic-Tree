@@ -446,7 +446,9 @@ function adjustPopupTime(diff) {
     }
   }
 }
-
+function subExp(x, a) {
+  return Decimal.exp(Decimal.pow(x, a));
+}
 function run(func, target, args = null) {
   if (isFunction(func)) {
     let bound = func.bind(target);

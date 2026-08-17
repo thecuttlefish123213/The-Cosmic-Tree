@@ -188,6 +188,7 @@ var systemComponents = {
     <button class="tabButton active" onclick="addText('Music')" >Music</button>
    
     <button class="tabButton active" onclick="addText('Description & Info')" >Description & Info</button>
+	<button class="tabButton active" onclick="addText('Save Banks')" >Save Banks</button>
    
   </div>
 
@@ -195,6 +196,7 @@ var systemComponents = {
   <div class="tab-content" id="Introduction">Click on a tab for info!</div>
   <div class="tab-content" id="Music" style="display:none;">Text for Tab 2. Edit me!</div>
   <div class="tab-content" id="Description & Info" style="display:none;">Text for Tab 4. Change as needed.</div>
+	<div class="tab-content" id="Save Banks" style="display:none;">Text for Tab 4. Change as needed.</div>
 </div>
 		`,
   },

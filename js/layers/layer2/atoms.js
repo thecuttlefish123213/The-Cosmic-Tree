@@ -50,14 +50,17 @@ addLayer("a", {
     else return new Decimal(10000);
   },
   softcapPower() {
+    let mult = new Decimal(0.4);
     if (inChallenge("d", 11))
-      return new Decimal(0.01).add(player.d.points.mul(0.01));
-    else return new Decimal(0.4);
+      mult = new Decimal(0.01).add(player.d.points.mul(0.01));
+    if (mult.gte(1)) mult = new Decimal(1);
+    return mult;
   },
   exponent: 0.5, // Prestige currency exponent
   gainMult() {
     // Calculate the multiplier for main currency from bonuses
     mult = new Decimal(1);
+    if (player.ce.points.gte(1)) mult = mult.times(upgradeEffect("ce", 24));
     if (hasUpgrade("mm", 23)) mult = mult.times(5);
     if (hasUpgrade("q", 22)) mult = mult.times(2);
     mult = mult.times(buyableEffect("ce", 11));

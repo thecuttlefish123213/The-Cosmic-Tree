@@ -8,12 +8,12 @@ addLayer("sm", {
       points: new Decimal(0),
       starglass: new Decimal(0),
       starglassCap: new Decimal(5),
-      challengeGoal: new Decimal(1e6),
+      challengeGoal: new Decimal(100000),
       timer: 0,
       canReset: true,
 
       starglassFunction() {
-        return this.starglass.plus(1).pow(3);
+        return new Decimal(4).pow(this.starglass);
       },
     };
   },
@@ -23,6 +23,7 @@ addLayer("sm", {
       body() {
         return `There are two challenges, Heaven's Cherubs and Hell's Allstars. Heaven's Cherubs is easy, Hell's Allstars IS HARD!!!. Hell's Allstars
         gives a better reward, but it's not enough to make a major difference in overall progress. The option is up to you on how you want to proceed.
+         Completing both will NOT multiply the effects.
              `;
       },
     },
@@ -44,14 +45,15 @@ addLayer("sm", {
   },
   update() {
     if (player[this.layer].starglass.gte(player[this.layer].starglassCap)) {
-      player[this.layer].starglass = new Decimal(5);
+      player[this.layer].starglass = player[this.layer].starglassCap;
     }
-
-    if (player[this.layer].timer > 0) {
-      player[this.layer].timer--;
-    }
-    if (player[this.layer].timer == 0) {
-      setClickableState(this.layer, 11, false);
+    if (!hasMilestone("sm", 3)) {
+      if (player[this.layer].timer > 0) {
+        player[this.layer].timer--;
+      }
+      if (player[this.layer].timer == 0) {
+        setClickableState(this.layer, 11, false);
+      }
     }
   },
   nodeStyle() {
@@ -191,9 +193,19 @@ addLayer("sm", {
     3: {
       requirementDescription: "15 Starglass",
       effectDescription:
-        "Add 2 to Nissionite gain, add 2 to dimensional point gain",
+        "Add 2 to Nissionite gain, add 2 to dimensional point gain. Remove starglass cooldown",
       done() {
         return player[this.layer].starglass.gte(15);
+      },
+      unlocked() {
+        return player[this.layer].starglass.gte(1);
+      },
+    },
+    4: {
+      requirementDescription: "60 Starglass",
+      effectDescription: "Ten times Dimensional Point gain",
+      done() {
+        return player[this.layer].starglass.gte(60);
       },
       unlocked() {
         return player[this.layer].starglass.gte(1);
@@ -251,10 +263,23 @@ addLayer("sm", {
         return "Raise Starglass cap";
       },
       onComplete() {
-        if (challengeCompletions(this.layer, 11) >= 1) {
-          player[this.layer].starglassCap = player[this.layer].starglassCap.mul(
-            new Decimal(challengeCompletions(this.layer, 11)).plus(1),
-          );
+        let comps = challengeCompletions(this.layer, this.id);
+        if (challengeCompletions(this.layer, 12) < 5) {
+          if (comps <= 2) {
+            player.sm.starglassCap = new Decimal(25).mul(
+              new Decimal(challengeCompletions(this.layer, this.id)).plus(2),
+            );
+          } else if (comps == 3) {
+            player.sm.starglassCap = new Decimal(70);
+          } else if (comps == 4) {
+            player.sm.starglassCap = new Decimal(90);
+          } else if (comps == 5) {
+            player.sm.starglassCap = new Decimal(110);
+          } else if (comps == 6) {
+            player.sm.starglassCap = new Decimal(130);
+          } else {
+            player.sm.starglassCap = new Decimal(150);
+          }
         }
       },
     },
@@ -276,15 +301,29 @@ addLayer("sm", {
         return "Raise Starglass Cap, once at 5 completions, you get an artifact!";
       },
       onComplete() {
-        if (challengeCompletions(this.layer, 12) >= 1) {
-          player[this.layer].challengeGoal = player[
-            this.layer
-          ].challengeGoal.pow(
-            new Decimal(challengeCompletions(this.layer, 12)).plus(1),
-          );
-          player[this.layer].starglassCap = player[this.layer].starglassCap.mul(
-            new Decimal(challengeCompletions(this.layer, 12)).plus(2),
-          );
+        let comps = challengeCompletions(this.layer, this.id);
+
+        if (comps == 1) {
+          player.sm.challengeGoal = new Decimal("1e11");
+        } else if (comps == 2) {
+          player.sm.challengeGoal = new Decimal("1e38");
+        } else if (comps == 3) {
+          player.sm.challengeGoal = new Decimal("1e62");
+        } else if (comps == 4) {
+          player.sm.challengeGoal = new Decimal("1e77");
+        }
+        if (challengeCompletions(this.layer, 11) < 7) {
+          if (comps <= 2) {
+            player.sm.starglassCap = new Decimal(25).mul(
+              new Decimal(challengeCompletions(this.layer, this.id)).plus(2),
+            );
+          } else if (comps == 3) {
+            player.sm.starglassCap = new Decimal(100);
+          } else if (comps == 4) {
+            player.sm.starglassCap = new Decimal(125);
+          } else {
+            player.sm.starglassCap = new Decimal(150);
+          }
         }
       },
     },
