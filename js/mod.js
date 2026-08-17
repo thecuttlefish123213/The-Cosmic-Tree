@@ -235,7 +235,7 @@ function showText(text) {
 
 // Style for the background, can be a function
 var backgroundStyle = {
-  "background-image": "url('resources/space2.avif')",
+  "background-image": "url('resources/cosmos.jpg')",
   width: "100%",
   height: "100%",
   "background-size": "cover",

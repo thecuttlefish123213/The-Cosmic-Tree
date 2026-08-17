@@ -287,12 +287,7 @@ addLayer("vo", {
         ],
         ["bar", "bigBar"],
         ["infobox", "evolution"],
-        ["display-text", "Toggle to enable/disable thunder sound effect"],
-        function () {
-          return hasUpgrade("vo", 11)
-            ? ["toggle", ["vo", "lightningSound"]]
-            : null;
-        },
+
         [
           "display-text",
           function () {

@@ -442,22 +442,7 @@ addLayer("ce", {
           },
         ],
 
-        [
-          "column",
-          [
-            [
-              "row",
-              [
-                ["buyable", "11"],
-                [
-                  "display-image",
-                  "resources/mitochondria.png",
-                  { width: "200px", height: "200px" },
-                ],
-              ],
-            ],
-          ],
-        ],
+        ["column", [["row", [["buyable", "11"]]]]],
 
         [
           "display-text",
@@ -486,22 +471,7 @@ addLayer("ce", {
           },
         ],
 
-        [
-          "column",
-          [
-            [
-              "row",
-              [
-                ["buyable", "12"],
-                [
-                  "display-image",
-                  "resources/nucleus.png",
-                  { width: "200px", height: "200px" },
-                ],
-              ],
-            ],
-          ],
-        ],
+        ["column", [["row", [["buyable", "12"]]]]],
 
         [
           "display-text",
@@ -532,11 +502,6 @@ addLayer("ce", {
               [
                 ["buyable", "13"],
                 ["buyable", "14"],
-                [
-                  "display-image",
-                  "resources/er.png",
-                  { width: "200px", height: "200px" },
-                ],
               ],
             ],
           ],
@@ -557,11 +522,6 @@ addLayer("ce", {
               [
                 ["buyable", "15"],
                 ["buyable", "16"],
-                [
-                  "display-image",
-                  "resources/vacuole.png",
-                  { width: "200px", height: "150px" },
-                ],
               ],
             ],
           ],
@@ -588,11 +548,6 @@ addLayer("ce", {
               [
                 ["buyable", "17"],
                 ["buyable", "18"],
-                [
-                  "display-image",
-                  "resources/golgi.png",
-                  { width: "200px", height: "200px" },
-                ],
               ],
             ],
           ],
@@ -667,17 +622,7 @@ addLayer("ce", {
             );
           },
         ],
-        [
-          "row",
-          [
-            ["buyable", "41"],
-            [
-              "display-image",
-              "resources/MSmithii.png",
-              { width: "200px", height: "200px" },
-            ],
-          ],
-        ],
+        ["row", [["buyable", "41"]]],
         function () {
           return hasUpgrade("hm", 38)
             ? [
@@ -689,19 +634,7 @@ addLayer("ce", {
             : null;
         },
         function () {
-          return hasUpgrade("hm", 38)
-            ? [
-                "row",
-                [
-                  ["buyable", "42"],
-                  [
-                    "display-image",
-                    "resources/Solfataricus.jpg",
-                    { width: "200px", height: "200px" },
-                  ],
-                ],
-              ]
-            : null;
+          return hasUpgrade("hm", 38) ? ["row", [["buyable", "42"]]] : null;
         },
         function () {
           return hasChallenge("d", 12)
@@ -714,19 +647,7 @@ addLayer("ce", {
             : null;
         },
         function () {
-          return hasChallenge("d", 12)
-            ? [
-                "row",
-                [
-                  ["buyable", "43"],
-                  [
-                    "display-image",
-                    "resources/halobacterium.webp",
-                    { width: "200px", height: "200px" },
-                  ],
-                ],
-              ]
-            : null;
+          return hasChallenge("d", 12) ? ["row", [["buyable", "43"]]] : null;
         },
         function () {
           return hasUpgrade("d", 39)
@@ -739,19 +660,7 @@ addLayer("ce", {
             : null;
         },
         function () {
-          return hasUpgrade("d", 39)
-            ? [
-                "row",
-                [
-                  ["buyable", "44"],
-                  [
-                    "display-image",
-                    "resources/mJan.jpg",
-                    { width: "200px", height: "200px" },
-                  ],
-                ],
-              ]
-            : null;
+          return hasUpgrade("d", 39) ? ["row", [["buyable", "44"]]] : null;
         },
       ],
     },
@@ -766,84 +675,14 @@ addLayer("ce", {
           [
             "column",
             [
-              [
-                "row",
-                [
-                  ["buyable", "101"],
-                  [
-                    "display-image",
-                    "resources/bloodcells.png",
-                    { width: "200px", height: "200px" },
-                  ],
-                ],
-              ],
-              [
-                "row",
-                [
-                  ["buyable", "102"],
-                  [
-                    "display-image",
-                    "resources/hepatic.png",
-                    { width: "175px", height: "175px" },
-                  ],
-                ],
-              ],
-              [
-                "row",
-                [
-                  ["buyable", "103"],
-                  [
-                    "display-image",
-                    "resources/lungcell.jpg",
-                    { width: "175px", height: "175px" },
-                  ],
-                ],
-              ],
-              [
-                "row",
-                [
-                  ["buyable", "104"],
-                  [
-                    "display-image",
-                    "resources/bonecell.png",
-                    { width: "200px", height: "200px" },
-                  ],
-                ],
-              ],
-              [
-                "row",
-                [
-                  ["buyable", "105"],
-                  [
-                    "display-image",
-                    "resources/musclecell.png",
-                    { width: "200px", height: "200px" },
-                  ],
-                ],
-              ],
-              [
-                "row",
-                [
-                  ["buyable", "106"],
-                  [
-                    "display-image",
-                    "resources/renal.jpg",
-                    { width: "175px", height: "175px" },
-                  ],
-                ],
-              ],
+              ["row", [["buyable", "101"]]],
+              ["row", [["buyable", "102"]]],
+              ["row", [["buyable", "103"]]],
+              ["row", [["buyable", "104"]]],
+              ["row", [["buyable", "105"]]],
+              ["row", [["buyable", "106"]]],
 
-              [
-                "row",
-                [
-                  ["buyable", "108"],
-                  [
-                    "display-image",
-                    "resources/neuron.png",
-                    { width: "200px", height: "200px" },
-                  ],
-                ],
-              ],
+              ["row", [["buyable", "108"]]],
             ],
           ],
         ],
