@@ -1745,50 +1745,10 @@ addLayer("chm", {
         [
           "column",
           [
-            [
-              "row",
-              [
-                ["buyable", "51"],
-                [
-                  "display-image",
-                  "resources/Mjölnir.png",
-                  { width: "200px", height: "200px" },
-                ],
-              ],
-            ],
-            [
-              "row",
-              [
-                ["buyable", "52"],
-                [
-                  "display-image",
-                  "resources/Stormbreaker.png",
-                  { width: "200px", height: "200px" },
-                ],
-              ],
-            ],
-            [
-              "row",
-              [
-                ["buyable", "53"],
-                [
-                  "display-image",
-                  "resources/InfinityGauntlet.png",
-                  { width: "200px", height: "200px" },
-                ],
-              ],
-            ],
-            [
-              "row",
-              [
-                ["buyable", "54"],
-                [
-                  "display-image",
-                  "resources/KingCrystal.png",
-                  { width: "200px", height: "200px" },
-                ],
-              ],
-            ],
+            ["row", [["buyable", "51"]]],
+            ["row", [["buyable", "52"]]],
+            ["row", [["buyable", "53"]]],
+            ["row", [["buyable", "54"]]],
           ],
         ],
       ],
