@@ -93,10 +93,6 @@ addLayer("vo", {
           player.vo.points = player.vo.points.add(
             new Decimal(Math.random() * 0.015).mul(this.lightningMultiplier()),
           );
-          if (player[this.layer].lightningSound) {
-            let audio = document.getElementById("thunder");
-            audio.play().catch(() => {});
-          }
         }
       }
     }
