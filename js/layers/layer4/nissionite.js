@@ -55,16 +55,24 @@ addLayer("n", {
     if (player.art.godlyTherm.gte(1)) return 1;
   },
   softcap() {
-    let sMetal = player.sm.points.toNumber();
-    let equation = 1000 + sMetal * 10 - challengeCompletions("sm", 11) * 100;
-    if (inChallenge("sm", 11)) return new Decimal(equation);
-    else return new Decimal(1e100);
-  },
-  softcapPower() {
-    let sMetal = player.sm.points.toNumber();
-    let equation = 0.6 + sMetal * 0.01 - challengeCompletions("sm", 11) * 0.1;
+    let sMetal = player.sm.points;
 
-    if (inChallenge("sm", 11)) return new Decimal(equation);
+    let equation = new Decimal(1000)
+      .plus(sMetal.mul(10))
+      .minus(new Decimal(challengeCompletions("sm", 11)).mul(100));
+
+    if (inChallenge("sm", 11)) return equation;
+    else return new Decimal("1e100");
+  },
+
+  softcapPower() {
+    let sMetal = player.sm.points;
+
+    let equation = new Decimal(0.6)
+      .plus(sMetal.mul(0.01))
+      .minus(new Decimal(challengeCompletions("sm", 11)).mul(0.1));
+
+    if (inChallenge("sm", 11)) return equation;
     else return new Decimal(1);
   },
   resource: "Nissionite", // Name of prestige currency

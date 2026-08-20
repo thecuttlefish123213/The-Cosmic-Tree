@@ -777,113 +777,23 @@ addLayer("o", {
     },
     Organs: {
       content: [
-        [
-          "row",
-          [
-            ["buyable", "11"],
-            [
-              "display-image",
-              "resources/kidney.webp",
-              { width: "225px", height: "175px" },
-            ],
-          ],
-        ],
+        ["row", [["buyable", "11"]]],
         "blank",
-        [
-          "row",
-          [
-            ["buyable", "12"],
-            [
-              "display-image",
-              "resources/bone.avif",
-              { width: "225px", height: "175px" },
-            ],
-          ],
-        ],
+        ["row", [["buyable", "12"]]],
         "blank",
-        [
-          "row",
-          [
-            ["buyable", "13"],
-            [
-              "display-image",
-              "resources/brain.jpg",
-              { width: "225px", height: "175px" },
-            ],
-          ],
-        ],
+        ["row", [["buyable", "13"]]],
         "blank",
-        [
-          "row",
-          [
-            ["buyable", "14"],
-            [
-              "display-image",
-              "resources/muscle.jpg",
-              { width: "225px", height: "175px" },
-            ],
-          ],
-        ],
+        ["row", [["buyable", "14"]]],
         "blank",
-        [
-          "row",
-          [
-            ["buyable", "15"],
-            [
-              "display-image",
-              "resources/liver.jpg",
-              { width: "225px", height: "175px" },
-            ],
-          ],
-        ],
+        ["row", [["buyable", "15"]]],
         "blank",
-        [
-          "row",
-          [
-            ["buyable", "16"],
-            [
-              "display-image",
-              "resources/lung.jpg",
-              { width: "225px", height: "175px" },
-            ],
-          ],
-        ],
+        ["row", [["buyable", "16"]]],
         "blank",
-        [
-          "row",
-          [
-            ["buyable", "17"],
-            [
-              "display-image",
-              "resources/bladder.avif",
-              { width: "225px", height: "175px" },
-            ],
-          ],
-        ],
+        ["row", [["buyable", "17"]]],
         "blank",
-        [
-          "row",
-          [
-            ["buyable", "18"],
-            [
-              "display-image",
-              "resources/uterus.jpg",
-              { width: "225px", height: "175px" },
-            ],
-          ],
-        ],
+        ["row", [["buyable", "18"]]],
         "blank",
-        [
-          "row",
-          [
-            ["buyable", "19"],
-            [
-              "display-image",
-              "resources/testes.jpg",
-              { width: "225px", height: "175px" },
-            ],
-          ],
-        ],
+        ["row", [["buyable", "19"]]],
       ],
     },
   },
