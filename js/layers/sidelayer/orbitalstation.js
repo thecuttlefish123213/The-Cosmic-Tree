@@ -155,18 +155,21 @@ addLayer("OS", {
             player.c.adt = player.c.adt.sub(15);
             player.c.t = player.c.t.sub(150);
             player.ce.unlocked = true;
+            break;
           case 201:
             player[this.layer].grid[id]++;
             player.c.sat = player.c.sat.sub(15);
-
+            break;
           case 302:
             player[this.layer].grid[id]++;
             player.c.sat = player.c.sat.sub(50);
             player.c.t = player.c.t.sub(666);
+            break;
           case 403:
             player[this.layer].grid[id]++;
             player.c.sat = player.c.sat.sub(150);
             player.c.adt = player.c.adt.sub(1000);
+            break;
         }
       }
       player[this.layer].grid[id]++;
