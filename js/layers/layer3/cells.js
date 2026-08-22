@@ -268,15 +268,15 @@ addLayer("ce", {
       cost: new Decimal(1),
       effect() {
         if (hasUpgrade("ce", 15)) {
-          number = new Decimal(100000);
+          player.ce.number = new Decimal(100000);
         } else {
-          number = new Decimal(10000);
+          player.ce.number = new Decimal(10000);
         }
 
         if (hasUpgrade("ce", 15)) {
-          cellnumber = new Decimal(1);
+          player.ce.cellnumber = new Decimal(1);
         } else {
-          cellnumber = new Decimal(0);
+          player.ce.cellnumber = new Decimal(0);
         }
       },
       style: {
@@ -1163,7 +1163,7 @@ addLayer("ce", {
         }
         player.ce.points = player.ce.points.sub(costPerUnit.mul(max));
         player.ce.bonecells = player.ce.bonecells.add(
-          max.mul(getBuyableEffect("ce", 107)),
+          max.mul(buyableEffect("ce", 107).plus(1)),
         );
         setBuyableAmount(
           this.layer,
@@ -1208,7 +1208,7 @@ addLayer("ce", {
 
         player.ce.points = player.ce.points.sub(costPerUnit.mul(max));
         player.ce.musclecells = player.ce.musclecells.add(
-          max.mul(getBuyableEffect("ce", 107)),
+          max.mul(buyableEffect("ce", 107).plus(1)),
         );
         setBuyableAmount(
           this.layer,
