@@ -190,7 +190,9 @@ addLayer("ce", {
 
     if (player.ce.musclecells.gte(1) && player.ce.bonecells.gte(1)) {
       let minimum = Decimal.min(player.ce.musclecells, player.ce.bonecells);
-      player.ce.kinetic = player.ce.kinetic.plus(new Decimal(0.01).mul(min));
+      player.ce.kinetic = player.ce.kinetic.plus(
+        new Decimal(0.01).mul(minimum),
+      );
     }
   },
 
