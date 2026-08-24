@@ -3077,7 +3077,7 @@ addLayer("chm", {
       }, // some sort of error
       display() {
         return (
-          "Forge Mjölnir from the power of a neutron star, the cost is high but the weapon is worth it(see artifacts for what it does)." +
+          "Forge Mjölnir from the power of a neutron star, the cost is high but the weapon is worth it(see bossfights for what it does)." +
           " casting material cost: " +
           format(this.cost()[0]) +
           " | iron cost: " +
@@ -3100,7 +3100,7 @@ addLayer("chm", {
           this.cost()[0],
         );
         player.ac.iron = player.ac.iron.sub(this.cost()[1]);
-        player.art.mjolnir = player.art.mjolnir.add(1);
+        player.BF.mjolnir = player.BF.mjolnir.add(1);
         setBuyableAmount(
           this.layer,
           this.id,
@@ -3120,7 +3120,7 @@ addLayer("chm", {
       }, // some sort of error
       display() {
         return (
-          "Forge Stormbreaker from the power of a neutron star, the cost is high but the weapon is worth it(see artifacts for what it does)." +
+          "Forge Stormbreaker from the power of a neutron star, the cost is high but the weapon is worth it(see boss fights for what it does)." +
           " casting material cost: " +
           format(this.cost()[0]) +
           " | lead cost: " +
@@ -3143,7 +3143,7 @@ addLayer("chm", {
           this.cost()[0],
         );
         player.ac.lead = player.ac.lead.sub(this.cost()[1]);
-        player.art.stormbreaker = player.art.stormbreaker.add(1);
+        player.BF.stormbreaker = player.BF.stormbreaker.add(1);
         setBuyableAmount(
           this.layer,
           this.id,
@@ -3163,7 +3163,7 @@ addLayer("chm", {
       }, // some sort of error
       display() {
         return (
-          "Forge the Infinity Gauntlet from the power of a neutron star, the cost is high but the weapon is worth it(see artifacts for what it does)." +
+          "Forge the Infinity Cobble from the power of a neutron star, the cost is high but the weapon is worth it(see boss fights for what it does)." +
           " casting material cost: " +
           format(this.cost()[0]) +
           " | gold cost: " +
@@ -3186,7 +3186,7 @@ addLayer("chm", {
           this.cost()[0],
         );
         player.ac.gold = player.ac.gold.sub(this.cost()[1]);
-        player.art.infinityGauntlet = player.art.infinityGauntlet.add(1);
+        player.BF.infinityCobble = player.BF.infinityCobble.add(1);
         setBuyableAmount(
           this.layer,
           this.id,

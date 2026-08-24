@@ -232,7 +232,7 @@ addLayer("c", {
             [
               "row",
               [
-                ["clickable", "21"],
+                ["clickable", "12"],
                 ["clickable", "22"],
                 ["clickable", "23"],
                 ["clickable", "24"],
@@ -302,6 +302,23 @@ addLayer("c", {
         } else {
           player.c.t = player.c.t.add(1);
         }
+      },
+      canClick() {
+        return true;
+      },
+    },
+    12: {
+      display() {
+        return "Resets Cosmic Dust, telescopes, advanced and super to 1";
+      },
+      onClick() {
+        confirm(
+          "Are you sure? This doesn't count as a reset, just resets the currencies to one",
+        );
+        player.c.points = new Decimal(1);
+        player.c.t = new Decimal(1);
+        player.c.adt = new Decimal(1);
+        player.c.sat = new Decimal(1);
       },
       canClick() {
         return true;

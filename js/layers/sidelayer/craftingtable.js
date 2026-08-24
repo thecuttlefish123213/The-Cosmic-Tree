@@ -363,16 +363,16 @@ addLayer("ct", {
       buyMax() {
         let costPerUnit1 = this.cost()[1];
         let costPerUnit2 = this.cost()[0];
-        let max1 = player.c.points.div(costPerUnit1).floor();
-        let max2 = player.a.points.div(costPerUnit2).floor();
+        let max1 = player.c.points.div(costPerUnit2).floor();
+        let max2 = player.a.points.div(costPerUnit1).floor();
         let max = Decimal.min(max1, max2).floor();
         return [costPerUnit1, costPerUnit2, max];
       },
       buy() {
         let [costPerUnit1, costPerUnit2, max] = this.buyMax();
         if (max.lt(1)) max = new Decimal(1);
-        player.c.points = player.c.points.sub(costPerUnit1.mul(max));
-        player.a.points = player.a.points.sub(costPerUnit2.mul(max));
+        player.c.points = player.c.points.sub(costPerUnit2.mul(max));
+        player.a.points = player.a.points.sub(costPerUnit1.mul(max));
         player.ct.sdust = player.ct.sdust.add(max);
         setBuyableAmount(
           this.layer,

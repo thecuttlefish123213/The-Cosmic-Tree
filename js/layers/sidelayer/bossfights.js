@@ -5,7 +5,7 @@ addLayer("BF", {
       points: new Decimal(1),
       mjolnir: new Decimal(0),
       stormbreaker: new Decimal(0),
-      infinityGauntlet: new Decimal(0),
+      infinityCobble: new Decimal(0),
       oCannon: new Decimal(0),
     };
   },
