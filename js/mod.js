@@ -69,11 +69,11 @@ let VERSION = {
 };
 
 let changelog = `<h1>Changelog:</h1><br>
-	<h3>v0.1</h3><br>
-		- 21 Main Layers to progress through.<br>
-		- Over 100 subcurrencies to collect and view!.;
-    - Many sidelayers with cool features! Some unfinished.
-    - Music and Guide.`;
+	<h3>v0.1.1</h3><br>
+		- Sine-Cosine duality.<br>
+		- Waves.;
+    - Bossfights
+    - Subcurrency reworks + new Volt buyable.`;
 
 let winText = `Congratulations! You have reached the end and beaten this game, for now...`;
 
