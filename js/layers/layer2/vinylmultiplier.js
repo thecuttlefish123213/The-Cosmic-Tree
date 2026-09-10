@@ -44,8 +44,8 @@ addLayer("v", {
       mult = mult.times(buyableEffect("t", 14));
     if (getBuyableAmount("t", 41).gte(1))
       mult = mult.times(buyableEffect("t", 41));
-    if (getBuyableAmount("ct", 14).gte(1))
-      mult = mult.times(buyableEffect("ct", 14));
+    if (player.ct.hatom.gte(0.01))
+      mult = mult.times(player.hm.hatomMultiplier());
     if (getBuyableAmount("ce", 107).gte(1))
       mult = mult.times(buyableEffect("ce", 107));
 

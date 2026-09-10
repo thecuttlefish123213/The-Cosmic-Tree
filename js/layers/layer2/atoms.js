@@ -60,6 +60,8 @@ addLayer("a", {
   gainMult() {
     // Calculate the multiplier for main currency from bonuses
     mult = new Decimal(1);
+    if (player.hm.atomicm.gte(0.001))
+      mult = mult.times(player.hm.atomicmMultiplier());
     if (player.ce.points.gte(1)) mult = mult.times(upgradeEffect("ce", 24));
     if (hasUpgrade("mm", 23)) mult = mult.times(5);
     if (hasUpgrade("q", 22)) mult = mult.times(2);
@@ -75,8 +77,7 @@ addLayer("a", {
       mult = mult.times(buyableEffect("ce", 108));
     if (player.ce.points.gte(1))
       mult = mult.times(new Decimal(4).mul(player.ce.points));
-    if (getBuyableAmount("ct", 14).gte(1))
-      mult = mult.times(buyableEffect("ct", 14));
+
     if (inChallenge("t", 11)) {
       mult = mult.times(1);
     } else {
@@ -84,7 +85,7 @@ addLayer("a", {
       if (hasUpgrade("a", 25)) mult = mult.times(upgradeEffect("a", 26));
       if (hasMilestone("h", 9))
         mult = mult.times(player.v.points.plus(1).pow(0.5));
-      if (hasUpgrade("c", 23)) mult = mult.times(1.5);
+      if (hasUpgrade("c", 23)) mult = mult.times(10);
     }
     if (player.b.Realgar.gte(1))
       mult = mult.times(player.b.realgarMultiplier());
@@ -96,6 +97,7 @@ addLayer("a", {
       if (hasUpgrade("n", 12)) mult = mult.times(3);
     }
     if (hasUpgrade("d", 44)) mult = mult.times(1e12);
+    if (player.ct.sdust.gte(1)) mult = mult.times(player.c.sMult());
     return mult;
   },
   gainExp() {

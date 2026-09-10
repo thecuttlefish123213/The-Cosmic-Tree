@@ -819,7 +819,7 @@ addLayer("d", {
     },
     27: {
       title: "Lossy Integrity",
-      description: "+20 Basalt",
+      description: "+20 Basalt, UNLOCK A BOSS FIGHT",
       cost: new Decimal(90),
       style: {
         width: "200px",
@@ -828,6 +828,7 @@ addLayer("d", {
       },
       onPurchase() {
         player.d.basalt = player.d.basalt.plus(20);
+        player.BF.tarUnlocked = true;
       },
     },
     28: {

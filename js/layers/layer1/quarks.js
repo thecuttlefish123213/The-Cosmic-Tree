@@ -19,7 +19,17 @@ addLayer("q", {
     if (hasMilestone("ce", 1)) return 1;
     else if (hasUpgrade("c", 11)) return 0.01;
   },
-
+  onPrestige() {
+    if (hasUpgrade("c", 16)) {
+      let chance = Math.floor(Math.random() * 10);
+      if (chance == 1) {
+        player.c.mathfrag = player.c.mathfrag.add(1);
+      }
+      if (chance == 2) {
+        player.c.negmathfrag = player.c.negmathfrag.add(1);
+      }
+    }
+  },
   requires: new Decimal(50), // Can be a function that takes requirement increases into account
   resource: "Quarks", // Name of prestige currency
   baseResource: "particles", // Name of resource prestige is based on
@@ -80,7 +90,7 @@ addLayer("q", {
         mult = mult.times(player.h.points.pow(0.5).plus(1));
       }
       if (hasUpgrade("v", 15)) mult = mult.times(upgradeEffect("v", 15));
-      if (hasUpgrade("c", 24)) mult = mult.times(1.5);
+      if (hasUpgrade("c", 24)) mult = mult.times(10);
     }
     if (player.ce.points.gte(1))
       mult = mult.times(new Decimal(4).mul(player.ce.points));
@@ -387,12 +397,12 @@ addLayer("q", {
   upgrades: {
     11: {
       title: "Another Tree?",
-      description: "Earn a particle boost",
+      description: "2x Particle Boost",
       cost: new Decimal(2),
     },
     12: {
       title: "6 fold",
-      description: "Earn a multiplier boost!",
+      description: "1.9x Multiplier Boost",
       cost: new Decimal(6),
     },
     13: {

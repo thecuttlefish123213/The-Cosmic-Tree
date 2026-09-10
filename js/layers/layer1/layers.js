@@ -35,7 +35,7 @@ addLayer("m", {
     // Calculate the multiplier for main currency from bonuses
     mult = new Decimal(1);
     if (hasUpgrade("m", 14)) mult = mult.times(2);
-    if (hasUpgrade("q", 12)) mult = mult.times(1.5);
+    if (hasUpgrade("q", 12)) mult = mult.times(1.9);
     if (player.b.Voidstone.gte(1))
       mult = mult.times(player.b.voidstoneMultiplier());
     if (hasUpgrade("q", 13)) mult = mult.times(2);
@@ -196,14 +196,13 @@ addLayer("m", {
   upgrades: {
     11: {
       title: "Humble beginnings",
-      description:
-        "A cosmic... multipliers aren't cosmic. Experience your first particle boost(Roughly .69 more)",
+      description: "A cosmic... multipliers aren't cosmic. 2x Particle boost",
       cost: new Decimal(3),
     },
     12: {
       title: "Deviance",
       description:
-        "Multipliers have no direct correlation with particles. But maybe a virtual one. Another gain boost",
+        "Multipliers have no direct correlation with particles. But maybe a virtual one. 1.75x Particle Boost",
       cost: new Decimal(6),
     },
     13: {
@@ -247,12 +246,12 @@ addLayer("m", {
     },
     21: {
       title: "Ferocity",
-      description: "1.5x particle gain",
+      description: "2.5x particle gain",
       cost: new Decimal(180),
     },
     22: {
       title: "Row 2",
-      description: "Double particle gain",
+      description: "4x particle gain",
       cost: new Decimal(10000),
       unlocked() {
         if (hasUpgrade("a", 14)) return true;
@@ -260,7 +259,7 @@ addLayer("m", {
     },
     23: {
       title: "Row 2.1",
-      description: "Double multiplier boost",
+      description: "4x multiplier boost",
       cost: new Decimal(20000),
       unlocked() {
         if (hasUpgrade("a", 14)) return true;
@@ -268,7 +267,7 @@ addLayer("m", {
     },
     24: {
       title: "Uptown",
-      description: "Double quark boost",
+      description: "4x quark boost",
       cost: new Decimal(50000),
       unlocked() {
         if (hasUpgrade("a", 14)) return true;
@@ -276,7 +275,7 @@ addLayer("m", {
     },
     25: {
       title: "Downtown",
-      description: "1.1 boost to all three aforementioned boosts",
+      description: "^1.1 boost to all three aforementioned boosts",
       cost: new Decimal(75000),
       unlocked() {
         if (hasUpgrade("a", 14)) return true;

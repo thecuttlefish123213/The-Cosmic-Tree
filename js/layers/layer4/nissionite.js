@@ -28,7 +28,8 @@ addLayer("n", {
         let multiplier = player.n.points.add(1);
         if (hasUpgrade("n", 14)) multiplier = multiplier.mul(2);
         if (hasUpgrade("n", 31)) multiplier = multiplier.mul(4);
-
+        if (player.ct.crystalFlake.gte(1))
+          multiplier = multiplier.times(player.ct.flakeEffect1());
         if (multiplier.lte(1)) multiplier = new Decimal(1);
         return multiplier;
       },
@@ -368,13 +369,16 @@ addLayer("n", {
     },
     23: {
       title: "Granular Snow",
-      description: "Unlock a Grandulum craftable",
+      description: "Unlock a boss fight(The Adominable Snowman)",
       cost: new Decimal(34567),
       currencyDisplayName: "Fragments",
       currencyInternalName: "fragments",
       currencyLayer: "n",
       unlocked() {
         return challengeCompletions("n", 11) >= 4;
+      },
+      onPurchase() {
+        player.BF.adSnowman = true;
       },
       style: {
         width: "200px",

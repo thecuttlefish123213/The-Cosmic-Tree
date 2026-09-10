@@ -79,7 +79,23 @@ addLayer("h", {
   layerShown() {
     return player.m.unlocked;
   },
-
+  tabFormat: {
+    Main: {
+      content: [
+        "main-display",
+        "prestige-button",
+        [
+          "display-text",
+          function () {
+            return hasMilestone("hm", 3)
+              ? "You have " + format(player.ct.hq) + " Hyper Quarks."
+              : null;
+          },
+        ],
+        "milestones",
+      ],
+    },
+  },
   milestones: {
     1: {
       requirementDescription: "1 Hyper Multiplier",
@@ -100,7 +116,7 @@ addLayer("h", {
     3: {
       requirementDescription: "3 Hyper Multipliers",
       effectDescription:
-        "Earn the ability to craft Hyper Quarks. Hyper Quarks can stack up quickly. Maximum of 5 allowed",
+        "Earn the ability to craft Hyper Quarks. Hyper Quarks can stack up quickly. Maximum of 5 allowed, effect listed above",
       done() {
         return player.h.points.gte(3);
       },

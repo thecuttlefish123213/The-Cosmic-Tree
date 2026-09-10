@@ -5,9 +5,39 @@ addLayer("hm", {
   startData() {
     return {
       unlocked: false,
+      tensionunlocked: false,
+      cosineunlocked: false,
+      sineunlocked: false,
       points: new Decimal(0),
       variable: new Decimal(0),
       atomicm: new Decimal(0),
+      verysmallwave: new Decimal(0),
+      smallwave: new Decimal(0),
+      smallmediumwave: new Decimal(0),
+      mediumwave: new Decimal(0),
+      mediumlargewave: new Decimal(0),
+      largewave: new Decimal(0),
+      atomicmMultiplier() {
+        if (this.atomicm.lt(2)) {
+          return new Decimal(1).plus(this.atomicm);
+        }
+        if (this.atomicm.gte(2)) {
+          return new Decimal(1).plus(this.atomicm.pow(0.8));
+        }
+      },
+      hatomMultiplier() {
+        if (player.ct.hatom.lt(2)) {
+          return new Decimal(1).plus(player.ct.hatom);
+        }
+        if (player.ct.hatom.gte(2)) {
+          return new Decimal(1).plus(player.ct.hatom.pow(0.8));
+        }
+      },
+      countable: 0,
+      clickableVariable: false,
+      clickableLetter: "a",
+      x: 0,
+      y: 1,
 
       keepMUpgrades: false,
       keepVUpgrades: false,
@@ -29,6 +59,21 @@ addLayer("hm", {
       "keepQUpgrades",
       "keepVUpgrades",
       "keepHMilestones",
+      "verysmallwave",
+      "smallwave",
+      "smallmediumwave",
+      "mediumwave",
+      "mediumlargewave",
+      "largewave",
+      "countable",
+      "atomicm",
+      "clickables",
+      "clickableVariable",
+      "clickableLetter",
+      "x",
+      "y",
+      "tensionunlocked",
+      "cosineunlocked",
     ];
     if (hasUpgrade("mm", 12) || hasMilestone("ct", 3)) {
       keep.push("upgrades", "milestones");
@@ -70,15 +115,6 @@ addLayer("hm", {
     // Calculate the exponent on main currency from bonuses
     return new Decimal(1);
   },
-  doReset(reset) {
-    let keep = [];
-
-    keep.push("atomicm");
-    keep.push("variable");
-    if (layers[reset].row > this.row) {
-      layerDataReset("hm", keep);
-    }
-  },
 
   nodeStyle() {
     let style = {
@@ -113,7 +149,370 @@ addLayer("hm", {
   layerShown() {
     return player.v.unlocked;
   },
-
+  clickables: {
+    11: {
+      title:
+        "Click me to change wether or not you convert from a quark into a wave",
+      display() {},
+      onClick() {
+        if (player.hm.countable < 1) {
+          player.hm.clickableVariable = true;
+          player.hm.countable++;
+        }
+        player.hm.clickableVariable = !player.hm.clickableVariable;
+      },
+      canClick() {
+        return true;
+      },
+      style: {
+        width: "200px",
+        height: "200px",
+      },
+    },
+    12: {
+      title: "Click me to change type of quark/wave being converted",
+      display() {
+        return "Click me to change type of quark/wave being converted";
+      },
+      onClick() {
+        player.hm.x++;
+        if (player.hm.x == 1) {
+          player.hm.clickableLetter = "b";
+        }
+        if (player.hm.x == 2) {
+          player.hm.clickableLetter = "c";
+        }
+        if (player.hm.x == 3) {
+          player.hm.clickableLetter = "d";
+        }
+        if (player.hm.x == 4) {
+          player.hm.clickableLetter = "e";
+        }
+        if (player.hm.x == 5) {
+          player.hm.clickableLetter = "f";
+        }
+        if (player.hm.x == 6) {
+          player.hm.clickableLetter = "a";
+          player.hm.x = 0;
+        }
+      },
+      canClick() {
+        return true;
+      },
+      style: {
+        width: "200px",
+        height: "200px",
+      },
+    },
+    13: {
+      title: "Click me to convert!",
+      display() {
+        if (player.hm.clickableVariable == false) {
+          if (player.hm.clickableLetter == "a") {
+            return "1 up quark to 1 very small wave";
+          }
+          if (player.hm.clickableLetter == "b") {
+            return "1 down quark to 1 small wave";
+          }
+          if (player.hm.clickableLetter == "c") {
+            return "1 strange quark to 1 small medium wave";
+          }
+          if (player.hm.clickableLetter == "d") {
+            return "1 charm quark to 1 medium wave";
+          }
+          if (player.hm.clickableLetter == "e") {
+            return "1 top quark to 1 medium large wave";
+          }
+          if (player.hm.clickableLetter == "f") {
+            return "1 bottom quark to 1 large wave";
+          }
+        } else {
+          if (player.hm.clickableLetter == "a") {
+            return "1 very small wave to 1 up quark";
+          }
+          if (player.hm.clickableLetter == "b") {
+            return "1 small wave to 1 down quark";
+          }
+          if (player.hm.clickableLetter == "c") {
+            return "1 small medium wave to 1 strange quark";
+          }
+          if (player.hm.clickableLetter == "d") {
+            return "1 medium wave to 1 charm quark";
+          }
+          if (player.hm.clickableLetter == "e") {
+            return "1 medium large wave to 1 top quark";
+          }
+          if (player.hm.clickableLetter == "f") {
+            return "1 large wave to 1 bottom quark";
+          }
+        }
+      },
+      onClick() {
+        if (player.hm.clickableVariable == false) {
+          if (player.hm.clickableLetter == "a") {
+            player.q.uq = player.q.uq.sub(1);
+            player.hm.verysmallwave = player.hm.verysmallwave.add(1);
+          }
+          if (player.hm.clickableLetter == "b") {
+            player.q.dq = player.q.dq.sub(1);
+            player.hm.smallwave = player.hm.smallwave.add(1);
+          }
+          if (player.hm.clickableLetter == "c") {
+            player.q.sq = player.q.sq.sub(1);
+            player.hm.smallmediumwave = player.hm.smallmediumwave.add(1);
+          }
+          if (player.hm.clickableLetter == "d") {
+            player.q.cq = player.q.cq.sub(1);
+            player.hm.mediumwave = player.hm.mediumwave.add(1);
+          }
+          if (player.hm.clickableLetter == "e") {
+            player.q.tq = player.q.tq.sub(1);
+            player.hm.mediumlargewave = player.hm.mediumlargewave.add(1);
+          }
+          if (player.hm.clickableLetter == "f") {
+            player.q.bq = player.q.bq.sub(1);
+            player.hm.largewave = player.hm.largewave.add(1);
+          }
+        } else {
+          if (player.hm.clickableLetter == "a") {
+            player.q.uq = player.q.uq.add(1);
+            player.hm.verysmallwave = player.hm.verysmallwave.sub(1);
+          }
+          if (player.hm.clickableLetter == "b") {
+            player.q.dq = player.q.dq.add(1);
+            player.hm.smallwave = player.hm.smallwave.sub(1);
+          }
+          if (player.hm.clickableLetter == "c") {
+            player.q.sq = player.q.sq.add(1);
+            player.hm.smallmediumwave = player.hm.smallmediumwave.sub(1);
+          }
+          if (player.hm.clickableLetter == "d") {
+            player.q.cq = player.q.cq.add(1);
+            player.hm.mediumwave = player.hm.mediumwave.sub(1);
+          }
+          if (player.hm.clickableLetter == "e") {
+            player.q.tq = player.q.tq.add(1);
+            player.hm.mediumlargewave = player.hm.mediumlargewave.sub(1);
+          }
+          if (player.hm.clickableLetter == "f") {
+            player.q.bq = player.q.bq.add(1);
+            player.hm.largewave = player.hm.largewave.sub(1);
+          }
+        }
+      },
+      canClick() {
+        if (player.hm.clickableVariable == false) {
+          if (player.hm.clickableLetter == "a") {
+            return player.q.uq.gte(1);
+          }
+          if (player.hm.clickableLetter == "b") {
+            return player.q.dq.gte(1);
+          }
+          if (player.hm.clickableLetter == "c") {
+            return player.q.sq.gte(1);
+          }
+          if (player.hm.clickableLetter == "d") {
+            return player.q.cq.gte(1);
+          }
+          if (player.hm.clickableLetter == "e") {
+            return player.q.tq.gte(1);
+          }
+          if (player.hm.clickableLetter == "f") {
+            return player.q.bq.gte(1);
+          }
+        } else {
+          if (player.hm.clickableLetter == "a") {
+            return player.hm.verysmallwave.gte(1);
+          }
+          if (player.hm.clickableLetter == "b") {
+            return player.hm.smallwave.gte(1);
+          }
+          if (player.hm.clickableLetter == "c") {
+            return player.hm.smallmediumwave.gte(1);
+          }
+          if (player.hm.clickableLetter == "d") {
+            return player.hm.mediumwave.gte(1);
+          }
+          if (player.hm.clickableLetter == "e") {
+            return player.hm.mediumlargewave.gte(1);
+          }
+          if (player.hm.clickableLetter == "f") {
+            return player.hm.largewave.gte(1);
+          }
+        }
+      },
+      style: {
+        width: "200px",
+        height: "200px",
+      },
+    },
+    21: {
+      title: "Click me to change what wave(not sine or cosine) you oscillate",
+      display() {},
+      onClick() {
+        player.hm.y++;
+        if (player.hm.y == 7) {
+          player.hm.y = 0;
+        }
+      },
+      canClick() {
+        return true;
+      },
+      style: {
+        width: "200px",
+        height: "200px",
+      },
+    },
+    22: {
+      title: "Oscillate for Sine",
+      display() {
+        if (player.hm.y == 1) {
+          return "Oscillate very small waves for .01 atomic multipliers";
+        }
+        if (player.hm.y == 2) {
+          return "Oscillate small waves for .1 atomic multipliers";
+        }
+        if (player.hm.y == 3) {
+          return "Oscillate small medium waves for 1 atomic multipliers";
+        }
+        if (player.hm.y == 4) {
+          return "Oscillate medium waves for 10 atomic multipliers";
+        }
+        if (player.hm.y == 5) {
+          return "Oscillate medium-large waves for 50 atomic multipliers";
+        }
+        if (player.hm.y == 6) {
+          return "Oscillate large waves for 100 atomic multipliers";
+        }
+      },
+      onClick() {
+        if (player.hm.y == 1) {
+          player.hm.verysmallwave = player.hm.verysmallwave.sub(1);
+          player.hm.atomicm = player.hm.atomicm.add(0.01);
+        }
+        if (player.hm.y == 2) {
+          player.hm.smallwave = player.hm.smallwave.sub(1);
+          player.hm.atomicm = player.hm.atomicm.add(0.1);
+        }
+        if (player.hm.y == 3) {
+          player.hm.smallmediumwave = player.hm.smallmediumwave.sub(1);
+          player.hm.atomicm = player.hm.atomicm.add(1);
+        }
+        if (player.hm.y == 4) {
+          player.hm.mediumwave = player.hm.mediumwave.sub(1);
+          player.hm.atomicm = player.hm.atomicm.add(10);
+        }
+        if (player.hm.y == 5) {
+          player.hm.mediumlargewave = player.hm.mediumlargewave.sub(1);
+          player.hm.atomicm = player.hm.atomicm.add(50);
+        }
+        if (player.hm.y == 6) {
+          player.hm.largewave = player.hm.largewave.sub(1);
+          player.hm.atomicm = player.hm.atomicm.add(100);
+        }
+      },
+      canClick() {
+        if (player.hm.y == 1) {
+          return player.hm.verysmallwave.gte(1);
+        }
+        if (player.hm.y == 2) {
+          return player.hm.smallwave.gte(1);
+        }
+        if (player.hm.y == 3) {
+          return player.hm.smallmediumwave.gte(1);
+        }
+        if (player.hm.y == 4) {
+          return player.hm.mediumwave.gte(1);
+        }
+        if (player.hm.y == 5) {
+          return player.hm.mediumlargewave.gte(1);
+        }
+        if (player.hm.y == 6) {
+          return player.hm.largewave.gte(1);
+        }
+      },
+      style: {
+        width: "200px",
+        height: "200px",
+      },
+    },
+    23: {
+      title: "Oscillate for Cosine",
+      display() {
+        if (player.hm.y == 1) {
+          return "Oscillate very small waves for .001 heavy atoms";
+        }
+        if (player.hm.y == 2) {
+          return "Oscillate small waves for .01 heavy atoms";
+        }
+        if (player.hm.y == 3) {
+          return "Oscillate small medium waves for .1 heavy atoms";
+        }
+        if (player.hm.y == 4) {
+          return "Oscillate medium waves for 1 heavy atoms";
+        }
+        if (player.hm.y == 5) {
+          return "Oscillate medium-large waves for 5 heavy atoms";
+        }
+        if (player.hm.y == 6) {
+          return "Oscillate large waves for 10 heavy atoms";
+        }
+      },
+      onClick() {
+        if (player.hm.y == 1) {
+          player.hm.verysmallwave = player.hm.verysmallwave.sub(1);
+          player.ct.hatom = player.ct.hatom.add(0.001);
+        }
+        if (player.hm.y == 2) {
+          player.hm.smallwave = player.hm.smallwave.sub(1);
+          player.ct.hatom = player.ct.hatom.add(0.01);
+        }
+        if (player.hm.y == 3) {
+          player.hm.smallmediumwave = player.hm.smallmediumwave.sub(1);
+          player.ct.hatom = player.ct.hatom.add(0.1);
+        }
+        if (player.hm.y == 4) {
+          player.hm.mediumwave = player.hm.mediumwave.sub(1);
+          player.ct.hatom = player.ct.hatom.add(1);
+        }
+        if (player.hm.y == 5) {
+          player.hm.mediumlargewave = player.hm.mediumlargewave.sub(1);
+          player.ct.hatom = player.ct.hatom.add(5);
+        }
+        if (player.hm.y == 6) {
+          player.hm.largewave = player.hm.largewave.sub(1);
+          player.ct.hatom = player.ct.hatom.add(10);
+        }
+      },
+      canClick() {
+        if (player.hm.y == 1) {
+          return player.hm.verysmallwave.gte(1);
+        }
+        if (player.hm.y == 2) {
+          return player.hm.smallwave.gte(1);
+        }
+        if (player.hm.y == 3) {
+          return player.hm.smallmediumwave.gte(1);
+        }
+        if (player.hm.y == 4) {
+          return player.hm.mediumwave.gte(1);
+        }
+        if (player.hm.y == 5) {
+          return player.hm.mediumlargewave.gte(1);
+        }
+        if (player.hm.y == 6) {
+          return player.hm.largewave.gte(1);
+        }
+      },
+      unlocked() {
+        return player.hm.cosineunlocked;
+      },
+      style: {
+        width: "200px",
+        height: "200px",
+      },
+    },
+  },
   upgrades: {
     11: {
       title: "10x boost to Multipliers",
@@ -203,8 +602,7 @@ addLayer("hm", {
     },
 
     24: {
-      title:
-        "Unlock Atomic Multipliers<br>(craftable). They boost Atom gain by 1.1x and Vinyl per one bought. ",
+      title: "Unlock Atomic Multipliers. ",
       description: "Violet state",
       cost() {
         if (hasUpgrade("hm", 23)) return new Decimal(40);
@@ -221,6 +619,7 @@ addLayer("hm", {
       },
       onPurchase() {
         player.hm.atomicm = player.hm.atomicm.add(1);
+        player.hm.sineunlocked = true;
       },
       branches: [36],
     },
@@ -250,7 +649,7 @@ addLayer("hm", {
     },
 
     32: {
-      title: "Unlock more craftables",
+      title: "Unlock heavy atoms",
       description: "Red hearth",
       cost() {
         if (hasUpgrade("hm", 31)) return new Decimal(100);
@@ -264,6 +663,9 @@ addLayer("hm", {
       },
       unlocked() {
         return hasUpgrade("hm", 21);
+      },
+      onPurchase() {
+        player.hm.cosineunlocked = true;
       },
       branches: [34],
     },
@@ -425,6 +827,17 @@ addLayer("hm", {
         player[this.layer].keepHMilestones = true;
       },
     },
+    4: {
+      requirementDescription: "Sine-cosine Duality(75 HM)",
+      effectDescription:
+        "Quarks can now freely be converted into a wave, and vice versa. The bigger/more unstable the quark, the longer the wavelength. Now enjoy the tension tab here, to vibrate each wave. This is used for obtaining atomic multipliers and heavy atoms.",
+      done() {
+        return player.hm.points.gte(75);
+      },
+      onComplete() {
+        player[this.layer].tensionunlocked = true;
+      },
+    },
   },
 
   tabFormat: {
@@ -447,7 +860,32 @@ addLayer("hm", {
         ],
         "blank",
         "blank",
-
+        [
+          "display-text",
+          function () {
+            if (player.hm.atomicm.gte(1) || hasUpgrade("hm", 24))
+              return (
+                "You have " +
+                format(player.hm.atomicm) +
+                " Atomic Multipliers | Multiplying Atoms by " +
+                format(player.hm.atomicmMultiplier()) +
+                "x"
+              );
+          },
+        ],
+        [
+          "display-text",
+          function () {
+            if (player.ct.hatom.gte(1) || hasUpgrade("hm", 32))
+              return (
+                "You have " +
+                format(player.ct.hatom) +
+                " Heavy Atoms | Multiplying Vinyl Multiplier by " +
+                format(player.hm.hatomMultiplier()) +
+                "x"
+              );
+          },
+        ],
         [
           "display-text",
           function () {
@@ -465,6 +903,117 @@ addLayer("hm", {
             [33, 34, 37, 38],
           ],
         ],
+      ],
+    },
+    Tension: {
+      content: [
+        [
+          "display-text",
+          function () {
+            if (hasMilestone("hm", 4) || player.hm.tensionunlocked)
+              return "You have " + format(player.q.uq) + " Up Quarks";
+          },
+        ],
+        [
+          "display-text",
+          function () {
+            if (hasMilestone("hm", 4) || player.hm.tensionunlocked)
+              return "You have " + format(player.q.dq) + " Down Quarks.";
+          },
+        ],
+        [
+          "display-text",
+          function () {
+            if (hasMilestone("hm", 4) || player.hm.tensionunlocked)
+              return "You have " + format(player.q.sq) + " Strange Quarks";
+          },
+        ],
+        [
+          "display-text",
+          function () {
+            if (hasMilestone("hm", 4) || player.hm.tensionunlocked)
+              return "You have " + format(player.q.cq) + " Charm Quarks.";
+          },
+        ],
+        [
+          "display-text",
+          function () {
+            if (hasMilestone("hm", 4) || player.hm.tensionunlocked)
+              return "You have " + format(player.q.tq) + " Top Quarks";
+          },
+        ],
+        [
+          "display-text",
+          function () {
+            if (hasMilestone("hm", 4) || player.hm.tensionunlocked)
+              return "You have " + format(player.q.bq) + " Bottom Quarks.";
+          },
+        ],
+        "blank",
+        [
+          "display-text",
+          function () {
+            if (hasMilestone("hm", 4) || player.hm.tensionunlocked)
+              return (
+                "You have " +
+                format(player.hm.verysmallwave) +
+                " Very Small Waves"
+              );
+          },
+        ],
+        [
+          "display-text",
+          function () {
+            if (hasMilestone("hm", 4) || player.hm.tensionunlocked)
+              return (
+                "You have " + format(player.hm.smallwave) + " Small Waves."
+              );
+          },
+        ],
+        [
+          "display-text",
+          function () {
+            if (hasMilestone("hm", 4) || player.hm.tensionunlocked)
+              return (
+                "You have " +
+                format(player.hm.smallmediumwave) +
+                " Small-Medium Waves"
+              );
+          },
+        ],
+        [
+          "display-text",
+          function () {
+            if (hasMilestone("hm", 4) || player.hm.tensionunlocked)
+              return (
+                "You have " + format(player.hm.mediumwave) + " Medium Waves."
+              );
+          },
+        ],
+        [
+          "display-text",
+          function () {
+            if (hasMilestone("hm", 4) || player.hm.tensionunlocked)
+              return (
+                "You have " +
+                format(player.hm.mediumlargewave) +
+                " Medium-Large Waves"
+              );
+          },
+        ],
+        [
+          "display-text",
+          function () {
+            if (hasMilestone("hm", 4) || player.hm.tensionunlocked)
+              return (
+                "You have " + format(player.hm.largewave) + " Large Waves."
+              );
+          },
+        ],
+        function () {
+          if (hasMilestone("hm", 4) || player.hm.tensionunlocked)
+            return "clickables";
+        },
       ],
     },
   },

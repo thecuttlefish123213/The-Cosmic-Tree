@@ -9,11 +9,18 @@ addLayer("c", {
       t: new Decimal(0),
       adt: new Decimal(0),
       sat: new Decimal(0),
+      mathfrag: new Decimal(0),
+      negmathfrag: new Decimal(0),
+      polarity: new Decimal(0),
+      polarityTime: 0,
 
       aChallengeUnlocked: false,
       cellUnlocked: false,
       updated: false,
       permanentGeneration: false,
+      sMult() {
+        return Decimal.sqrt(player.ct.sdust.plus(1));
+      },
       multiplier() {
         if (inChallenge("a", 21)) return new Decimal(1);
         else return player.ce.dna.plus(1).pow(0.1);
@@ -38,7 +45,14 @@ addLayer("c", {
     else return new Decimal(0.2);
   },
   doReset(reset) {
-    let keep = ["aChallengeUnlocked", "permanetGeneration"];
+    let keep = [
+      "aChallengeUnlocked",
+      "permanetGeneration",
+      "mathfrag",
+      "polarityTime",
+      "polarity",
+      "negmathfrag",
+    ];
     if (!player.sm.canReset) {
       return null;
     }
@@ -114,6 +128,7 @@ addLayer("c", {
     if (hasUpgrade("d", 45)) mult = mult.times(1e13);
     if (challengeCompletions("n", 11) >= 1)
       mult = mult.times(challengeEffect("n", 11));
+    if (player.ct.sdust.gte(1)) mult = mult.times(player.c.sMult());
     return mult;
   },
   passiveGeneration() {
@@ -133,6 +148,9 @@ addLayer("c", {
     }
     if (hasMilestone("b", 1)) {
       player.c.t = player.c.t.add(0.1);
+    }
+    if (player.c.polarityTime > 0) {
+      player.c.polarityTime -= 1;
     }
   },
   gainExp() {
@@ -180,6 +198,53 @@ addLayer("c", {
           function () {
             return "You have " + format(player.q.points) + " quarks.";
           },
+          { "border-radius": "0px", "font-size": "28px" },
+        ],
+        [
+          "display-text",
+          function () {
+            return "You have " + format(player.c.mathfrag) + " math fragments.";
+          },
+          { "border-radius": "0px", "font-size": "28px" },
+        ],
+        [
+          "display-text",
+          function () {
+            return (
+              "You have " +
+              format(player.c.negmathfrag) +
+              " negative math fragments."
+            );
+          },
+          { "border-radius": "0px", "font-size": "28px" },
+        ],
+        [
+          "display-text",
+          function () {
+            return (
+              "You have " +
+              format(player.ct.sdust) +
+              " Star dust." +
+              " | <br>boosting cosmic dust and atoms by " +
+              format(player.c.sMult()) +
+              "x"
+            );
+          },
+          { "border-radius": "0px", "font-size": "28px" },
+        ],
+        [
+          "display-text",
+          function () {
+            return (
+              "You have " +
+              format(player.c.polarity) +
+              " polarity | " +
+              "lasting for " +
+              format(player.c.polarityTime) +
+              " ticks."
+            );
+          },
+          { "border-radius": "0px", "font-size": "28px" },
         ],
         "blank",
         "upgrades",
@@ -206,11 +271,21 @@ addLayer("c", {
           { "border-radius": "0px", "font-size": "28px" },
         ],
         "blank",
-
         [
           "display-text",
           function () {
             if (player.c.adt.gte(1)) {
+              return (
+                "You have " + format(player.c.adt) + " advanced telescopes."
+              );
+            }
+          },
+          { "border-radius": "0px", "font-size": "28px" },
+        ],
+        [
+          "display-text",
+          function () {
+            if (player.c.sat.gte(1)) {
               return (
                 "You have " +
                 format(player.c.sat) +
@@ -226,64 +301,13 @@ addLayer("c", {
         "buyables",
         "blank",
         ["infobox", "lore"],
+        ["clickable", "12"],
+        ["h-line", "800px"],
         [
-          "column",
+          "row",
           [
-            [
-              "row",
-              [
-                ["clickable", "12"],
-                ["clickable", "22"],
-                ["clickable", "23"],
-                ["clickable", "24"],
-                ["clickable", "25"],
-              ],
-            ],
-          ],
-        ],
-        [
-          "column",
-          [
-            [
-              "row",
-              [
-                ["clickable", "31"],
-                ["clickable", "32"],
-                ["clickable", "33"],
-                ["clickable", "34"],
-                ["clickable", "35"],
-              ],
-            ],
-          ],
-        ],
-        [
-          "column",
-          [
-            [
-              "row",
-              [
-                ["clickable", "41"],
-                ["clickable", "42"],
-                ["clickable", "43"],
-                ["clickable", "44"],
-                ["clickable", "45"],
-              ],
-            ],
-          ],
-        ],
-        [
-          "column",
-          [
-            [
-              "row",
-              [
-                ["clickable", "51"],
-                ["clickable", "52"],
-                ["clickable", "53"],
-                ["clickable", "54"],
-                ["clickable", "55"],
-              ],
-            ],
+            ["clickable", 13],
+            ["clickable", 14],
           ],
         ],
       ],
@@ -312,9 +336,13 @@ addLayer("c", {
         return "Resets Cosmic Dust, telescopes, advanced and super to 1";
       },
       onClick() {
-        confirm(
-          "Are you sure? This doesn't count as a reset, just resets the currencies to one",
-        );
+        if (
+          confirm(
+            "Are you sure? This doesn't count as a reset, just resets the currencies to one",
+          ) == false
+        ) {
+          return;
+        }
         player.c.points = new Decimal(1);
         player.c.t = new Decimal(1);
         player.c.adt = new Decimal(1);
@@ -322,6 +350,69 @@ addLayer("c", {
       },
       canClick() {
         return true;
+      },
+    },
+    13: {
+      title:
+        "Annihilate 1 math fragment and 1 negative math fragment to gain 1 stardust",
+
+      display() {
+        return `Annihilate 1 math fragment and 1 negative math fragment to gain 1 stardust. If negative is too large, convert two into one positive. Too many negative fragments in a 
+      reaction could create polarity, which reduces stardust gain for as long as it lasts(1-5 minutes).`;
+      },
+      onClick() {
+        if (player.c.negmathfrag.gt(player.c.mathfrag)) {
+          player.c.polarity = player.c.polarity.add(
+            player.c.negmathfrag.sub(player.c.mathfrag),
+          );
+          player.c.polarityTime = Math.floor(Math.random() * 1800);
+          if (player.c.polarityTime < 600) {
+            player.c.polarityTime = 600;
+          }
+          player.c.negmathfrag = player.c.negmathfrag.sub(player.c.mathfrag);
+          player.c.mathfrag = new Decimal(0);
+        }
+        if (player.c.mathfrag.gte(player.c.negmathfrag)) {
+          player.ct.sdust = player.ct.sdust.add(
+            player.c.mathfrag
+              .sub(player.c.negmathfrag)
+              .plus(1)
+              .sub(player.c.polarity),
+          );
+          player.c.mathfrag = player.c.mathfrag.sub(player.c.negmathfrag);
+          player.c.negmathfrag = new Decimal(0);
+        }
+      },
+      canClick() {
+        return player.c.mathfrag.gte(1) && player.c.negmathfrag.gte(1);
+      },
+      unlocked() {
+        return hasUpgrade("c", 17);
+      },
+      style: {
+        width: "300px",
+        height: "300px",
+        "font-size": "13px",
+      },
+    },
+    14: {
+      title:
+        "Convert 2 negative math fragments into 1 positive math fragment. This is used for stardust",
+
+      onClick() {
+        player.c.negmathfrag = player.c.negmathfrag.sub(2);
+        player.c.mathfrag = player.c.mathfrag.add(1);
+      },
+      canClick() {
+        return player.c.mathfrag.gte(1) && player.c.negmathfrag.gte(2);
+      },
+      unlocked() {
+        return hasUpgrade("c", 17);
+      },
+      style: {
+        width: "200px",
+        height: "200px",
+        "font-size": "15px",
       },
     },
   },
@@ -373,9 +464,27 @@ addLayer("c", {
         return true;
       },
     },
+    16: {
+      title: "Refractive Power",
+      description:
+        "1/10 chance for a math fragment or negative math fragment, from prestiging for quarks. This is used for stardust",
+      cost: new Decimal(30),
+      unlocked() {
+        return true;
+      },
+    },
+    17: {
+      title: "Highend Observatory",
+      description:
+        "Annilihate positive and negative math fragments to gain stardust. Read more under astronomy tab",
+      cost: new Decimal(51),
+      unlocked() {
+        return true;
+      },
+    },
     21: {
       title: "Astronomical gains",
-      description: "1.5x particle gain",
+      description: "10x particle gain",
       cost: new Decimal(35000),
       unlocked() {
         return hasUpgrade("hm", 37);
@@ -383,7 +492,7 @@ addLayer("c", {
     },
     22: {
       title: "Frequent arcs",
-      description: "1.5x particle gain",
+      description: "10x particle gain",
       cost: new Decimal(60000),
       unlocked() {
         return hasUpgrade("hm", 37);
@@ -391,7 +500,7 @@ addLayer("c", {
     },
     23: {
       title: "Diamond Mines",
-      description: "1.5x atom gain",
+      description: "10x atom gain",
       cost: new Decimal(75000),
       unlocked() {
         return hasUpgrade("hm", 37);
@@ -399,7 +508,7 @@ addLayer("c", {
     },
     24: {
       title: "Furious storm",
-      description: "1.5x quark gain",
+      description: "10x quark gain",
       cost: new Decimal(105000),
       unlocked() {
         return hasUpgrade("hm", 37);
@@ -421,7 +530,7 @@ addLayer("c", {
         return player.c.t.gte(this.cost(1));
       },
       unlocked() {
-        return hasChallenge("a", 11);
+        return hasChallenge("a", 11) || player.c.adt.gte(1);
       },
       buyMax() {
         return true;

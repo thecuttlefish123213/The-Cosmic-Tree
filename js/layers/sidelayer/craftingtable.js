@@ -9,17 +9,11 @@ addLayer("ct", {
       hq: new Decimal(0), // Hyper Quarks
       sdust: new Decimal(0), // Stardust
       amult: new Decimal(0), // Atomic multiplier
-      variable: new Decimal(0),
+
       stars: new Decimal(0),
-      nzet: new Decimal(0),
-      index: 0,
+
       hatom: new Decimal(0),
-      agenta: new Decimal(0),
       nuke: new Decimal(0),
-
-      keepLevels: new Decimal(0),
-
-      grandeu: new Decimal(0),
 
       fire: new Decimal(0),
       bastion: new Decimal(0),
@@ -45,6 +39,14 @@ addLayer("ct", {
       pshard: new Decimal(0), // primeval shard
       blackKnife: new Decimal(0),
       dementedCrystal: new Decimal(0), // demented Crystal
+
+      crystalFlake: new Decimal(0),
+      flakeEffect1() {
+        return new Decimal(1.5).mul(this.crystalFlake);
+      },
+      flakeEffect2() {
+        return new Decimal(3).mul(this.crystalFlake.mul(15));
+      },
     };
   },
   color: "#291103",
@@ -81,7 +83,7 @@ addLayer("ct", {
     return player.ct.unlocked;
   },
   update(diff) {
-    if (getBuyableAmount("t", 34).gte(1))
+    if (getBuyableAmount("t", 34).gte(1) || hasMilestone("t", 1))
       player.ct.sdust = player.ct.sdust.plus(
         new Decimal(0.1).mul(getBuyableAmount("t", 34)).mul(diff),
       );
@@ -171,12 +173,7 @@ addLayer("ct", {
             if (player.ct.stars.gte(1)) {
               html += `<div style='font-size: 35px'>You have ${player.ct.stars} Stars</div>`;
             }
-            if (player.ct.agenta.gte(1)) {
-              html += `<div style='font-size: 35px'>You have ${player.ct.agenta} Agenta</div>`;
-            }
-            if (player.ct.grandeu.gte(1)) {
-              html += `<div style='font-size: 35px'>You have ${player.ct.grandeu} Grandeu</div>`;
-            }
+
             if (player.ct.fire.gte(1)) {
               html += `<div style='font-size: 35px'>You have ${player.ct.fire} Units of Fire</div>`;
             }
@@ -205,14 +202,7 @@ addLayer("ct", {
       title: "Crafting Table",
       body() {
         return `The Crafting Table allows you to craft items using resources you've gathered.
-         Currently, this feature is under development and will be expanded in future updates. In addition,
-         there exists a tab to permanetly keep any feature that is unlocked once. This primarily pertains to components like an upgrade or challenge`;
-      },
-    },
-    lore2: {
-      title: "Keeps",
-      body() {
-        return `Each layer has its own temporary keeps, that are reset when reset by a higher layer. Unlocking all the keeps of a layer will unlock a keep layer, which is unaffectd by layer resets.`;
+         Currently, this feature is under development and will be expanded in future updates.`;
       },
     },
   },
@@ -328,143 +318,7 @@ addLayer("ct", {
         };
       },
     },
-    13: {
-      cost(x) {
-        return [
-          new Decimal(5000).mul(player.ct.sdust.plus(1).pow(0.5)),
-          new Decimal(100000).mul(player.ct.sdust.plus(1).pow(0.5)),
-        ];
-      },
-      title() {
-        return "Star Dust";
-      },
-      display() {
-        return (
-          "Exchange atoms and cosmic dust for Star Dust. " +
-          "Atoms cost: " +
-          format(this.cost()[1]) +
-          " Cosmic Dust cost: " +
-          format(this.cost()[0])
-        );
-      },
-      canAfford() {
-        if (
-          player.a.points.gte(this.cost()[1]) &&
-          player.c.points.gte(this.cost()[0])
-        ) {
-          return true;
-        } else {
-          return false;
-        }
-      },
-      unlocked() {
-        return player.c.points.gte(1) || player.ct.sdust.gte(1);
-      },
-      buyMax() {
-        let costPerUnit1 = this.cost()[1];
-        let costPerUnit2 = this.cost()[0];
-        let max1 = player.c.points.div(costPerUnit2).floor();
-        let max2 = player.a.points.div(costPerUnit1).floor();
-        let max = Decimal.min(max1, max2).floor();
-        return [costPerUnit1, costPerUnit2, max];
-      },
-      buy() {
-        let [costPerUnit1, costPerUnit2, max] = this.buyMax();
-        if (max.lt(1)) max = new Decimal(1);
-        player.c.points = player.c.points.sub(costPerUnit2.mul(max));
-        player.a.points = player.a.points.sub(costPerUnit1.mul(max));
-        player.ct.sdust = player.ct.sdust.add(max);
-        setBuyableAmount(
-          this.layer,
-          this.id,
-          getBuyableAmount(this.layer, this.id).add(max),
-        );
-      },
-      style() {
-        return {
-          backgroundImage: this.canAfford()
-            ? "linear-gradient(90deg, rgb(91, 11, 11) 0%, rgb(93, 255, 171) 50%, rgb(11, 11, 128) 100%)"
-            : "linear-gradient(90deg, rgb(91, 11, 11) 0%, rgb(93, 255, 171) 50%, rgb(11, 11, 128) 100%)",
-          borderRadius: "0px",
-          border: "4px ridge #797979",
-          fontSize: "20px",
-          padding: "20px",
-          width: "400px",
-          backgroundSize: "800% 800%",
-          height: "150px",
-          fontColor: "#000000",
-          fontFamily: "Comic Sans",
-          animation: "rippleMove 20s ease infinite",
-        };
-      },
-    },
-    14: {
-      cost(x) {
-        return [
-          new Decimal(150000).mul(new Decimal(1.015).pow(x)),
-          new Decimal(150000).mul(new Decimal(1.015).pow(x)),
-        ];
-      },
-      title() {
-        return "Atomic Multipliers";
-      },
-      display() {
-        return (
-          "Exchange atoms and vinyl multipliers " +
-          "Atoms cost: " +
-          format(this.cost()[1]) +
-          " Vinyl Multipliers cost: " +
-          format(this.cost()[0])
-        );
-      },
-      effect() {
-        return player.ct.amult.add(1).pow(0.7);
-      },
-      effectDisplay() {
-        return format(upgradeEffect(this.layer, this.id)) + "x";
-      },
-      canAfford() {
-        if (player.ct.amult.gte(1e9)) return false;
-        if (
-          player.a.points.gte(this.cost()[1]) &&
-          player.v.points.gte(this.cost()[0])
-        ) {
-          return true;
-        } else {
-          return false;
-        }
-      },
-      unlocked() {
-        return player.hm.atomicm.gte(1);
-      },
-      buy() {
-        player.a.points = player.a.points.sub(this.cost()[1]);
-        player.v.points = player.v.points.sub(this.cost()[0]);
-        player.ct.amult = player.ct.amult.add(1);
-        setBuyableAmount(
-          this.layer,
-          this.id,
-          getBuyableAmount(this.layer, this.id).add(1),
-        );
-      },
-      style() {
-        return {
-          backgroundImage: this.canAfford()
-            ? "linear-gradient(90deg, rgb(91, 11, 11) 0%, rgb(74, 7, 7) 50%, rgb(160, 38, 38) 100%)"
-            : "linear-gradient(90deg, rgb(91, 11, 11) 0%, rgb(74, 7, 7) 50%, rgb(160, 38, 38) 100%)",
-          borderRadius: "0px",
-          border: "4px ridge #797979",
-          fontSize: "20px",
-          padding: "20px",
-          width: "400px",
-          height: "150px",
-          backgroundSize: "800% 800%",
-          fontColor: "#000000",
-          fontFamily: "Comic Sans",
-          animation: "rippleMove 20s ease infinite",
-        };
-      },
-    },
+
     15: {
       cost(x) {
         return new Decimal(100).mul(x.plus(1).pow(0.5));
@@ -527,297 +381,7 @@ addLayer("ct", {
         };
       },
     },
-    16: {
-      cost(x) {
-        return new Decimal(100000).mul(x.plus(1).pow(0.5));
-      },
-      title() {
-        return "Neptunic Zet";
-      },
-      display() {
-        return (
-          "Exchange empzet and protozet for Neptunic Zets. A Neptunic Zet boosts particles. " +
-          "cost(both): " +
-          format(this.cost()) +
-          " currently: " +
-          format(buyableEffect(this.layer, this.id)) +
-          "x"
-        );
-      },
-      effect() {
-        return new Decimal(1.5).mul(player.ct.nzet);
-      },
-      effectDisplay() {
-        return format(upgradeEffect(this.layer, this.id)) + "x";
-      },
-      canAfford() {
-        if (player.ct.nzet.gte(1e9)) return false;
-        return (
-          player.chm.empzet.gte(this.cost()) &&
-          player.chm.protozet.gte(this.cost())
-        );
-      },
-      unlocked() {
-        return player.chm.empzet.gte(1);
-      },
-      buyMax() {
-        let costPerUnit = new Decimal(100000).mul(
-          getBuyableAmount(this.layer, this.id).plus(1).pow(0.5),
-        );
-        let max1 = player.chm.empzet.div(costPerUnit).floor();
-        let max2 = player.chm.protozet.div(costPerUnit).floor();
-        let max = Decimal.min(max1, max2).floor();
-        return [costPerUnit, max];
-      },
-      buy() {
-        let [costPerUnit, max] = this.buyMax();
-        if (max.lt(1)) max = new Decimal(1);
-        player.chm.empzet = player.chm.empzet.sub(costPerUnit.mul(max));
-        player.chm.protozet = player.chm.protozet.sub(costPerUnit.mul(max));
-        player.ct.nzet = player.ct.nzet.add(max);
-        setBuyableAmount(
-          this.layer,
-          this.id,
-          getBuyableAmount(this.layer, this.id).add(max),
-        );
-      },
-      style() {
-        return {
-          backgroundImage: this.canAfford()
-            ? "linear-gradient(90deg, rgb(36, 29, 240) 0%, rgb(15, 235, 255) 50%, rgb(43, 21, 140) 100%)"
-            : "linear-gradient(90deg, rgb(29, 180, 240) 0%, rgb(35, 15, 255) 50%, rgb(21, 41, 140) 100%)",
-          borderRadius: "0px",
-          border: "4px ridge #797979",
-          fontSize: "20px",
-          padding: "20px",
-          width: "400px",
-          height: "150px",
-          backgroundSize: "800% 800%",
-          fontColor: "#000000",
-          fontSize: "17px",
-          fontFamily: "Comic Sans",
-          animation: "rippleMove 20s ease infinite",
-        };
-      },
-    },
-    17: {
-      cost(x) {
-        return [
-          new Decimal(100000000).mul(
-            x
-              .plus(1)
-              .mul(Decimal.log(x.plus(1), 10))
-              .plus(1),
-          ),
-          new Decimal(48).mul(x.plus(1).pow(0.5)),
-        ];
-      },
-      title() {
-        return "Heavy Atoms";
-      },
-      display() {
-        return (
-          "Exchange heavy multiplier and atoms for heavy atoms, heavy atoms boost vinyl multiplier and atoms gain by 1.2x, " +
-          "Heavy cost: " +
-          format(this.cost()[1]) +
-          " | Atoms cost: " +
-          format(this.cost()[0]) +
-          " currently: " +
-          format(buyableEffect(this.layer, this.id)) +
-          "x"
-        );
-      },
-      effect() {
-        return new Decimal(1.2).mul(player.ct.hatom);
-      },
-      effectDisplay() {
-        return format(upgradeEffect(this.layer, this.id)) + "x";
-      },
-      canAfford() {
-        if (player.ct.hatom.gte(1e9)) return false;
-        return (
-          player.hm.points.gte(this.cost()[1]) &&
-          player.a.points.gte(this.cost()[0])
-        );
-      },
-      unlocked() {
-        return hasUpgrade("hm", 32);
-      },
-      buyMax() {
-        let costPerUnit1 = this.cost()[1];
-        let costPerUnit2 = this.cost()[0];
-        let max1 = player.a.points.div(costPerUnit1).floor();
-        let max2 = player.hm.points.div(costPerUnit2).floor();
-        let max = Decimal.min(max1, max2).floor();
-        return [costPerUnit1, costPerUnit2, max];
-      },
-      buy() {
-        let [costPerUnit1, costPerUnit2, max] = this.buyMax();
-        if (max.lt(1)) max = new Decimal(1);
-        player.a.points = player.a.points.sub(costPerUnit1.mul(max));
-        player.hm.points = player.hm.points.sub(costPerUnit2.mul(max));
-        player.ct.hatom = player.ct.hatom.add(max);
-        setBuyableAmount(
-          this.layer,
-          this.id,
-          getBuyableAmount(this.layer, this.id).add(max),
-        );
-      },
-      style() {
-        return {
-          backgroundImage: this.canAfford()
-            ? "conic-gradient(90deg, rgb(19, 15, 15) 0%, rgb(30, 16, 16) 50%, rrgb(30, 6, 6)100%)"
-            : "conic-gradient(90deg, rgb(19, 13, 13) 0%, rgb(44, 13, 13) 50%, rgb(48, 27, 27) 100%)",
-          borderRadius: "0px",
-          border: "4px ridge #797979",
-          fontSize: "16px",
-          padding: "20px",
-          width: "400px",
-          height: "150px",
-          backgroundSize: "800% 800%",
-          fontColor: "#000000",
 
-          fontFamily: "Comic Sans",
-          animation: "rippleMove 20s ease infinite",
-        };
-      },
-    },
-    18: {
-      cost(x) {
-        return new Decimal(100).mul(x.plus(1));
-      },
-      title() {
-        return "Agenta";
-      },
-      display() {
-        return (
-          "Exchange Agate for Agenta, which increases boracite gain " +
-          "cost: " +
-          format(this.cost()) +
-          " currently: " +
-          format(buyableEffect(this.layer, this.id)) +
-          "x"
-        );
-      },
-      effect() {
-        return new Decimal(1).add(player.ct.agenta.mul(0.1));
-      },
-      effectDisplay() {
-        return format(upgradeEffect(this.layer, this.id)) + "x";
-      },
-      canAfford() {
-        if (player.ct.agenta.gte(1e9)) return false;
-        return player.b.Agate.gte(this.cost());
-      },
-      unlocked() {
-        return hasMilestone("b", 3);
-      },
-      buyMax() {
-        let costPerUnit = this.cost()[0];
-
-        let max = player.b.Agate.div(costPerUnit).floor();
-
-        return [costPerUnit, max];
-      },
-      buy() {
-        let [costPerUnit, max] = this.buyMax();
-        if (max.lt(1)) max = new Decimal(1);
-        player.b.Agate = player.b.Agate.sub(costPerUnit.mul(max));
-
-        player.ct.agenta = player.ct.agenta.add(max);
-        setBuyableAmount(
-          this.layer,
-          this.id,
-          getBuyableAmount(this.layer, this.id).add(max),
-        );
-      },
-      style() {
-        return {
-          backgroundImage: this.canAfford()
-            ? "linear-gradient(90deg, rgb(211, 60, 29) 0%, rgb(219, 84, 56) 50%, rgb(229, 46, 10)100%)"
-            : "linear-gradient(90deg, rgb(211, 60, 29) 0%, rgb(239, 88, 57) 50%, rgb(229, 48, 11) 100%)",
-          borderRadius: "0px",
-          border: "4px ridge #797979",
-          fontSize: "16px",
-          padding: "20px",
-          width: "400px",
-          height: "150px",
-          backgroundSize: "800% 800%",
-          fontColor: "#000000",
-
-          fontFamily: "Comic Sans",
-          animation: "rippleMove 20s ease infinite",
-        };
-      },
-    },
-    19: {
-      cost(x) {
-        return new Decimal(10).mul(x.plus(1));
-      },
-      title() {
-        return "Grandeu";
-      },
-      display() {
-        return (
-          "A surplus of a fine judgement. Boost Tetra gain with this delicacy | " +
-          "Grandulum cost: " +
-          format(this.cost()) +
-          " currently: " +
-          format(buyableEffect(this.layer, this.id)) +
-          "x"
-        );
-      },
-      effect() {
-        return new Decimal(3).mul(player.ct.Grandeu);
-      },
-      effectDisplay() {
-        return format(upgradeEffect(this.layer, this.id)) + "x";
-      },
-      canAfford() {
-        if (player.ct.grandeu.gte(1e9)) return false;
-        return player.b.Grandulum.gte(this.cost());
-      },
-      unlocked() {
-        return hasUpgrade("n", 23);
-      },
-      buyMax() {
-        let costPerUnit = this.cost()[0];
-
-        let max = player.b.Grandulum.div(costPerUnit).floor();
-
-        return [costPerUnit, max];
-      },
-      buy() {
-        let [costPerUnit, max] = this.buyMax();
-        if (max.lt(1)) max = new Decimal(1);
-        player.b.Grandulum = player.b.Grandulum.sub(costPerUnit.mul(max));
-
-        player.ct.Grandeu = player.ct.Grandeu.add(max);
-        setBuyableAmount(
-          this.layer,
-          this.id,
-          getBuyableAmount(this.layer, this.id).add(max),
-        );
-      },
-      style() {
-        return {
-          backgroundImage: this.canAfford()
-            ? "linear-gradient(90deg, rgb(38, 188, 78) 0%, rgb(49, 186, 65) 50%, rgb(20, 196, 67)100%)"
-            : "linear-gradient(90deg, rgb(38, 188, 78) 0%, rgb(49, 186, 65) 50%, rgb(20, 196, 67)100%)",
-          borderRadius: "0px",
-          border: "4px ridge #797979",
-          fontSize: "16px",
-          padding: "20px",
-          width: "400px",
-          height: "150px",
-          backgroundSize: "800% 800%",
-          fontColor: "#000000",
-
-          fontFamily: "Comic Sans",
-          animation: "rippleMove 20s ease infinite",
-        };
-      },
-    },
     20: {
       cost(x) {
         return new Decimal(5).mul(x.plus(1));
@@ -935,94 +499,6 @@ addLayer("ct", {
           height: "150px",
           backgroundSize: "800% 800%",
           fontColor: "#000000",
-
-          fontFamily: "Comic Sans",
-          animation: "rippleMove 20s ease infinite",
-        };
-      },
-    },
-    22: {
-      cost(x) {
-        let y = player.ct.bdust;
-        return [
-          new Decimal(5).mul(y.plus(1)),
-          new Decimal(750).mul(y.plus(1)),
-          new Decimal(1e9).mul(y.plus(1)),
-        ];
-      },
-      title() {
-        return "Black Dust";
-      },
-      display() {
-        return (
-          "Combine Nissionite, Boracite, and Cosmic Dust for Black Dust... a very, very interesting material | " +
-          "cost(Nissionite): " +
-          format(this.cost()[0]) +
-          " | cost(Boracite): " +
-          format(this.cost()[1]) +
-          " | cost(Cosmic Dust): " +
-          format(this.cost()[2]) +
-          " | Effect: " +
-          format(player[this.layer].bdustEffect1()) +
-          "x -  boracite, cosmic dust, heavy multiplier + " +
-          format(player[this.layer].bdustEffect2()) +
-          "x - to particles"
-        );
-      },
-
-      canAfford() {
-        if (player.ct.bdust.gte(1e9)) return false;
-        return (
-          player.n.points.gte(this.cost()[0]) &&
-          player.b.points.gte(this.cost()[1]) &&
-          player.c.points.gte(this.cost()[2])
-        );
-      },
-      unlocked() {
-        let unlocked = false;
-        if (player.n.points.gte(20)) unlocked = true;
-        return unlocked;
-      },
-
-      buyMax() {
-        let costPerUnit = this.cost()[0];
-        let max = player.n.points.div(costPerUnit).floor();
-
-        let costPerUnit2 = this.cost()[1];
-        let max2 = player.b.points.div(costPerUnit2).floor();
-
-        let costPerUnit3 = this.cost()[2];
-        let max3 = player.c.points.div(costPerUnit3).floor();
-
-        let trueMax = Decimal.min(max3, Decimal.min(max, max2));
-        return [costPerUnit, costPerUnit2, costPerUnit3, trueMax];
-      },
-      buy() {
-        let [costPerUnit, costPerUnit2, costPerUnit3, trueMax] = this.buyMax();
-        if (trueMax.lt(1)) trueMax = new Decimal(1);
-        player.n.points = player.n.points.sub(costPerUnit.mul(trueMax));
-        player.b.points = player.b.points.sub(costPerUnit2.mul(trueMax));
-        player.c.points = player.c.points.sub(costPerUnit3.mul(trueMax));
-
-        player.ct.bdust = player.ct.bdust.add(trueMax);
-        setBuyableAmount(
-          this.layer,
-          this.id,
-          getBuyableAmount(this.layer, this.id).add(trueMax),
-        );
-      },
-      style() {
-        return {
-          backgroundImage:
-            "linear-gradient(90deg, rgb(18, 20, 20) 0%, rgb(13, 18, 19) 50%,rgb(13, 13, 22)100%)",
-          borderRadius: "0px",
-          border: "4px ridge #797979",
-          fontSize: "16px",
-          padding: "20px",
-          width: "400px",
-          height: "185px",
-          backgroundSize: "800% 800%",
-          color: "#817878",
 
           fontFamily: "Comic Sans",
           animation: "rippleMove 20s ease infinite",

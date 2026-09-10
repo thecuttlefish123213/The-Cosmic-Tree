@@ -1032,7 +1032,7 @@ const questions = [
     answer: "Jacorb",
   },
   {
-    question: "Who invented gravity?",
+    question: "Who discovered gravity?",
     answer: "Newton",
   },
   {
@@ -1065,7 +1065,7 @@ const pAnswers = [
 ];
 let quizBegun = false;
 let quizOver = false;
-let quizMusicPlaying = false;
+
 let questionCount = 0;
 let quizfailed = false;
 let hillPlaying = false;
@@ -1077,8 +1077,6 @@ function end() {
   }
 }
 function destruction() {
-  updateMusicDisplay();
-  toggleMusic();
   let demon = document.getElementById("DemonEmblem");
   demon.style.display = "block";
 
@@ -1100,6 +1098,7 @@ function challengeExit() {
 }
 // Earth
 function initiateQuiz() {
+  quizBegun = true;
   if (questionCount == 10) {
     player.d.cosmicQuizCompleted = true;
     questionSquare.style.backgroundColor = "lightgreen";
@@ -1125,15 +1124,10 @@ function initiateQuiz() {
     return;
   }
 
-  updateMusicDisplay();
-  toggleMusic();
-
   let startButton = document.getElementById("startButtonQ");
   let questionButton = document.getElementById("quizIntro");
 
   if (quizBegun) {
-    if (quizMusicPlaying) {
-    }
     startButton.style.display = "none";
   }
   questionCount = 1;
@@ -1423,5 +1417,12 @@ function addText(id) {
 function weaponsFunction(button) {
   if (button) {
     player.equipped = button.dataset.answer;
+    player.dmg = Number(button.dataset.dmg);
+    player.critChance = Number(button.dataset.critchance);
+    player.critdmg = Number(button.dataset.critdmg);
+
+    player.hp = 100;
+
+    player.hp = player.hp + Number(button.dataset.armor);
   }
 }

@@ -63,6 +63,8 @@ addLayer("vo", {
     if (player.vo.copperRod.gte(1)) mult = mult.times(buyableEffect("vo", 11));
     if (player.vo.fiberOpticCable.gte(1))
       mult = mult.times(buyableEffect("vo", 12));
+    if (player.vo.transmissionTower.gte(1))
+      mult = mult.times(buyableEffect("vo", 13));
     return mult;
   },
   update() {
@@ -203,6 +205,43 @@ addLayer("vo", {
         player[this.layer].points = player[this.layer].points.sub(this.cost());
         player[this.layer].fiberOpticCable =
           player[this.layer].fiberOpticCable.add(1);
+        setBuyableAmount(
+          this.layer,
+          this.id,
+          getBuyableAmount(this.layer, this.id).add(1),
+        );
+      },
+      style: {
+        "font-size": "17px",
+      },
+    },
+    13: {
+      cost(x) {
+        return new Decimal(13).add(player.vo.fiberOpticCable.mul(3));
+      },
+      title: "Transmission Towers",
+      display() {
+        return (
+          "Buy Transmission Towers to improve volt gain per lightning strike | Volt cost: " +
+          format(this.cost()) +
+          " | Currently: " +
+          format(this.effect()) +
+          "x"
+        );
+      },
+      effect() {
+        return new Decimal(1.7).add(player.vo.transmissionTower.mul(0.2));
+      },
+      canAfford() {
+        return player[this.layer].points.gte(this.cost());
+      },
+      unlocked() {
+        return player.vo.fiberOpticCable.gte(1);
+      },
+      buy() {
+        player[this.layer].points = player[this.layer].points.sub(this.cost());
+        player[this.layer].transmissionTower =
+          player[this.layer].transmissionTower.add(1);
         setBuyableAmount(
           this.layer,
           this.id,

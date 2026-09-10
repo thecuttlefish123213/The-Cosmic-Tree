@@ -59,7 +59,7 @@ A) Mechanical has no tooltip
 B) UI redo
 C) Vinyl returns infinity - error
 D) Frost arz may not be unlocked properly - remember to fix this especially
-E) Fix Math game under axiom such that hard and insane can be randomly generated
+
 */
 
 // Set your version in num and name
@@ -111,14 +111,14 @@ function getPointGen() {
     return mult;
   }
   if (getGridData("art", 302) == 2) mult = mult.times(10);
-  if (hasUpgrade("m", 11)) gain = gain.times(1 + Math.log(1 + x));
+  if (hasUpgrade("m", 11)) gain = gain.times(2);
   if (player.b.Panenite.gte(1))
     gain = gain.times(player.b.paneniteMultiplier());
-  if (hasUpgrade("m", 12)) gain = gain.times(1 + Math.log(1 + x));
+  if (hasUpgrade("m", 12)) gain = gain.times(1.75);
 
   if (hasUpgrade("m", 13)) gain = gain.times(upgradeEffect("m", 13));
   if (hasUpgrade("q", 15)) gain = gain.times(upgradeEffect("q", 15));
-  if (hasUpgrade("q", 11)) gain = gain.times(1 + Math.log(0.5 + x));
+  if (hasUpgrade("q", 11)) gain = gain.times(2);
   if (hasUpgrade("mm", 31)) gain = gain.times(20);
   if (inChallenge("a", 12)) gain = gain.times(0.25);
   if (inChallenge("a", 21)) gain = gain.times(0.1666);
@@ -162,8 +162,7 @@ function getPointGen() {
 
   if (getBuyableAmount("t", 53).gte(1))
     gain = gain.times(formula1).times(formula2).times(formula3);
-  if (getBuyableAmount("ct", 16).gte(1))
-    gain = gain.times(buyableEffect("ct", 16));
+
   if (inChallenge("t", 21)) {
     gain = gain.times(1);
   } else {
@@ -176,12 +175,14 @@ function getPointGen() {
       gain = gain.times(player.h.points.plus(1).pow(0.5));
     if (hasUpgrade("a", 11)) gain = gain.times(2);
     if (hasUpgrade("a", 13)) gain = gain.times(3);
-    if (hasUpgrade("c", 21)) gain = gain.times(1.5);
-    if (hasUpgrade("c", 22)) gain = gain.times(1.5);
+    if (hasUpgrade("c", 21)) gain = gain.times(10);
+    if (hasUpgrade("c", 22)) gain = gain.times(10);
     if (hasUpgrade("c", 15)) gain = gain.times(upgradeEffect("c", 15));
     if (hasChallenge("a", 22)) gain = gain.times(challengeEffect("a", 22));
   }
   if (player.ct.bdust.gte(1)) gain = gain.times(player.ct.bdustEffect2());
+  if (player.ct.crystalFlake.gte(1))
+    gain = gain.times(player.ct.flakeEffect2());
   if (inChallenge("d", 14)) {
     gain = gain.times(1);
   } else {
@@ -215,6 +216,16 @@ function addedPlayerData() {
     critdmg: 0,
     critChance: 0.01,
     armor: 0,
+    boss: {
+      name: "",
+      dmg: 0,
+      hp: 1e300,
+      critdmg: 0,
+      critChance: 0,
+      reward: "",
+      rewardAmount: new Decimal(1),
+      cd: 1000,
+    },
   };
 }
 

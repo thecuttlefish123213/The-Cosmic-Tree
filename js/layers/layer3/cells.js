@@ -406,6 +406,13 @@ addLayer("ce", {
             return "You have " + format(player.c.points) + " Cosmic Dust.";
           },
         ],
+        [
+          "display-text",
+          function () {
+            return "You have " + format(player.ct.sdust) + " Star dust.";
+          },
+          { "border-radius": "0px", "font-size": "28px" },
+        ],
         "blank",
         "milestones",
         [

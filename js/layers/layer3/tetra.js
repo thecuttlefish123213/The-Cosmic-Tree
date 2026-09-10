@@ -82,8 +82,7 @@ addLayer("t", {
     } else {
       if (hasUpgrade("n", 13)) mult = mult.times(2);
     }
-    if (getBuyableAmount("ct", 19).gte(1))
-      mult = mult.times(buyableEffect("ct", 19));
+
     if (hasUpgrade("d", 11)) mult = mult.add(10);
     if (hasUpgrade("d", 12)) mult = mult.add(2);
     if (hasUpgrade("d", 14)) mult = mult.add(10);
@@ -96,8 +95,7 @@ addLayer("t", {
     if (hasUpgrade("d", 30)) mult = mult.add(1000);
     if (hasUpgrade("d", 31)) mult = mult.add(500);
     if (hasUpgrade("d", 34)) mult = mult.add(1000);
-    if (player.chm.mechanicalBomb.gte(1))
-      mult = mult.add(buyableEffect("chm", 24)[0]);
+
     if (hasUpgrade("d", 41)) mult = mult.add(1000);
     if (hasMilestone("e", 0)) mult = mult.times(100);
     if (hasUpgrade("e", 13)) mult = mult.times(50);
@@ -125,7 +123,16 @@ addLayer("t", {
     },
   ],
   layerShown() {
-    return player.hm.unlocked;
+    return player.ce.unlocked;
+  },
+  milestones: {
+    1: {
+      requirementDescription: "11 tetra",
+      effectDescription: "Passively generate star dust!",
+      done() {
+        return player.t.points.gte(11);
+      },
+    },
   },
   tabFormat: {
     Tetratum: {
