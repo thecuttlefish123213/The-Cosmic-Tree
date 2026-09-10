@@ -64,8 +64,8 @@ D) Frost arz may not be unlocked properly - remember to fix this especially
 
 // Set your version in num and name
 let VERSION = {
-  num: "0.1",
-  name: "The Voltaic Sector",
+  num: "0.1.1",
+  name: "Sine-Cosine Duality",
 };
 
 let changelog = `<h1>Changelog:</h1><br>
